@@ -46,10 +46,10 @@ func (c Article) List() revel.Result {
 		return c.RenderText("Internal error")
 	}
 
-	findOptions := options.Find().SetSkip((pageInt - 1) * 20).SetLimit(20)
+	findOptions := options.Find().SetSkip((pageInt - 1) * 20).SetLimit(20).SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "categories": 1, "thumbimageurl": 1, "sourceurl": 1, "source": 1})
 
 	result, _ := data.Find(articleCollection, bson.M{}, func(cursor *mongo.Cursor) interface{} {
-		var article models.Article
+		var article models.ArticleMinimal
 		err := cursor.Decode(&article)
 		if err != nil {
 			glog.Warningf("error while decoding %+v", cursor.Current)
