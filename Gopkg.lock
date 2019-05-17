@@ -117,6 +117,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:faa5425474f06f95373a9ba87eda5d44127e447ca365b8f1238daedd402b2767"
+  name = "github.com/revel/cron"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "32f5d76f78c1f38d8c9a66369a0f810c9fdc702c"
+
+[[projects]]
+  branch = "master"
   digest = "1:5feca17db09c8862450c74a1fc0a3e5c56dcf7b5866eff623907f43554820b77"
   name = "github.com/revel/log15"
   packages = ["."]
@@ -127,7 +135,15 @@
   branch = "master"
   digest = "1:1c8ca3777f6b8b9a8562d8b5a4240820ad104dbdf894543baaf8940b322a265d"
   name = "github.com/revel/modules"
-  packages = ["."]
+  packages = [
+    ".",
+    "jobs/app/controllers",
+    "jobs/app/jobs",
+    "static/app/controllers",
+    "static/app/model",
+    "testrunner/app",
+    "testrunner/app/controllers",
+  ]
   pruneopts = "T"
   revision = "2737bfdaa8c41da68eae12bb18f7279b9f156048"
 
@@ -328,6 +344,11 @@
     "github.com/kodebot/newsorganiser/services",
     "github.com/mmcdole/gofeed",
     "github.com/revel/modules",
+    "github.com/revel/modules/jobs/app/controllers",
+    "github.com/revel/modules/jobs/app/jobs",
+    "github.com/revel/modules/static/app/controllers",
+    "github.com/revel/modules/testrunner/app",
+    "github.com/revel/modules/testrunner/app/controllers",
     "github.com/revel/revel",
     "github.com/revel/revel/testing",
     "go.mongodb.org/mongo-driver/bson",

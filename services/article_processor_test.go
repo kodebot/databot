@@ -7,8 +7,8 @@ import (
 
 	"github.com/golang/glog"
 
-	"github.com/kodebot/newsorganiser/models"
-	"github.com/kodebot/newsorganiser/services"
+	"github.com/kodebot/newsfeed/models"
+	"github.com/kodebot/newsfeed/services"
 
 	"github.com/BurntSushi/toml"
 )

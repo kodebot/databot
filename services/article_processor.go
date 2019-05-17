@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/kodebot/newsorganiser/data"
-	"github.com/kodebot/newsorganiser/models"
+	"github.com/kodebot/newsfeed/data"
+	"github.com/kodebot/newsfeed/models"
 	"github.com/mmcdole/gofeed"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

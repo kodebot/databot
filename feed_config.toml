@@ -1,0 +1,153 @@
+
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=ara1"
+    origin = "dinamalar"
+    defaultCategory = "politics"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+        # selectorType = "regexp"
+        # selector = "<a[^>]+href='(?P<URL>[^']+)"
+
+
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=pot1"
+    origin = "dinamalar"
+    defaultCategory = "general"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=sam1"
+    origin = "dinamalar"
+    defaultCategory = "incidents"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=kut1"
+    origin = "dinamalar"
+    defaultCategory = "justice"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.dinamalar.com/tamilnadunews.asp"
+    origin = "dinamalar"
+    defaultCategory = "tamilnadu"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.dinamalar.com/Delhinews.asp"
+    origin = "dinamalar"
+    defaultCategory = "delhi"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=INL1"
+    origin = "dinamalar"
+    defaultCategory = "world"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=business1"
+    origin = "dinamalar"
+    defaultCategory = "business"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "https://cinema.dinamalar.com/rss.php"
+    origin = "dinamalar"
+    defaultCategory = "cinema"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/other-sports"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false

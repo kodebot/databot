@@ -25,7 +25,7 @@ func GetCollection(collectionName string) (*mongo.Collection, error) {
 		return nil, err
 	}
 	// todo: take the database name from the config
-	collection := dbClient.Database("newsorganiser").Collection(collectionName)
+	collection := dbClient.Database("newsfeed").Collection(collectionName)
 	return collection, nil
 }
 

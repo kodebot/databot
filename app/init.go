@@ -1,6 +1,8 @@
 package app
 
 import (
+	app_jobs "github.com/kodebot/newsfeed/app/jobs"
+	"github.com/revel/modules/jobs/app/jobs"
 	"github.com/revel/revel"
 )
 
@@ -29,6 +31,13 @@ func init() {
 		revel.BeforeAfterFilter,       // Call the before and after filter functions
 		revel.ActionInvoker,           // Invoke the action.
 	}
+
+	revel.OnAppStart(func() {
+		jobs.Schedule("* 30 * * * ?", app_jobs.LoadArticlesFromFeedsJob{})
+		jobs.Schedule("* * 6 * * ?", app_jobs.PruneArticlesJob{})
+		// jobs.Every(20*time.Second, app_jobs.LoadArticlesFromFeedsJob{})
+		// jobs.Every(1*time.Minute, app_jobs.PruneArticlesJob{})
+	})
 
 	// Register startup functions with OnAppStart
 	// revel.DevMode and revel.RunMode only work inside of OnAppStart. See Example Startup Script
