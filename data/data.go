@@ -8,6 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// FindResultDecoder type
+type FindResultDecoder func(*mongo.Cursor) interface{}
+
 // GetCollection returns the provided collection
 func GetCollection(collectionName string) (*mongo.Collection, error) {
 	// todo: make dataaccess as reusable
@@ -37,10 +40,10 @@ func FindOne(collection *mongo.Collection, filter interface{}, result interface{
 }
 
 // Find gets the first document matches the filter in the collection
-func Find(collection *mongo.Collection, filter interface{}) ([]interface{}, error) {
+func Find(collection *mongo.Collection, filter interface{}, decode FindResultDecoder, opts ...*options.FindOptions) ([]interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	cursor, err := collection.Find(ctx, filter)
+	cursor, err := collection.Find(ctx, filter, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +51,7 @@ func Find(collection *mongo.Collection, filter interface{}) ([]interface{}, erro
 	var result []interface{}
 
 	for cursor.Next(ctx) {
-		result = append(result, cursor.Current)
+		result = append(result, decode(cursor))
 	}
 
 	return result, nil
