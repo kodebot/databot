@@ -11,6 +11,6 @@ ADD . /go/src/github.com/kodebot/newsfeed
 RUN go get github.com/revel/revel
 RUN go get github.com/revel/cmd/revel
 
-ENTRYPOINT revel run github.com/kodebot/newsfeed dev 9000
+ENTRYPOINT revel run github.com/kodebot/newsfeed dev 9020
 
-EXPOSE 9000
+EXPOSE 9020
