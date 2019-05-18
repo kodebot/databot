@@ -25,8 +25,14 @@ type Article struct {
 // List returns list of articles
 func (c Article) List() revel.Result {
 	page := c.Params.Query.Get("page")
+	category := c.Params.Query.Get("category")
+
 	if page == "" {
 		page = "1"
+	}
+
+	if category == "" {
+		category = "0"
 	}
 
 	fmt.Printf("%s\n", page)
@@ -38,6 +44,13 @@ func (c Article) List() revel.Result {
 		pageInt = 1
 	}
 
+	categoryInt, err := strconv.ParseInt(category, 10, 64)
+
+	if err != nil {
+		glog.Warningf("parsing category number failed %s. setting to 0\n", category)
+		categoryInt = 0
+	}
+
 	articleCollection, err := data.GetCollection("articles")
 
 	if err != nil {
@@ -46,9 +59,42 @@ func (c Article) List() revel.Result {
 		return c.RenderText("Internal error")
 	}
 
-	findOptions := options.Find().SetSort(bson.M{"createdat": -1}).SetSkip((pageInt - 1) * 20).SetLimit(20).SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "categories": 1, "thumbimageurl": 1, "sourceurl": 1, "source": 1})
+	findOptions := options.Find()
+	findOptions.SetSort(bson.M{"createdat": -1})
+	findOptions.SetSkip((pageInt - 1) * 20)
+	findOptions.SetLimit(20)
+	findOptions.SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "categories": 1, "thumbimageurl": 1, "sourceurl": 1, "source": 1})
 
-	result, _ := data.Find(articleCollection, bson.M{}, func(cursor *mongo.Cursor) interface{} {
+	/*
+		available categories
+		general = 0
+		politics = 1
+		incident = 0
+		tamilnadu = 0
+		delhi = 0
+		cinema = 2
+		sports = 4
+		world = 3
+		business = 0
+
+	*/
+
+	var filter interface{}
+
+	switch categoryInt {
+	case 0:
+		filter = bson.M{"categories": bson.M{"$nin": []string{"politics", "cinema", "world", "sports"}}}
+	case 1:
+		filter = bson.M{"categories": bson.M{"$in": []string{"politics"}}}
+	case 2:
+		filter = bson.M{"categories": bson.M{"$in": []string{"cinema"}}}
+	case 3:
+		filter = bson.M{"categories": bson.M{"$in": []string{"world"}}}
+	case 4:
+		filter = bson.M{"categories": bson.M{"$in": []string{"sports"}}}
+	}
+
+	result, _ := data.Find(articleCollection, filter, func(cursor *mongo.Cursor) interface{} {
 		var article models.ArticleMinimal
 		err := cursor.Decode(&article)
 		if err != nil {
