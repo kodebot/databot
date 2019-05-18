@@ -6,7 +6,7 @@ run `revel run -a  github.com/kodebot/newsfeed`
 go into newsfeed folder
 
 run `sudo docker build -t newsfeed .`
-run `sudo docker run -p 9020:9020 newsfeed`
+run `sudo docker run -p 9020:9020 newsfeed` or `sudo docker run -it -p 9020:9020 newsfeed` for interactive connection
 
 
 ## config
@@ -15,4 +15,4 @@ set the mongo db url to the container's ip address using the follwing command an
 `docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container name or id>`
 
 ## mongo
-run `sudo docker run -d -p 27017:27107 -v ~/data:/data/db mongo --name datastore`
+run `sudo docker run --name datastore -d -p 27017:27017 -v ~/data:/data/db mongo`
