@@ -13,11 +13,11 @@ import (
 var dbClient *mongo.Client
 
 func init() {
-	print("initialising data packge")
+	println("initialising data packge")
 	// todo: make dataaccess as reusable
 	// todo: take connection string from config
 	var err error
-	dbClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	dbClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://10.0.0.4:27017"))
 	if err != nil {
 		glog.Fatalf("error when creating new mongo client %s", err.Error())
 	}
