@@ -23,7 +23,7 @@ func GetCollection(collectionName string) (*mongo.Collection, error) {
 		return nil, err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 
 	err = dbClient.Connect(ctx)
@@ -38,14 +38,14 @@ func GetCollection(collectionName string) (*mongo.Collection, error) {
 
 // FindOne gets the first document matches the filter in the collection
 func FindOne(collection *mongo.Collection, filter interface{}, result interface{}) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	return collection.FindOne(ctx, filter).Decode(result)
 }
 
 // Find gets the first document matches the filter in the collection
 func Find(collection *mongo.Collection, filter interface{}, decode FindResultDecoder, opts ...*options.FindOptions) ([]interface{}, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	cursor, err := collection.Find(ctx, filter, opts...)
 	if err != nil {
@@ -63,14 +63,14 @@ func Find(collection *mongo.Collection, filter interface{}, decode FindResultDec
 
 // InsertOne inserts one document to the given collection
 func InsertOne(collection *mongo.Collection, document interface{}) (*mongo.InsertOneResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	return collection.InsertOne(ctx, &document)
 }
 
 // Delete deletes the documents matching the filter
 func Delete(collection *mongo.Collection, filter interface{}) (*mongo.DeleteResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 	return collection.DeleteMany(ctx, filter)
 }
