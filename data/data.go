@@ -10,17 +10,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// FindResultDecoder type
-type FindResultDecoder func(*mongo.Cursor) interface{}
+var dbClient *mongo.Client
 
-// GetCollection returns the provided collection
-func GetCollection(collectionName string) (*mongo.Collection, error) {
+func init() {
+	print("initialising data packge")
 	// todo: make dataaccess as reusable
 	// todo: take connection string from config
-	dbClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://10.0.0.4:27017"))
+	var err error
+	dbClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://10.0.0.4:27017"))
 	if err != nil {
-		glog.Errorf("getting collection %s failed with error %s", collectionName, err.Error())
-		return nil, err
+		glog.Fatalf("error when creating new mongo client %s", err.Error())
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -28,9 +27,15 @@ func GetCollection(collectionName string) (*mongo.Collection, error) {
 
 	err = dbClient.Connect(ctx)
 	if err != nil {
-		glog.Errorf("getting collection %s failed with error %s", collectionName, err.Error())
-		return nil, err
+		glog.Fatalf("error when connecting to mongo database %s", err.Error())
 	}
+}
+
+// FindResultDecoder type
+type FindResultDecoder func(*mongo.Cursor) interface{}
+
+// GetCollection returns the provided collection
+func GetCollection(collectionName string) (*mongo.Collection, error) {
 	// todo: take the database name from the config
 	collection := dbClient.Database("newsfeed").Collection(collectionName)
 	return collection, nil
