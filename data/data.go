@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/golang/glog"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -15,8 +17,9 @@ type FindResultDecoder func(*mongo.Cursor) interface{}
 func GetCollection(collectionName string) (*mongo.Collection, error) {
 	// todo: make dataaccess as reusable
 	// todo: take connection string from config
-	dbClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	dbClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://10.0.0.4:27017"))
 	if err != nil {
+		glog.Errorf("getting collection %s failed with error %s", collectionName, err.Error())
 		return nil, err
 	}
 
@@ -25,6 +28,7 @@ func GetCollection(collectionName string) (*mongo.Collection, error) {
 
 	err = dbClient.Connect(ctx)
 	if err != nil {
+		glog.Errorf("getting collection %s failed with error %s", collectionName, err.Error())
 		return nil, err
 	}
 	// todo: take the database name from the config
@@ -45,6 +49,7 @@ func Find(collection *mongo.Collection, filter interface{}, decode FindResultDec
 	defer cancel()
 	cursor, err := collection.Find(ctx, filter, opts...)
 	if err != nil {
+		glog.Errorf("find one failed with error %s", err.Error())
 		return nil, err
 	}
 
@@ -53,7 +58,6 @@ func Find(collection *mongo.Collection, filter interface{}, decode FindResultDec
 	for cursor.Next(ctx) {
 		result = append(result, decode(cursor))
 	}
-
 	return result, nil
 }
 
