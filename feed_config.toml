@@ -137,6 +137,82 @@
         sourceField = "Link"
         scrapingRequired = false
 
+
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/Cricket"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/Football"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/Tennis"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/Hockey"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/Badminton"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+
 [[feed]]
     url = "https://sports.dinamalar.com/rss/other-sports"
     origin = "dinamalar"
