@@ -1,0 +1,14 @@
+[[feed]]
+    url = "https://sports.dinamalar.com/rss/Badminton"
+    origin = "dinamalar"
+    defaultCategory = "sports"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<URL>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
