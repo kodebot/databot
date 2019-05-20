@@ -60,7 +60,7 @@ func (c Article) List() revel.Result {
 	}
 
 	findOptions := options.Find()
-	findOptions.SetSort(bson.M{"createdat": -1})
+	findOptions.SetSort(bson.M{"publisheddate": -1})
 	findOptions.SetSkip((pageInt - 1) * 20)
 	findOptions.SetLimit(20)
 	findOptions.SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "categories": 1, "thumbimageurl": 1, "sourceurl": 1, "source": 1})
