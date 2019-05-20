@@ -1,74 +1,62 @@
 package services
 
 import (
-	"flag"
-	"sync"
-	"time"
-
-	"github.com/golang/glog"
-
-	"github.com/kodebot/newsfeed/models"
-	"github.com/kodebot/newsfeed/services"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"testing"
 
 	"github.com/BurntSushi/toml"
+	"github.com/kodebot/newsfeed/models"
 )
 
-// todo: move extractor logic to config file
-// todo: use named group for extractors
-// todo: refactor
-// todo: robust error handling
-// todo: test that the links are indeed working
-// todo: run it in 10 minutes schedule
-// todo: remove items after 3 days of they added
-// todo: write solid tests for the extractors
-// todo: sometimes link uses feed proxy url - find out when and why this happens (resolve this to original url)
-// todo: record last loaded time for each feed
-// todo: move scheduling to config
-
-var wg sync.WaitGroup
-
-func test() {
-	flag.Parse()
-	defer crashHandler()
+func TestParseFeed(t *testing.T) {
 	var feedConfig models.FeedConfig
-	_, err := toml.DecodeFile("./feed_config.toml", &feedConfig)
+	_, err := toml.DecodeFile("../feed_config.toml", &feedConfig)
 	if err != nil {
-		glog.Fatalf("error when loading feed config: %s\n", err.Error())
+		t.Errorf("error when loading feed config: %s\n", err.Error())
 	}
 
-	// https://stackoverflow.com/a/16466581/3208697
-	loadArticlesTicker := time.NewTicker(30 * time.Minute)
-	cleanArticlesTicker := time.NewTicker(6 * time.Hour)
-
-	loadArticles := func() {
-		for _, feed := range feedConfig.Feed {
-			services.LoadArticlesFromFeed(feed)
+	for _, feed := range feedConfig.Feed {
+		t.Logf("processing %s \n", feed.URL)
+		result := ParseFeed(feed)
+		if result == nil {
+			t.Error("failed")
 		}
-	}
-
-	go scheduler("Feed Loader Task", loadArticlesTicker, loadArticles)
-	go scheduler("Clean News Item", cleanArticlesTicker, services.PruneArticles)
-
-	wg.Add(1)
-	go forever()
-	wg.Wait()
-}
-
-func forever() {
-
-}
-
-func scheduler(name string, ticker *time.Ticker, task func()) {
-	for {
-		<-ticker.C
-		glog.Infof("new tick received on %s...\n", name)
-		task()
-		glog.Infof("tick completed on %s...\n", name)
+		t.Logf("finished processing %s \n", feed.URL)
 	}
 }
 
-func crashHandler() {
-	if r := recover(); r != nil {
-		glog.Warningf("unhandled panic %s. recovering to keep the process alive...", r)
+func xTestIllegalXML(t *testing.T) {
+
+	illegalXMLCharacters := []rune{
+		'\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
+		'\u0008', '\u000b', '\u000c', '\u000e', '\u000f', '\u0010', '\u0011',
+		'\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017', '\u0018',
+		'\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001e', '\u001f'}
+
+	var client http.Client
+	resp, err := client.Get("https://sports.dinamalar.com/rss/Badminton")
+	if err != nil {
+		t.Error(err)
+	}
+	defer resp.Body.Close()
+
+	t.Errorf("%d", http.StatusOK)
+
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			t.Error(err)
+		}
+		bodyString := string(bodyBytes)
+		t.Log(bodyString)
+		correctedBodyString := bodyString
+
+		for _, char := range illegalXMLCharacters {
+			correctedBodyString = strings.Replace(correctedBodyString, string(char), "", -1)
+		}
+
+		t.Log(correctedBodyString)
 	}
 }

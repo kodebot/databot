@@ -1,8 +1,11 @@
 package services
 
 import (
+	"io/ioutil"
+	"net/http"
 	"reflect"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/golang/glog"
@@ -43,30 +46,43 @@ func PruneArticles() {
 
 }
 
-// LoadArticlesFromFeed from the given url
-func LoadArticlesFromFeed(feedConfig models.FeedConfigItem) {
+// ParseFeed from the given url
+func ParseFeed(feedConfig models.FeedConfigItem) []*gofeed.Item {
 	defer handleLoadFeedPanics(feedConfig)
 	glog.Infof("starting loading articles from URL: %s \n", feedConfig.URL)
 	defer glog.Infof("ending loading feed from URL: %s", feedConfig.URL)
 
+	xmlString, err := getRawFeedAsString(feedConfig.URL)
+
+	if err != nil {
+		glog.Errorf("retrieving feed xml failed with error %s. Skipping this source.\n", err.Error())
+		return nil
+	}
+
 	parser := gofeed.NewParser()
-	feed, err := parser.ParseURL(feedConfig.URL)
+	feed, err := parser.ParseString(xmlString)
 	if err != nil {
 		glog.Errorf("parsing feed failed with error %s. Skipping this source.\n", err.Error())
 		dumpErrorInDatabase("parsing feed failed", errorDump{
 			FeedConfig: feedConfig,
 			Error:      err.Error()})
-		return
+		return nil
 	}
 
 	totalItems := len(feed.Items)
 	if totalItems == 0 {
 		glog.Infoln("no items found to process")
-		return
+	} else {
+
+		glog.Infof("%d items found\n", totalItems)
 	}
 
-	glog.Infof("%d items found\n", totalItems)
+	return feed.Items
 
+}
+
+// LoadArticles loads news articles into the database
+func LoadArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) {
 	glog.Infoln("loading articles collection...")
 	articlesCollection, err := data.GetCollection("articles")
 	if err != nil {
@@ -80,7 +96,9 @@ func LoadArticlesFromFeed(feedConfig models.FeedConfigItem) {
 	}
 	glog.Infoln("loading articles collection...")
 
-	for i, item := range feed.Items {
+	totalItems := len(feedItems)
+
+	for i, item := range feedItems {
 		glog.Infof("processing item %d of %d\n", i+1, totalItems)
 
 		glog.Infof("item data dump %+v\n", item)
@@ -176,7 +194,37 @@ func LoadArticlesFromFeed(feedConfig models.FeedConfigItem) {
 		glog.Infof("item added to the store successfully. new id: %s\n", result)
 		glog.Infof("finished processing item %d of %d\n", i+1, totalItems)
 	}
+}
 
+// some rss feed has illegal xml data - this is to replace them with empty letter
+func getRawFeedAsString(url string) (string, error) {
+	illegalXMLCharacters := []rune{
+		'\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
+		'\u0008', '\u000b', '\u000c', '\u000e', '\u000f', '\u0010', '\u0011',
+		'\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017', '\u0018',
+		'\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001e', '\u001f'}
+
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil || resp.StatusCode != http.StatusOK {
+		glog.Errorf("error when retrieving raw feed from url %s status code: %d. error: %s\n", url, resp.StatusCode, err.Error())
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		glog.Errorf("error when reading body from url %s. error: %s\n", url, err.Error())
+		return "", err
+	}
+	bodyString := string(bodyBytes)
+	correctedBodyString := bodyString
+
+	for _, char := range illegalXMLCharacters {
+		correctedBodyString = strings.Replace(correctedBodyString, string(char), "", -1)
+	}
+
+	return correctedBodyString, nil
 }
 
 func extractData(source interface{}, extractorConfig models.FeedDataExtractorConfig) (string, error) {
