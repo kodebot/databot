@@ -1,0 +1,19 @@
+[[feed]]
+    url = "https://cinema.dinamalar.com/rss.php"
+    origin = "dinamalar"
+    defaultCategory = "cinema"
+    dateLayouts = ["01/02/06", "January 2, 2016"]
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<Data>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [[feed.publishedDateExtractors]]
+        sourceField = "Published"
+        scrapingRequired = false

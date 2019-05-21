@@ -23,12 +23,19 @@ func (j LoadArticlesFromFeedsJob) Run() {
 
 	glog.Infoln("running LoadArticlesFromFeedsJob...")
 	for _, feed := range feedConfig.Feed {
+		glog.Infof("processing feed from %s \n", feed.URL)
 		result := services.ParseFeed(feed)
-		if result != nil {
-			services.LoadArticles(result, feed)
-		} else {
+		if result == nil {
 			glog.Errorln("feed skipped...")
+			continue
 		}
+
+		articles := services.CreateArticles(result, feed)
+		if len(articles) == 0 {
+			glog.Warning("no articles found...")
+			continue
+		}
+		services.LoadArticles(articles)
 	}
 
 	glog.Infoln("finished LoadArticlesFromFeedsJob...")

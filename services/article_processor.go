@@ -81,38 +81,64 @@ func ParseFeed(feedConfig models.FeedConfigItem) []*gofeed.Item {
 
 }
 
-// LoadArticles loads news articles into the database
-func LoadArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) {
-	glog.Infoln("loading articles collection...")
-	articlesCollection, err := data.GetCollection("articles")
-	if err != nil {
-		if err != nil {
-			glog.Errorf("loading articles collections failed with error %s. Skipping this source.\n", err.Error())
-			dumpErrorInDatabase("loading articles collections failed", errorDump{
-				FeedConfig: feedConfig,
-				Error:      err.Error()})
-			return
-		}
-	}
-	glog.Infoln("loading articles collection...")
-
+// CreateArticles loads news articles into the database
+func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) []*models.Article {
+	glog.Info("creating articles...")
+	result := []*models.Article{}
 	totalItems := len(feedItems)
 
 	for i, item := range feedItems {
-		glog.Infof("processing item %d of %d\n", i+1, totalItems)
+		glog.Infof("creating article %d of %d\n", i+1, totalItems)
 
 		glog.Infof("item data dump %+v\n", item)
 
-		var revisedDate time.Time
+		var revisedDate *time.Time
 		if item.PublishedParsed != nil {
-			revisedDate = *item.PublishedParsed
-			if isUtcMidnight(item.PublishedParsed) { // this means we don't have time - only date is present - just use current time
-				glog.Infoln("published date missing time, setting it current time...")
-				revisedDate = time.Now()
-			}
+			revisedDate = item.PublishedParsed
 		} else {
-			glog.Infoln("parsed date not found. use current date time...")
-			revisedDate = time.Now()
+			glog.Infoln("parsed date not found. trying extractors...")
+			for _, extractor := range feedConfig.PublishedDateExtractors {
+				extractedDate, err := extractData(item, extractor)
+				if err != nil {
+					glog.Warningf("unable to extract date using date extractor: %s\n", err.Error())
+					continue
+				}
+				dateString, err := convertTamilToEnglishDate(extractedDate)
+
+				if err != nil {
+					glog.Warningf("unable to convert extracted tamil date %s to english: %s\n", extractedDate, err.Error())
+					continue
+				}
+
+				var parsedExtractedDate time.Time
+
+				for _, layout := range feedConfig.DateLayouts {
+					var err error
+					parsedExtractedDate, err = time.Parse(layout, dateString)
+					if err != nil {
+						glog.Warningf("unable to parse the date extracted using layout %s error: %s\n", layout, err.Error())
+						continue
+					}
+					break
+				}
+
+				revisedDate = &parsedExtractedDate
+				glog.Infof("extracted date %s\n", revisedDate)
+			}
+		}
+
+		if revisedDate == nil {
+			glog.Errorf("unable to establish date for the article at all. Skipping this item.\n")
+			dumpErrorInDatabase("extracting source link failed", errorDump{
+				FeedConfig: feedConfig,
+				OtherData:  item})
+			continue
+		}
+
+		if isUtcMidnight(revisedDate) { // this means we don't have time - only date is present - just use current time
+			glog.Infoln("published date missing time, setting it current time...")
+			x := time.Now()
+			revisedDate = &x
 		}
 
 		glog.Infoln("extracting source url...")
@@ -151,7 +177,7 @@ func LoadArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) {
 
 		article := models.Article{
 			Title:         item.Title,
-			PublishedDate: revisedDate,
+			PublishedDate: *revisedDate,
 			Categories:    []string{feedConfig.DefaultCategory},
 			ThumbImageURL: extactedImageURL,
 			SourceURL:     extractedSourceURL,
@@ -159,18 +185,40 @@ func LoadArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) {
 			OriginalFeed:  *item,
 			CreatedAt:     time.Now()}
 
-		glog.Infoln("preparing to store the item...")
+		result = append(result, &article)
+		glog.Infof("finished creating article %d of %d\n", i+1, totalItems)
+	}
 
+	return result
+}
+
+// LoadArticles loads news articles into the database
+func LoadArticles(articles []*models.Article) {
+	glog.Infoln("loading articles collection...")
+	articlesCollection, err := data.GetCollection("articles")
+	if err != nil {
+		if err != nil {
+			glog.Errorf("loading articles collections failed with error %s. Skipping this source.\n", err.Error())
+			dumpErrorInDatabase("loading articles collections failed", errorDump{
+				Error: err.Error()})
+			return
+		}
+	}
+	glog.Infoln("loading articles collection finished...")
+
+	totalItems := len(articles)
+
+	for i, article := range articles {
+		glog.Infof("loading item %d of %d\n", i+1, totalItems)
 		glog.Infoln("checking whether the item has already been loaded...")
 		var existing models.Article
-		err = data.FindOne(articlesCollection, bson.M{"sourceurl": extractedSourceURL}, &existing)
+		err = data.FindOne(articlesCollection, bson.M{"sourceurl": article.SourceURL}, &existing)
 
 		if err != nil && err != mongo.ErrNoDocuments {
 			glog.Errorf("error when checking if the item has already been loaded. error: %s\n", err.Error())
 			dumpErrorInDatabase("error when checking if the item has already been loaded", errorDump{
-				FeedConfig: feedConfig,
-				OtherData:  item,
-				Error:      err.Error()})
+				OtherData: article,
+				Error:     err.Error()})
 			continue
 		}
 
@@ -185,14 +233,13 @@ func LoadArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) {
 		if err != nil {
 			glog.Errorf("adding item to the store failed with error: %s. Skipping this item \n", err.Error())
 			dumpErrorInDatabase("adding item to the store failed", errorDump{
-				FeedConfig: feedConfig,
-				OtherData:  item,
-				Error:      err.Error()})
+				OtherData: article,
+				Error:     err.Error()})
 			continue
 		}
 
 		glog.Infof("item added to the store successfully. new id: %s\n", result)
-		glog.Infof("finished processing item %d of %d\n", i+1, totalItems)
+		glog.Infof("finished loading item %d of %d\n", i+1, totalItems)
 	}
 }
 
@@ -249,7 +296,7 @@ func extractData(source interface{}, extractorConfig models.FeedDataExtractorCon
 
 		requiredMatchIndex := 0
 		for i, val := range re.SubexpNames() {
-			if val == "URL" {
+			if val == "Data" {
 				requiredMatchIndex = i
 			}
 		}
@@ -319,6 +366,16 @@ func dumpErrorInDatabase(message string, errorDump errorDump) {
 		glog.Warningf("failed to insert error dump. %s\n", err.Error())
 		return
 	}
+}
+
+func convertTamilToEnglishDate(dateString string) (string, error) {
+	tamilMonths := [...]string{"ஜனவரி", "பெப்ரவரி", "மார்ச்", "ஏப்ரல்", "மே", "ஜூன்", "ஜூலை", "ஆகஸ்ட்", "செப்டம்பர்", "அக்டோபர்", "நவம்பர்", "டிசம்பர்"}
+	englishMonths := [...]string{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"}
+	for i, tamilMonth := range tamilMonths {
+		dateString = strings.Replace(dateString, tamilMonth, englishMonths[i], -1)
+	}
+	dateString = strings.Replace(dateString, "  ", " ", -1) // remove double space
+	return dateString, nil
 }
 
 type errorDocument struct {

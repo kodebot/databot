@@ -7,8 +7,15 @@
         sourceField = "Description"
         scrapingRequired = true
         selectorType = "regexp"
-        selector = "<img[^>]+src='(?P<URL>[^']+)"
+        selector = "<img[^>]+src='(?P<Data>[^']+)"
 
     [feed.itemUrlExtractor]
         sourceField = "Link"
         scrapingRequired = false
+
+    [[feed.publishedDateExtractors]]
+        sourceField = "Title"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "(?P<Data>(ஜனவரி|பெப்ரவரி|மார்ச்|ஏப்ரல்|மே|ஜூன்|ஜூலை|ஆகஸ்ட்|செப்டம்பர்|அக்டோபர்|நவம்பர்|டிசம்பர்)[ ]{1,2}[0-9]{1,2},[ ]{1,2}[0-9]{2,4})"
+
