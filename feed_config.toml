@@ -147,6 +147,7 @@
     url = "https://sports.dinamalar.com/rss/Cricket"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 2, 2016"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -169,6 +170,7 @@
     url = "https://sports.dinamalar.com/rss/Football"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 2, 2016"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -191,6 +193,7 @@
     url = "https://sports.dinamalar.com/rss/Tennis"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 2, 2016"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -213,6 +216,7 @@
     url = "https://sports.dinamalar.com/rss/Hockey"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 2, 2016"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -235,6 +239,7 @@
     url = "https://sports.dinamalar.com/rss/Badminton"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 2, 2016"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -257,6 +262,7 @@
     url = "https://sports.dinamalar.com/rss/other-sports"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 2, 2016"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
