@@ -19,6 +19,7 @@ type ArticleMinimal struct {
 // Article model
 type Article struct {
 	Title         string
+	ShortContent  string
 	PublishedDate time.Time
 	Categories    []string
 	ThumbImageURL string

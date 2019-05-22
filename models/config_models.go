@@ -15,6 +15,7 @@ type FeedConfigItem struct {
 	DefaultCategory         string
 	ItemThumbImageExtractor FeedDataExtractorConfig
 	ItemURLExtractor        FeedDataExtractorConfig
+	ShortContentExtractor   FeedDataExtractorConfig
 	PublishedDateExtractors []FeedDataExtractorConfig
 	DateLayouts             []string
 }

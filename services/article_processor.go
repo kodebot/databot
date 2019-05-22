@@ -137,7 +137,10 @@ func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) 
 
 		if isUtcMidnight(revisedDate) { // this means we don't have time - only date is present - just use current time
 			glog.Infoln("published date missing time, setting it current time...")
-			x := time.Now()
+			now := time.Now()
+			x := revisedDate.Add(time.Hour*time.Duration(now.Hour()) +
+				time.Minute*time.Duration(now.Minute()) +
+				time.Second*time.Duration(now.Second()))
 			revisedDate = &x
 		}
 
@@ -175,8 +178,24 @@ func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) 
 			glog.Warningln("extracting image link failed - no image link found.")
 		}
 
+		extractedShortContent := ""
+		if feedConfig.ShortContentExtractor != (models.FeedDataExtractorConfig{}) {
+			glog.Infoln("extracting short content...")
+			var err error
+			extractedShortContent, err = extractData(item, feedConfig.ShortContentExtractor)
+
+			if err != nil {
+				glog.Warningf("extracting short content failed with error: %s\n", err.Error())
+			} else if extractedShortContent == "" {
+				glog.Warningln("extracting short content failed - no content found.")
+			} else {
+				glog.Infof("extracted short content successfully")
+			}
+		}
+
 		article := models.Article{
 			Title:         item.Title,
+			ShortContent:  extractedShortContent,
 			PublishedDate: *revisedDate,
 			Categories:    []string{feedConfig.DefaultCategory},
 			ThumbImageURL: extactedImageURL,

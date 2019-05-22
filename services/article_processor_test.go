@@ -58,7 +58,7 @@ func TestCreateArticlesWithDinamalarSportsBadmintonFeed(t *testing.T) {
 		t.Logf("number of articles %d\n", len(articles))
 
 		for _, article := range articles {
-			t.Errorf("published date %s\n", article.PublishedDate)
+			t.Errorf("short content %s\n", article.ShortContent)
 		}
 		t.Fail()
 	}

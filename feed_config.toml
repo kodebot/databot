@@ -159,6 +159,10 @@
         sourceField = "Link"
         scrapingRequired = false
     
+    [feed.shortContentExtractor]
+        sourceField = "Description"
+        scrapingRequired = false
+
     [[feed.publishedDateExtractors]]
         sourceField = "Title"
         scrapingRequired = true
@@ -182,6 +186,10 @@
         sourceField = "Link"
         scrapingRequired = false
     
+    [feed.shortContentExtractor]
+        sourceField = "Description"
+        scrapingRequired = false
+
     [[feed.publishedDateExtractors]]
         sourceField = "Title"
         scrapingRequired = true
@@ -205,6 +213,10 @@
         sourceField = "Link"
         scrapingRequired = false
     
+    [feed.shortContentExtractor]
+        sourceField = "Description"
+        scrapingRequired = false
+
     [[feed.publishedDateExtractors]]
         sourceField = "Title"
         scrapingRequired = true
@@ -228,6 +240,10 @@
         sourceField = "Link"
         scrapingRequired = false
     
+    [feed.shortContentExtractor]
+        sourceField = "Description"
+        scrapingRequired = false
+
     [[feed.publishedDateExtractors]]
         sourceField = "Title"
         scrapingRequired = true
@@ -251,6 +267,10 @@
         sourceField = "Link"
         scrapingRequired = false
     
+    [feed.shortContentExtractor]
+        sourceField = "Description"
+        scrapingRequired = false
+
     [[feed.publishedDateExtractors]]
         sourceField = "Title"
         scrapingRequired = true
@@ -274,6 +294,10 @@
         sourceField = "Link"
         scrapingRequired = false
     
+    [feed.shortContentExtractor]
+        sourceField = "Description"
+        scrapingRequired = false
+
     [[feed.publishedDateExtractors]]
         sourceField = "Title"
         scrapingRequired = true
