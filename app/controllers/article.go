@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
 	"github.com/golang/glog"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,6 +22,32 @@ import (
 // Article controller
 type Article struct {
 	*revel.Controller
+}
+
+// Get return article by id
+func (c Article) Get(id string) revel.Result {
+	articleCollection, err := data.GetCollection("articles")
+	if err != nil {
+		glog.Errorf("error while loading articles collection %s", err.Error())
+		c.Response.Status = 500
+		return c.RenderText("Internal error")
+	}
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		glog.Warningf("error while parsing id %s error: %s", id, err.Error())
+		c.Response.SetStatus(500)
+		c.RenderText("Internal server error")
+	}
+
+	filter := bson.M{"_id": objectID}
+	var result models.ArticleContent
+
+	err = data.FindOne(articleCollection, filter, &result)
+	if err != nil {
+		glog.Warningf("error while getting article by id %s error: %s", id, err.Error())
+	}
+	return c.RenderJSON(result)
 }
 
 // List returns list of articles
@@ -63,7 +91,7 @@ func (c Article) List() revel.Result {
 	findOptions.SetSort(bson.M{"publisheddate": -1})
 	findOptions.SetSkip((pageInt - 1) * 20)
 	findOptions.SetLimit(20)
-	findOptions.SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "categories": 1, "thumbimageurl": 1, "sourceurl": 1, "source": 1})
+	findOptions.SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "thumbimageurl": 1, "source": 1})
 
 	/*
 		available categories

@@ -8,7 +8,7 @@ module:testrunner
 
 
 GET     /article/list                                       Article.List
-
+GET     /article/:id                                        Article.Get
 
 # Catch all, this will route any request into the controller path
 #

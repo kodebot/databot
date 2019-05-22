@@ -13,7 +13,7 @@ import (
 var dbClient *mongo.Client
 
 func init() {
-	println("initialising data packge")
+	println("initialising data package")
 	// todo: make dataaccess as reusable
 	// todo: take connection string from config
 	var err error

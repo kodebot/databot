@@ -4,20 +4,27 @@ import (
 	"time"
 
 	"github.com/mmcdole/gofeed"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // ArticleMinimal used as DTO for api
 type ArticleMinimal struct {
+	ID            primitive.ObjectID `bson:"_id,omitempty"`
 	Title         string
 	PublishedDate time.Time
-	Categories    []string
 	ThumbImageURL string
-	SourceURL     string
 	Source        string
+}
+
+// ArticleContent DTO to show the detail of the new article
+type ArticleContent struct {
+	ShortContent string
+	SourceURL    string
 }
 
 // Article model
 type Article struct {
+	ID            primitive.ObjectID `bson:"_id,omitempty"`
 	Title         string
 	ShortContent  string
 	PublishedDate time.Time
