@@ -2,6 +2,7 @@
     url = "https://sports.dinamalar.com/rss/Badminton"
     origin = "dinamalar"
     defaultCategory = "sports"
+    dateLayouts = ["January 02, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"

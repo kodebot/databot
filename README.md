@@ -1,7 +1,7 @@
 ## web
 run `revel run -a  github.com/kodebot/newsfeed`
 
-## docker
+## docker on server
 
 go into newsfeed folder
 

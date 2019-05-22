@@ -33,7 +33,7 @@ func init() {
 	}
 
 	revel.OnAppStart(func() {
-		jobs.Schedule("* */30 * * * ?", app_jobs.LoadArticlesFromFeedsJob{})
+		jobs.Schedule("* */3 * * * ?", app_jobs.LoadArticlesFromFeedsJob{})
 		jobs.Schedule("* * */6 * * ?", app_jobs.PruneArticlesJob{})
 		// jobs.Every(20*time.Second, app_jobs.LoadArticlesFromFeedsJob{})
 		// jobs.Every(1*time.Minute, app_jobs.PruneArticlesJob{})

@@ -126,7 +126,7 @@
     url = "https://cinema.dinamalar.com/rss.php"
     origin = "dinamalar"
     defaultCategory = "cinema"
-    dateLayouts = ["01/02/06", "January 2, 2016"]
+    dateLayouts = ["01/02/06", "January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -147,7 +147,7 @@
     url = "https://sports.dinamalar.com/rss/Cricket"
     origin = "dinamalar"
     defaultCategory = "sports"
-    dateLayouts = ["January 2, 2016"]
+    dateLayouts = ["January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -174,7 +174,7 @@
     url = "https://sports.dinamalar.com/rss/Football"
     origin = "dinamalar"
     defaultCategory = "sports"
-    dateLayouts = ["January 2, 2016"]
+    dateLayouts = ["January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -201,7 +201,7 @@
     url = "https://sports.dinamalar.com/rss/Tennis"
     origin = "dinamalar"
     defaultCategory = "sports"
-    dateLayouts = ["January 2, 2016"]
+    dateLayouts = ["January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -228,7 +228,7 @@
     url = "https://sports.dinamalar.com/rss/Hockey"
     origin = "dinamalar"
     defaultCategory = "sports"
-    dateLayouts = ["January 2, 2016"]
+    dateLayouts = ["January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -255,7 +255,7 @@
     url = "https://sports.dinamalar.com/rss/Badminton"
     origin = "dinamalar"
     defaultCategory = "sports"
-    dateLayouts = ["January 2, 2016"]
+    dateLayouts = ["January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
@@ -282,7 +282,7 @@
     url = "https://sports.dinamalar.com/rss/other-sports"
     origin = "dinamalar"
     defaultCategory = "sports"
-    dateLayouts = ["January 2, 2016"]
+    dateLayouts = ["January 2, 2006"]
 
     [feed.itemThumbImageExtractor]
         sourceField = "Description"
