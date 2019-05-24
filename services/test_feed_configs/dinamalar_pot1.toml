@@ -1,0 +1,14 @@
+[[feed]]
+    url = "http://rss.dinamalar.com/?cat=pot1"
+    origin = "dinamalar"
+    defaultCategory = "general"
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src='(?P<Data>[^']+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false

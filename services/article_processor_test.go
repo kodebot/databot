@@ -86,6 +86,27 @@ func TestCreateArticlesWithDinamalarCinemaFeed(t *testing.T) {
 	}
 }
 
+func TestCreateArticlesWithDinamalarPot1Feed(t *testing.T) {
+	feedConfig := getFeedConfig(t, "./test_feed_configs/dinamalar_pot1.toml")
+
+	for _, feed := range feedConfig.Feed {
+		t.Logf("processing %s \n", feed.URL)
+		result := ParseFeed(feed)
+		if result == nil {
+			t.Errorf("failed when parsing feed from %s", feed.URL)
+		}
+
+		articles := CreateArticles(result, feed)
+		print(articles[0].PublishedDate.String())
+		t.Logf("number of articles %d\n", len(articles))
+
+		for _, article := range articles {
+			t.Errorf("published date %s\n", article.PublishedDate)
+		}
+		t.Fail()
+	}
+}
+
 func TestParseFeedExperiment(t *testing.T) {
 	parser := gofeed.NewParser()
 	feed, err := parser.ParseURL("http://rss.vikatan.com/feeds/short_news_content.rss")

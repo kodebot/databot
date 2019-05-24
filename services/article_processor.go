@@ -144,10 +144,17 @@ func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) 
 		if isUtcMidnight(revisedDate) { // this means we don't have time - only date is present - just use current time
 			glog.Infoln("published date missing time, setting it current time...")
 			now := time.Now()
-			x := revisedDate.Add(time.Hour*time.Duration(now.Hour()) +
-				time.Minute*time.Duration(now.Minute()) +
-				time.Second*time.Duration(now.Second()))
-			revisedDate = &x
+			if revisedDate.Before(now) {
+				// when processing feed from india late in the evening the feed will come for next day
+				// adding current UK time to next day feed from India result in next day + current UK time
+				// if this happens the feed will have future published date - fall back to time.Now() for this cases
+				x := revisedDate.Add(time.Hour*time.Duration(now.Hour()) +
+					time.Minute*time.Duration(now.Minute()) +
+					time.Second*time.Duration(now.Second()))
+				revisedDate = &x
+			} else {
+				revisedDate = &now
+			}
 		}
 
 		glog.Infoln("extracting source url...")
