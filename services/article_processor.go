@@ -127,6 +127,12 @@ func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) 
 			}
 		}
 
+		if revisedDate == nil && feedConfig.UseCurrentDateTimeWhenPubDateMissing == true {
+			glog.Infoln("published date missing time, setting it current date time...")
+			x := time.Now()
+			revisedDate = &x
+		}
+
 		if revisedDate == nil {
 			glog.Errorf("unable to establish date for the article at all. Skipping this item.\n")
 			dumpErrorInDatabase("extracting source link failed", errorDump{

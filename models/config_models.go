@@ -10,14 +10,15 @@ type FeedDataExtractorConfig struct {
 
 // FeedConfigItem model
 type FeedConfigItem struct {
-	URL                     string
-	Origin                  string
-	DefaultCategory         string
-	ItemThumbImageExtractor FeedDataExtractorConfig
-	ItemURLExtractor        FeedDataExtractorConfig
-	ShortContentExtractor   FeedDataExtractorConfig
-	PublishedDateExtractors []FeedDataExtractorConfig
-	DateLayouts             []string
+	URL                                  string
+	Origin                               string
+	DefaultCategory                      string
+	ItemThumbImageExtractor              FeedDataExtractorConfig
+	ItemURLExtractor                     FeedDataExtractorConfig
+	ShortContentExtractor                FeedDataExtractorConfig
+	PublishedDateExtractors              []FeedDataExtractorConfig
+	DateLayouts                          []string
+	UseCurrentDateTimeWhenPubDateMissing bool
 }
 
 // FeedConfig model

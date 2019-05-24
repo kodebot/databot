@@ -3,6 +3,8 @@ package services
 import (
 	"testing"
 
+	"github.com/mmcdole/gofeed"
+
 	"github.com/BurntSushi/toml"
 	"github.com/kodebot/newsfeed/models"
 )
@@ -82,4 +84,16 @@ func TestCreateArticlesWithDinamalarCinemaFeed(t *testing.T) {
 		}
 		t.Fail()
 	}
+}
+
+func TestParseFeedExperiment(t *testing.T) {
+	parser := gofeed.NewParser()
+	feed, err := parser.ParseURL("http://rss.vikatan.com/feeds/short_news_content.rss")
+
+	if err != nil {
+		print("error")
+	} else {
+		print(len(feed.Items))
+	}
+
 }
