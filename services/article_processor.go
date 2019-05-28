@@ -93,8 +93,28 @@ func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) 
 		glog.Infof("item data dump %+v\n", item)
 
 		var revisedDate *time.Time
-		if item.PublishedParsed != nil {
+		if item.PublishedParsed != nil && feedConfig.ForceReparsePublishedDate != true {
 			revisedDate = item.PublishedParsed
+		} else if item.PublishedParsed != nil && feedConfig.ForceReparsePublishedDate == true {
+			// todo: check if layout and location is present
+			// when reparse is forced, layout and location must be specified
+			for _, layout := range feedConfig.DateLayouts {
+				var err error
+				var location *time.Location
+				location, err = time.LoadLocation(feedConfig.ReparsePublishedDateDefaultLocation)
+				if err != nil{
+					glog.Warningf("invalid data reparse location %s error: %s\n", feedConfig.ReparsePublishedDateDefaultLocation, err.Error())
+					break
+				}
+				var forceParsedTime time.Time
+				forceParsedTime, err = time.ParseInLocation(layout, item.Published, location)
+				if err != nil {
+					glog.Warningf("unable to parse the date extracted using layout %s error: %s\n", layout, err.Error())
+					continue
+				}
+				revisedDate = &forceParsedTime
+				break
+			}
 		} else {
 			glog.Infoln("parsed date not found. trying extractors...")
 			for _, extractor := range feedConfig.PublishedDateExtractors {

@@ -17,6 +17,8 @@ type FeedConfigItem struct {
 	ItemURLExtractor                     FeedDataExtractorConfig
 	ShortContentExtractor                FeedDataExtractorConfig
 	PublishedDateExtractors              []FeedDataExtractorConfig
+	ForceReparsePublishedDate            bool
+	ReparsePublishedDateDefaultLocation  string
 	DateLayouts                          []string
 	UseCurrentDateTimeWhenPubDateMissing bool
 }
