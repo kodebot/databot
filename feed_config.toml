@@ -449,7 +449,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
-    url = "http://rss.vikatan.com/feeds/short_news_content.rss"
+    url = "http://rss.vikatan.com/feeds/short_news_uc.rss"
     origin = "vikadan"
     defaultCategory = "general"
     dateLayouts = ["2006-01-02 15:04:05"]
@@ -458,7 +458,7 @@ allowedOrigins =["vikadan", "dinamalar"]
     useCurrentDateTimeWhenPubDateMissing = true
 
     [feed.itemThumbImageExtractor]
-        sourceField = "Description"
+        sourceField = "Content"
         scrapingRequired = true
         selectorType = "regexp"
         selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
