@@ -1,0 +1,22 @@
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/short_news_uc.rss"
+    origin = "vikadan"
+    defaultCategory = "general"
+    dateLayouts = ["Mon, 02 Jan 2006 15:04:05 IST"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Content"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false

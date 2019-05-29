@@ -106,7 +106,7 @@ func TestCreateArticlesWithDinamalarPot1Feed(t *testing.T) {
 }
 
 func TestParseFeedExperiment(t *testing.T) {
-	feedConfig := getFeedConfig(t, "./test_feed_configs/vikadan_politics.toml")
+	feedConfig := getFeedConfig(t, "./test_feed_configs/vikadan_short_news.toml")
 
 	for _, feed := range feedConfig.Feed {
 		t.Logf("processing %s \n", feed.URL)
