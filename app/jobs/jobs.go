@@ -22,7 +22,21 @@ func (j LoadArticlesFromFeedsJob) Run() {
 	}
 
 	glog.Infoln("running LoadArticlesFromFeedsJob...")
+	var isFeedOriginAllowed bool
 	for _, feed := range feedConfig.Feed {
+		for _, val := range feedConfig.AllowedOrigins {
+
+			if val == feed.Origin {
+				isFeedOriginAllowed = true
+				break
+			}
+		}
+
+		if isFeedOriginAllowed != true {
+			glog.Warningf("%s is not in allowed origin.. skipping origin\n", feed.Origin)
+			continue
+		}
+
 		glog.Infof("processing feed from %s \n", feed.URL)
 		result := services.ParseFeed(feed)
 		if result == nil {

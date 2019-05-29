@@ -1,3 +1,5 @@
+allowedOrigins =["vikadan", "dinamalar"]
+# allowedOrigins =["vikadan"]
 
 [[feed]]
     url = "http://rss.dinamalar.com/?cat=ara1"
@@ -310,6 +312,146 @@
     url = "http://rss.vikatan.com/feeds/politics_news.rss"
     origin = "vikadan"
     defaultCategory = "politics"
+    dateLayouts = ["2006-01-02 15:04:05"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false
+
+
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/entertainment.rss"
+    origin = "vikadan"
+    defaultCategory = "cinema"
+    dateLayouts = ["2006-01-02 15:04:05"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/sports_news.rss"
+    origin = "vikadan"
+    defaultCategory = "sports"
+    dateLayouts = ["2006-01-02 15:04:05"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/world_news.rss"
+    origin = "vikadan"
+    defaultCategory = "world"
+    dateLayouts = ["2006-01-02 15:04:05"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false
+
+
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/tamilagam_news.rss"
+    origin = "vikadan"
+    defaultCategory = "general"
+    dateLayouts = ["2006-01-02 15:04:05"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/india_news.rss"
+    origin = "vikadan"
+    defaultCategory = "general"
+    dateLayouts = ["2006-01-02 15:04:05"]
+    forceReparsePublishedDate = true
+    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    useCurrentDateTimeWhenPubDateMissing = true
+
+    [feed.itemThumbImageExtractor]
+        sourceField = "Description"
+        scrapingRequired = true
+        selectorType = "regexp"
+        selector = "<img[^>]+src=\"(?P<Data>[^\"]+)"
+
+    [feed.itemUrlExtractor]
+        sourceField = "Link"
+        scrapingRequired = false
+    
+    [feed.shortContentExtractor]
+        sourceField = "Content"
+        scrapingRequired = false
+
+[[feed]]
+    url = "http://rss.vikatan.com/feeds/short_news_content.rss"
+    origin = "vikadan"
+    defaultCategory = "general"
     dateLayouts = ["2006-01-02 15:04:05"]
     forceReparsePublishedDate = true
     reparsePublishedDateDefaultLocation = "Asia/Kolkata"

@@ -25,5 +25,6 @@ type FeedConfigItem struct {
 
 // FeedConfig model
 type FeedConfig struct {
-	Feed []FeedConfigItem
+	AllowedOrigins []string
+	Feed           []FeedConfigItem
 }
