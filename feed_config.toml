@@ -452,9 +452,7 @@ allowedOrigins =["vikadan", "dinamalar"]
     url = "http://rss.vikatan.com/feeds/short_news_uc.rss"
     origin = "vikadan"
     defaultCategory = "general"
-    dateLayouts = ["2006-01-02 15:04:05"]
-    forceReparsePublishedDate = true
-    reparsePublishedDateDefaultLocation = "Asia/Kolkata"
+    dateLayouts = []
     useCurrentDateTimeWhenPubDateMissing = true
 
     [feed.itemThumbImageExtractor]
