@@ -1,8 +1,10 @@
 package controllers
 
 import (
-	"fmt"
 	"strconv"
+	"strings"
+
+	"github.com/kodebot/newsfeed/conf"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -54,16 +56,11 @@ func (c Article) Get(id string) revel.Result {
 func (c Article) List() revel.Result {
 	page := c.Params.Query.Get("page")
 	category := c.Params.Query.Get("category")
+	sources := c.Params.Query.Get("sources")
 
 	if page == "" {
 		page = "1"
 	}
-
-	if category == "" {
-		category = "0"
-	}
-
-	fmt.Printf("%s\n", page)
 
 	pageInt, err := strconv.ParseInt(page, 10, 64)
 
@@ -72,11 +69,31 @@ func (c Article) List() revel.Result {
 		pageInt = 1
 	}
 
+	if category == "" {
+		category = "0"
+	}
+
 	categoryInt, err := strconv.ParseInt(category, 10, 64)
 
 	if err != nil {
 		glog.Warningf("parsing category number failed %s. setting to 0\n", category)
 		categoryInt = 0
+	}
+
+	if sources == "" {
+		// use all sources
+		sources = "0,1,2,3,4"
+	}
+
+	var sourcesInt []int64
+	for _, val := range strings.Split(strings.TrimSpace(sources), ",") {
+		sourceInt, err := strconv.ParseInt(val, 10, 64)
+		if err != nil {
+			glog.Warningf("parsing source number failed %s. skipping...\n", val)
+			continue
+		} else {
+			sourcesInt = append(sourcesInt, sourceInt)
+		}
 	}
 
 	articleCollection, err := data.GetCollection("articles")
@@ -93,34 +110,39 @@ func (c Article) List() revel.Result {
 	findOptions.SetLimit(20)
 	findOptions.SetProjection(bson.M{"_id": 1, "title": 1, "publisheddate": 1, "thumbimageurl": 1, "source": 1})
 
-	/*
-		available categories
-		general = 0
-		politics = 1
-		incident = 0
-		tamilnadu = 0
-		delhi = 0
-		cinema = 2
-		sports = 4
-		world = 3
-		business = 0
+	var categoriesToFilter []string
+	for _, category := range conf.AppSettings.ArticleCategory {
+		if category.ID == int(categoryInt) {
+			categoriesToFilter = append(categoriesToFilter, category.Category)
+		}
 
-	*/
+		if category.ID == 0 { // general category - add all non public ones
+			for _, cat := range conf.AppSettings.ArticleCategory {
+				if cat.IsPublic != true {
+					categoriesToFilter = append(categoriesToFilter, cat.Category)
+				}
+			}
 
-	var filter interface{}
-
-	switch categoryInt {
-	case 0:
-		filter = bson.M{"categories": bson.M{"$nin": []string{"politics", "cinema", "world", "sports"}}}
-	case 1:
-		filter = bson.M{"categories": bson.M{"$in": []string{"politics"}}}
-	case 2:
-		filter = bson.M{"categories": bson.M{"$in": []string{"cinema"}}}
-	case 3:
-		filter = bson.M{"categories": bson.M{"$in": []string{"world"}}}
-	case 4:
-		filter = bson.M{"categories": bson.M{"$in": []string{"sports"}}}
+		}
 	}
+
+	var sourcesToFilter []string
+	for _, source := range conf.AppSettings.ArticleSource {
+		for _, requestedSourceID := range sourcesInt {
+			if source.ID == int(requestedSourceID) {
+				sourcesToFilter = append(sourcesToFilter, source.Source)
+			}
+		}
+	}
+
+	if len(sourcesToFilter) == 0 {
+		glog.Warningf("no sources specified, using all feeds")
+		for _, source := range conf.AppSettings.ArticleSource {
+			sourcesToFilter = append(sourcesToFilter, source.Source)
+		}
+	}
+
+	filter := bson.M{"categories": bson.M{"$in": categoriesToFilter}, "source": bson.M{"$in": sourcesToFilter}}
 
 	result, _ := data.Find(articleCollection, filter, func(cursor *mongo.Cursor) interface{} {
 		var article models.ArticleMinimal

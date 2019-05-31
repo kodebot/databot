@@ -2,6 +2,7 @@ package app
 
 import (
 	app_jobs "github.com/kodebot/newsfeed/app/jobs"
+	"github.com/kodebot/newsfeed/conf"
 	"github.com/revel/modules/jobs/app/jobs"
 	"github.com/revel/revel"
 )
@@ -45,6 +46,10 @@ func init() {
 	// revel.OnAppStart(ExampleStartupScript)
 	// revel.OnAppStart(InitDB)
 	// revel.OnAppStart(FillCache)
+
+	revel.OnAppStart(func() {
+		conf.Init()
+	})
 }
 
 // HeaderFilter adds common security headers

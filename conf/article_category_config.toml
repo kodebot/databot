@@ -1,0 +1,54 @@
+[[articleCategory]]
+    id = 0 # all non public categories are part of this for the feed
+    category = "general"
+    categoryDisplayName = "General"
+    isPublic = true
+
+[[articleCategory]]
+    id = 1
+    category = "politics"
+    categoryDisplayName = "Politics"
+    isPublic = true
+
+[[articleCategory]]
+    id = 2
+    category = "cinema"
+    categoryDisplayName = "Cinema"
+    isPublic = true
+
+[[articleCategory]]
+    id = 3
+    category = "world"
+    categoryDisplayName = "World"
+    isPublic = true
+
+[[articleCategory]]
+    id = 4
+    category = "sports"
+    categoryDisplayName = "Sports"
+    isPublic = true
+
+
+[[articleCategory]]
+    id = 51
+    category = "incident"
+    categoryDisplayName = "Incidents"
+    isPublic = false
+
+[[articleCategory]]
+    id = 52
+    category = "tamilnadu"
+    categoryDisplayName = "Tamil Nadu"
+    isPublic = false
+
+[[articleCategory]]
+    id = 53
+    category = "delhi"
+    categoryDisplayName = "Delhi"
+    isPublic = false
+
+[[articleCategory]]
+    id = 54
+    category = "business"
+    categoryDisplayName = "Business"
+    isPublic = false

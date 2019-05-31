@@ -10,6 +10,9 @@ module:testrunner
 GET     /article/list                                       Article.List
 GET     /article/:id                                        Article.Get
 
+GET     /source/list                                        Source.List
+
+GET     /category/list                                      Category.List
 # Catch all, this will route any request into the controller path
 #
 #                    **** WARNING ****

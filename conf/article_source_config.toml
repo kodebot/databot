@@ -1,0 +1,13 @@
+[[articleSource]]
+    id = 1
+    source = "dinamalar"
+    sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/dinamalar.png"
+    sourceDisplayName = "Dinamalar"
+    availableCategories = [0, 1, 2, 3, 4]
+
+[[articleSource]]
+    id = 2
+    source = "vikadan"
+    sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/vikadan.png"
+    sourceDisplayName = "Vikadan"
+    availableCategories = [0, 1, 2, 3, 4]

@@ -16,7 +16,7 @@ type PruneArticlesJob struct{}
 // Run LoadArticlesFromFeedsJob
 func (j LoadArticlesFromFeedsJob) Run() {
 	var feedConfig models.FeedConfig
-	_, err := toml.DecodeFile("./feed_config.toml", &feedConfig)
+	_, err := toml.DecodeFile("./conf/feed_parsing_config.toml", &feedConfig)
 	if err != nil {
 		glog.Errorf("error when loading feed config: %s\n", err.Error())
 	}
