@@ -80,11 +80,6 @@ func (c Article) List() revel.Result {
 		categoryInt = 0
 	}
 
-	if sources == "" {
-		// use all sources
-		sources = "0,1,2,3,4"
-	}
-
 	var sourcesInt []int64
 	for _, val := range strings.Split(strings.TrimSpace(sources), ",") {
 		sourceInt, err := strconv.ParseInt(val, 10, 64)
