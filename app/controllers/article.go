@@ -52,6 +52,7 @@ func (c Article) Get(id string) revel.Result {
 	return c.RenderJSON(result)
 }
 
+// RedirectToArticle redirects user to the original aritcle
 func (c Article) RedirectToArticle(id string) revel.Result {
 	articleCollection, err := data.GetCollection("articles")
 	if err != nil {

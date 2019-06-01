@@ -20,6 +20,7 @@ type ArticleMinimal struct {
 type ArticleContent struct {
 	ShortContent string
 	SourceURL    string
+	Source       string
 }
 
 // Article model
