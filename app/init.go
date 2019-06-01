@@ -1,6 +1,8 @@
 package app
 
 import (
+	"net/http"
+
 	app_jobs "github.com/kodebot/newsfeed/app/jobs"
 	"github.com/kodebot/newsfeed/conf"
 	"github.com/revel/modules/jobs/app/jobs"
@@ -16,8 +18,30 @@ var (
 )
 
 func init() {
+	// https://stackoverflow.com/questions/53164637/handle-preflight-request-with-golang-revel
+	var ValidateOrigin = func(c *revel.Controller, fc []revel.Filter) {
+		if c.Request.Method == "OPTIONS" {
+			c.Response.Out.Header().Add("Access-Control-Allow-Origin", "https://tamiltent.com/")
+			c.Response.Out.Header().Add("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization") //自定义 Header
+			c.Response.Out.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+			c.Response.Out.Header().Add("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+			c.Response.Out.Header().Add("Access-Control-Allow-Credentials", "true")
+			c.Response.SetStatus(http.StatusNoContent)
+		} else {
+			c.Response.Out.Header().Add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
+			c.Response.Out.Header().Add("Access-Control-Allow-Origin", "https://tamiltent.com/")
+			c.Response.Out.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+			c.Response.Out.Header().Add("Content-Type", "application/json; charset=UTF-8")
+			c.Response.Out.Header().Add("X-Frame-Options", "SAMEORIGIN")
+			c.Response.Out.Header().Add("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers")
+
+			fc[0](c, fc[1:]) // Execute the next filter stage.
+		}
+	}
+
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
+		ValidateOrigin,
 		revel.PanicFilter,             // Recover from panics and display an error page instead.
 		revel.RouterFilter,            // Use the routing table to select the right Action
 		revel.FilterConfiguringFilter, // A hook for adding or removing per-Action filters.
