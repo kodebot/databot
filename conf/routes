@@ -9,7 +9,7 @@ module:testrunner
 
 GET     /article/list                                       Article.List
 GET     /article/:id                                        Article.Get
-GET     /article/redirect/:id                               Article.RecirectToArticle
+GET     /article/redirect/:id                               Article.RedirectToArticle
 
 GET     /source/list                                        Source.List
 
