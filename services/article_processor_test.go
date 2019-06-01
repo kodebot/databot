@@ -1,6 +1,7 @@
 package services
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/BurntSushi/toml"
@@ -106,7 +107,7 @@ func TestCreateArticlesWithDinamalarPot1Feed(t *testing.T) {
 }
 
 func TestParseFeedExperiment(t *testing.T) {
-	feedConfig := getFeedConfig(t, "./test_feed_configs/vikadan_short_news.toml")
+	feedConfig := getFeedConfig(t, "./test_feed_configs/vikadan_sports_news.toml")
 
 	for _, feed := range feedConfig.Feed {
 		t.Logf("processing %s \n", feed.URL)
@@ -116,11 +117,15 @@ func TestParseFeedExperiment(t *testing.T) {
 		}
 
 		articles := CreateArticles(result, feed)
-		print(articles[0].PublishedDate.String())
 		t.Logf("number of articles %d\n", len(articles))
 
 		for _, article := range articles {
-			t.Errorf("published date %s\n", article.PublishedDate)
+
+			if strings.Contains(article.ShortContent, "39") {
+				t.Errorf("%s\n", article.ShortContent)
+
+			}
+
 		}
 		t.Fail()
 	}
