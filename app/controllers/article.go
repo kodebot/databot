@@ -52,6 +52,31 @@ func (c Article) Get(id string) revel.Result {
 	return c.RenderJSON(result)
 }
 
+func (c Article) RedirectToArticle(id string) revel.Result {
+	articleCollection, err := data.GetCollection("articles")
+	if err != nil {
+		glog.Errorf("error while loading articles collection %s", err.Error())
+		c.Response.Status = 500
+		return c.RenderText("Internal error")
+	}
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		glog.Warningf("error while parsing id %s error: %s", id, err.Error())
+		c.Response.SetStatus(500)
+		c.RenderText("Internal server error")
+	}
+
+	filter := bson.M{"_id": objectID}
+	var result models.ArticleContent
+
+	err = data.FindOne(articleCollection, filter, &result)
+	if err != nil {
+		glog.Warningf("error while getting article by id %s error: %s", id, err.Error())
+	}
+	return c.Redirect(result.ShortContent)
+}
+
 // List returns list of articles
 func (c Article) List() revel.Result {
 	page := c.Params.Query.Get("page")
