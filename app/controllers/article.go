@@ -74,7 +74,7 @@ func (c Article) RedirectToArticle(id string) revel.Result {
 	if err != nil {
 		glog.Warningf("error while getting article by id %s error: %s", id, err.Error())
 	}
-	return c.Redirect(result.ShortContent)
+	return c.Redirect(result.SourceURL)
 }
 
 // List returns list of articles
