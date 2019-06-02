@@ -18,9 +18,13 @@ type ArticleMinimal struct {
 
 // ArticleContent DTO to show the detail of the new article
 type ArticleContent struct {
-	ShortContent string
-	SourceURL    string
-	Source       string
+	ID            primitive.ObjectID `bson:"_id,omitempty"`
+	Title         string
+	PublishedDate time.Time
+	ThumbImageURL string
+	ShortContent  string
+	SourceURL     string
+	Source        string
 }
 
 // Article model
