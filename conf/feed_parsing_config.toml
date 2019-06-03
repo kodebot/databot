@@ -2,6 +2,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 # allowedOrigins =["vikadan"]
 
 [[feed]]
+    name = "dinamalar_politics"
     url = "http://rss.dinamalar.com/?cat=ara1"
     origin = "dinamalar"
     defaultCategory = "politics"

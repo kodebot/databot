@@ -53,6 +53,7 @@ func ParseFeed(feedConfig models.FeedConfigItem) []*gofeed.Item {
 	defer glog.Infof("ending loading feed from URL: %s", feedConfig.URL)
 
 	xmlString, err := getRawFeedAsString(feedConfig.URL)
+	xmlString = fixIllegalXMLCharacters(xmlString)
 
 	if err != nil {
 		glog.Errorf("retrieving feed xml failed with error %s. Skipping this source.\n", err.Error())
@@ -102,7 +103,7 @@ func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) 
 				var err error
 				var location *time.Location
 				location, err = time.LoadLocation(feedConfig.ReparsePublishedDateDefaultLocation)
-				if err != nil{
+				if err != nil {
 					glog.Warningf("invalid data reparse location %s error: %s\n", feedConfig.ReparsePublishedDateDefaultLocation, err.Error())
 					break
 				}
@@ -297,11 +298,6 @@ func LoadArticles(articles []*models.Article) {
 
 // some rss feed has illegal xml data - this is to replace them with empty letter
 func getRawFeedAsString(url string) (string, error) {
-	illegalXMLCharacters := []rune{
-		'\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
-		'\u0008', '\u000b', '\u000c', '\u000e', '\u000f', '\u0010', '\u0011',
-		'\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017', '\u0018',
-		'\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001e', '\u001f'}
 
 	var client http.Client
 	resp, err := client.Get(url)
@@ -317,13 +313,23 @@ func getRawFeedAsString(url string) (string, error) {
 		return "", err
 	}
 	bodyString := string(bodyBytes)
-	correctedBodyString := bodyString
+	return bodyString, nil
+}
+
+func fixIllegalXMLCharacters(xmlString string) string {
+	illegalXMLCharacters := []rune{
+		'\u0001', '\u0002', '\u0003', '\u0004', '\u0005', '\u0006', '\u0007',
+		'\u0008', '\u000b', '\u000c', '\u000e', '\u000f', '\u0010', '\u0011',
+		'\u0012', '\u0013', '\u0014', '\u0015', '\u0016', '\u0017', '\u0018',
+		'\u0019', '\u001a', '\u001b', '\u001c', '\u001d', '\u001e', '\u001f'}
+
+	correctedBodyString := xmlString
 
 	for _, char := range illegalXMLCharacters {
 		correctedBodyString = strings.Replace(correctedBodyString, string(char), "", -1)
 	}
 
-	return correctedBodyString, nil
+	return correctedBodyString
 }
 
 func extractData(source interface{}, extractorConfig models.FeedDataExtractorConfig) (string, error) {

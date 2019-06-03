@@ -10,6 +10,7 @@ type FeedDataExtractorConfig struct {
 
 // FeedConfigItem model
 type FeedConfigItem struct {
+	Name                                 string
 	URL                                  string
 	Origin                               string
 	DefaultCategory                      string
