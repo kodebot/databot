@@ -47,18 +47,21 @@ func PruneArticles() {
 }
 
 // ParseFeed from the given url
-func ParseFeed(feedConfig models.FeedConfigItem) []*gofeed.Item {
+func ParseFeed(feedConfig models.FeedConfigItem, xmlString string) []*gofeed.Item {
 	defer handleLoadFeedPanics(feedConfig)
 	glog.Infof("starting loading articles from URL: %s \n", feedConfig.URL)
 	defer glog.Infof("ending loading feed from URL: %s", feedConfig.URL)
 
-	xmlString, err := getRawFeedAsString(feedConfig.URL)
-	xmlString = fixIllegalXMLCharacters(xmlString)
-
-	if err != nil {
-		glog.Errorf("retrieving feed xml failed with error %s. Skipping this source.\n", err.Error())
-		return nil
+	if xmlString == "" {
+		var err error
+		xmlString, err = getRawFeedAsString(feedConfig.URL)
+		if err != nil {
+			glog.Errorf("retrieving feed xml failed with error %s. Skipping this source.\n", err.Error())
+			return nil
+		}
 	}
+
+	xmlString = fixIllegalXMLCharacters(xmlString)
 
 	parser := gofeed.NewParser()
 	feed, err := parser.ParseString(xmlString)
