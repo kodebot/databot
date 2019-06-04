@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -100,6 +101,7 @@ func (c Article) List() revel.Result {
 	}
 
 	categoryInt, err := strconv.ParseInt(category, 10, 64)
+	fmt.Printf("category: %d", categoryInt)
 
 	if err != nil {
 		glog.Warningf("parsing category number failed %s. setting to 0\n", category)
@@ -137,7 +139,7 @@ func (c Article) List() revel.Result {
 			categoriesToFilter = append(categoriesToFilter, category.Category)
 		}
 
-		if category.ID == 0 { // general category - add all non public ones
+		if categoryInt == 0 { // general category - add all non public ones
 			for _, cat := range conf.AppSettings.ArticleCategory {
 				if cat.IsPublic != true {
 					categoriesToFilter = append(categoriesToFilter, cat.Category)
@@ -146,7 +148,7 @@ func (c Article) List() revel.Result {
 
 		}
 	}
-
+	fmt.Println("categories, %A", categoriesToFilter)
 	var sourcesToFilter []string
 	for _, source := range conf.AppSettings.ArticleSource {
 		for _, requestedSourceID := range sourcesInt {

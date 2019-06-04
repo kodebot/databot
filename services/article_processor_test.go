@@ -22,7 +22,9 @@ func getFeedConfig(t *testing.T, filePath string) models.FeedConfig {
 
 func TestCreateArticle_dinamalar_politics(t *testing.T) {
 
-	getFeedConfig()
-	getRawFeedAsString()
+	var num1 int64
+	num1 = 2
+
+	t.Errorf("%d", int(num1))
 
 }

@@ -38,7 +38,7 @@ func (j LoadArticlesFromFeedsJob) Run() {
 		}
 
 		glog.Infof("processing feed from %s \n", feed.URL)
-		result := services.ParseFeed(feed)
+		result := services.ParseFeed(feed, "")
 		if result == nil {
 			glog.Errorln("feed skipped...")
 			continue
