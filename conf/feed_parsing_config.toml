@@ -21,6 +21,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name = "dinamalar_general_pot1"
     url = "http://rss.dinamalar.com/?cat=pot1"
     origin = "dinamalar"
     defaultCategory = "general"
@@ -36,6 +37,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name = "dinamalar_incidents_sam1"
     url = "http://rss.dinamalar.com/?cat=sam1"
     origin = "dinamalar"
     defaultCategory = "incidents"

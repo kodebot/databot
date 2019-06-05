@@ -6,24 +6,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mmcdole/gofeed"
+
 	"github.com/BurntSushi/toml"
 	"github.com/kodebot/newsfeed/models"
 )
-
-type testFunc func(t *testing.T)
-
-func test(t *testing.T, name string, test testFunc) {
-	t.Helper()
-	t.Run(name, func(t *testing.T) {
-		t.Helper()
-		test(t)
-		if t.Failed() {
-			t.Errorf(">>>%s FAILED\n\n", name)
-			return
-		}
-		t.Logf("%s SUCCEEDED\n\n", name)
-	})
-}
 
 func loadFeedConfig(t *testing.T, filePath string) models.FeedConfig {
 	if filePath == "" {
@@ -50,53 +37,106 @@ func getFeedConfigItemByName(t *testing.T, feedConfigName string, filePath strin
 	return nil
 }
 
-func TestCreateArticle_dinamalar_politics(t *testing.T) {
+type SingleCreateArticleTest struct {
+	feedConfigName  string
+	testFeedFile    string
+	expectedArticle models.Article
+}
 
-	feedConfigName := "dinamalar_politics"
-	feedConfig := getFeedConfigItemByName(t, feedConfigName, "")
+var createArticleTestCases = []SingleCreateArticleTest{
+	{
+		"dinamalar_politics",
+		"./test_data/feeds/dinamalar_politics_20190603.xml",
+		models.Article{
+			Title:         "கட்சி தாவுகிறாரா திவ்யா ஸ்பந்தனா",
+			ShortContent:  "",
+			PublishedDate: time.Date(2019, 6, 2, 16, 3, 0, 0, time.UTC), // Sun, 02 Jun 2019 21:33:00 +0530
+			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2289413",
+			Categories:    []string{"politics"},
+			ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2289413_150_100.jpg",
+			Source:        "dinamalar"}},
+	{
+		"dinamalar_general_pot1",
+		"./test_data/feeds/dinamalar_general_pot1_20190605.xml",
+		models.Article{
+			Title:         "பறவைகளுக்கு விலாசம் சொன்னது யார்?",
+			ShortContent:  "",
+			PublishedDate: time.Date(2019, 6, 4, 18, 4, 0, 0, time.UTC), // Tue, 04 Jun 2019 23:34:00 +0530
+			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2290872",
+			Categories:    []string{"general"},
+			ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg",
+			Source:        "dinamalar"}},
+	{
+		"dinamalar_incidents_sam1",
+		"./test_data/feeds/dinamalar_incidents_sam1_20190605.xml",
+		models.Article{
+			Title:         "கேரள மாணவருக்கு, 'நிபா'தனி வார்டில் தீவிர சிகிச்சை",
+			ShortContent:  "",
+			PublishedDate: time.Date(2019, 6, 4, 18, 27, 0, 0, time.UTC), // Tue, 04 Jun 2019 23:34:00 +0530
+			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2290888",
+			Categories:    []string{"incidents"},
+			ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290888_150_100.jpg",
+			Source:        "dinamalar"}}}
 
-	if feedConfig == nil {
-		t.Fatalf("Unable to load feed config with name %s", feedConfigName)
+func TestCreateArticle(t *testing.T) {
+	for _, testCase := range createArticleTestCases {
+		t.Run(fmt.Sprintf("CreateArticle tests for %s, %s", testCase.feedConfigName, testCase.testFeedFile), func(t *testing.T) {
+			feedConfigName := testCase.feedConfigName
+			testFeedFile := testCase.testFeedFile
+			feedConfig := getFeedConfigItemByName(t, feedConfigName, "")
+
+			// ** test setup start **
+			if feedConfig == nil {
+				t.Fatalf("Unable to load feed config with name %s", feedConfigName)
+			}
+
+			testFeedXMLBytes, err := ioutil.ReadFile(testFeedFile)
+
+			if err != nil {
+				t.Fatalf("Unable to load test data from %s, %s", testFeedFile, err.Error())
+			}
+
+			// todo: test fixing illegal chars
+
+			parsedFeeds := ParseFeed(*feedConfig, string(testFeedXMLBytes))
+
+			if parsedFeeds == nil {
+				t.Fatalf("Unable to parse feed data from file %s with feed config name %s", testFeedFile, feedConfigName)
+			}
+
+			// ** test setup end **
+
+			preConditionsPass := runCreateArticlePreConditionTests(t, parsedFeeds)
+			if preConditionsPass {
+				runCreateArticleTests(t, testCase, parsedFeeds, feedConfig)
+			}
+		})
 	}
+}
 
-	testFeedFile := "./test_data/feeds/dinamalar_politics_20190603.xml"
-	testFeedXMLBytes, err := ioutil.ReadFile(testFeedFile)
-
-	if err != nil {
-		t.Fatalf("Unable to load test data from %s, %s", testFeedFile, err.Error())
-	}
-
-	parsedFeeds := ParseFeed(*feedConfig, string(testFeedXMLBytes))
-
-	if parsedFeeds == nil {
-		t.Fatalf("Unable to parse feed data from file %s with feed config name %s", testFeedFile, feedConfigName)
-	}
-
-	// General tests
-
-	func() {
+func runCreateArticlePreConditionTests(outerT *testing.T, parsedFeeds []*gofeed.Item) bool {
+	return outerT.Run("<<PRE-CONDITIONS>>", func(t *testing.T) {
 		// feed item count
 		expected := 1
 		actual := len(parsedFeeds)
 		if actual != expected {
-			t.Fatalf("expected **%d** parsed feeds but found **%d**", expected, actual)
+			// make outer testing to fail
+			t.FailNow()
+			outerT.Fatalf("expected **%d** parsed feeds but found **%d**", expected, actual)
 		}
-	}()
+	})
+}
 
-	// todo: test fixing illegal chars
-
+func runCreateArticleTests(
+	t *testing.T,
+	testCase SingleCreateArticleTest,
+	parsedFeeds []*gofeed.Item,
+	feedConfig *models.FeedConfigItem) {
 	testArticles := CreateArticles(parsedFeeds, *feedConfig)
 	actualArticle := testArticles[0]
-	expectedArticle := models.Article{
-		Title:         "கட்சி தாவுகிறாரா திவ்யா ஸ்பந்தனா",
-		ShortContent:  "",
-		PublishedDate: time.Date(2019, 6, 2, 16, 3, 0, 0, time.UTC), // Sun, 02 Jun 2019 21:33:00 +0530
-		SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2289413",
-		Categories:    []string{"politics"},
-		ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2289413_150_100.jpg",
-		Source:        "dinamalar"}
+	expectedArticle := testCase.expectedArticle
 
-	test(t, fmt.Sprintf("Dinamalar politics feed %s", testFeedFile), func(t *testing.T) {
+	t.Run("<<BUSINESS TESTS>>", func(t *testing.T) {
 		if actualArticle.Title != expectedArticle.Title {
 			t.Errorf("Title >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.Title, actualArticle.Title)
 		}
