@@ -54,3 +54,5 @@ server {
 }
 ```
 
+## access newsfeed logs
+the logs are in /tmp of the container
