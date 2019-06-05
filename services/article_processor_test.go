@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 	"time"
@@ -85,63 +86,63 @@ func TestCreateArticle_dinamalar_politics(t *testing.T) {
 	// todo: test fixing illegal chars
 
 	testArticles := CreateArticles(parsedFeeds, *feedConfig)
+	actualArticle := testArticles[0]
+	expectedArticle := models.Article{
+		Title:         "கட்சி தாவுகிறாரா திவ்யா ஸ்பந்தனா",
+		ShortContent:  "",
+		PublishedDate: time.Date(2019, 6, 2, 16, 3, 0, 0, time.UTC), // Sun, 02 Jun 2019 21:33:00 +0530
+		SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2289413",
+		Categories:    []string{"politics"},
+		ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2289413_150_100.jpg",
+		Source:        "dinamalar"}
 
-	testArticle := testArticles[0]
+	test(t, fmt.Sprintf("Dinamalar politics feed %s", testFeedFile), func(t *testing.T) {
+		if actualArticle.Title != expectedArticle.Title {
+			t.Errorf("Title >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.Title, actualArticle.Title)
+		}
 
-	// Title tests
-	test(t, "Title should be same without leading and tailing whitespaces", func(t *testing.T) {
-		expected := "கட்சி தாவுகிறாரா திவ்யா ஸ்பந்தனா"
-		actual := testArticle.Title
-		if actual != expected {
-			t.Errorf("expect Title to be **%s** but found **%s**", expected, actual)
+		if actualArticle.ShortContent != expectedArticle.ShortContent {
+			t.Errorf("ShortContent >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.ShortContent, actualArticle.ShortContent)
+		}
+
+		if !actualArticle.PublishedDate.Equal(expectedArticle.PublishedDate) {
+			t.Errorf("PublishedDate >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.PublishedDate, actualArticle.PublishedDate)
+		}
+
+		if len(actualArticle.Categories) != len(expectedArticle.Categories) {
+			t.Errorf("Categories count >> EXPECTED: **%d** ACTUAL: **%d**", len(expectedArticle.Categories), len(actualArticle.Categories))
+		}
+
+		for _, expectedCategory := range expectedArticle.Categories {
+			found := false
+			for _, actualCategory := range actualArticle.Categories {
+				if expectedCategory == actualCategory {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Errorf("Category missing >> EXPECTED: **%s** but not found", expectedCategory)
+			}
+		}
+
+		if actualArticle.ThumbImageURL != expectedArticle.ThumbImageURL {
+			t.Errorf("ThumbImageURL >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.ThumbImageURL, actualArticle.ThumbImageURL)
+		}
+
+		if actualArticle.SourceURL != expectedArticle.SourceURL {
+			t.Errorf("SourceURL >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.SourceURL, actualArticle.SourceURL)
+		}
+
+		if actualArticle.Source != expectedArticle.Source {
+			t.Errorf("Source >> EXPECTED: **%s** ACTUAL: **%s**", expectedArticle.Source, actualArticle.Source)
+		}
+
+		now := time.Now()
+		twoSecBefore := now.Add(time.Second * -2)
+		if !((actualArticle.CreatedAt.Equal(now) || actualArticle.CreatedAt.Before(now)) &&
+			actualArticle.CreatedAt.After(twoSecBefore)) {
+			t.Errorf("CreatedAt EXPECTED: between **%s** and **%s** ACTUAL: **%s**", twoSecBefore, now, actualArticle.CreatedAt)
 		}
 	})
-
-	// SourceUrl tests
-	test(t, "SourceURL should match the link in feed", func(t *testing.T) {
-		expected := "http://www.dinamalar.com/news_detail.asp?id=2289413"
-		actual := testArticle.SourceURL
-		if actual != expected {
-			t.Errorf("expect Title to be **%s** but found **%s**", expected, actual)
-		}
-	})
-
-	// ShortContent tests
-	test(t, "ShortContent should be empty", func(t *testing.T) {
-		expected := ""
-		actual := testArticle.ShortContent
-		if actual != expected {
-			t.Errorf("expect ShortContent to be **%s** but found **%s**", expected, actual)
-		}
-	})
-
-	test(t, "ShortContent should match feed when available", func(t *testing.T) {
-		// title should be as is
-		t.Skipf("todo test data not available\n\n")
-	})
-
-	// PublishedDate
-	test(t, "PublishedDate should be UTC equivalent of feed date", func(t *testing.T) {
-		expected := time.Date(2019, 6, 2, 16, 3, 0, 0, time.UTC) // Sun, 02 Jun 2019 21:33:00 +0530
-		actual := testArticle.PublishedDate
-		if !actual.Equal(expected) {
-			t.Errorf("expect PublishedDate to be **%s** but found **%s**", expected, actual)
-		}
-	})
-
-	/*
-			type Article struct {
-			ID            primitive.ObjectID `bson:"_id,omitempty"`
-			Title         string
-			ShortContent  string
-			PublishedDate time.Time
-			Categories    []string
-			ThumbImageURL string
-			SourceURL     string
-			Source        string
-			OriginalFeed  gofeed.Item
-			CreatedAt     time.Time
-		}
-	*/
-
 }
