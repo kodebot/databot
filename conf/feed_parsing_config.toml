@@ -53,6 +53,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name = "dinamalar_justice_kut1"
     url = "http://rss.dinamalar.com/?cat=kut1"
     origin = "dinamalar"
     defaultCategory = "justice"

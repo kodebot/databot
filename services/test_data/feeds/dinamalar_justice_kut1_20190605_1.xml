@@ -1,0 +1,25 @@
+<?xml
+version='1.0' encoding='utf-8'?>
+<rss version='2.0'>
+    <channel>
+        <title>Dinamalar.com |ஜூன் 05,2019</title>
+        <link>http://www.dinamalar.com</link>
+        <managingEditor>coordinator@dinamalar.com(Editor)</managingEditor>
+        <image>
+            <title>dinamalar.com</title>
+            <url>http://img.dinamalar.com/images/top.png</url>
+            <link>http://www.dinamalar.com</link>
+            <width>150</width>
+            <height>40</height>
+            <description>Visit dinamalar.com</description>
+        </image>
+        <item>
+            <title>புதுச்சேரி முதல்வருக்கு, 'நோட்டீஸ்'</title>
+            <link>http://www.dinamalar.com/news_detail.asp?id=2290904</link>
+            <category></category>
+            <language>ta</language>
+            <pubDate>Wed, 05 Jun 2019 00:14:00 +0530</pubDate>
+            <description><![CDATA[<p>...</p>]]></description>
+        </item>
+    </channel>
+</rss>

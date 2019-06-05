@@ -76,6 +76,28 @@ var createArticleTestCases = []SingleCreateArticleTest{
 			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2290888",
 			Categories:    []string{"incidents"},
 			ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290888_150_100.jpg",
+			Source:        "dinamalar"}},
+	{
+		"dinamalar_justice_kut1",
+		"./test_data/feeds/dinamalar_justice_kut1_20190605_1.xml",
+		models.Article{
+			Title:         "புதுச்சேரி முதல்வருக்கு, 'நோட்டீஸ்'",
+			ShortContent:  "",
+			PublishedDate: time.Date(2019, 6, 4, 18, 44, 0, 0, time.UTC), // Wed, 05 Jun 2019 00:14:00 +0530
+			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2290904",
+			Categories:    []string{"justice"},
+			ThumbImageURL: "",
+			Source:        "dinamalar"}},
+	{
+		"dinamalar_justice_kut1",
+		"./test_data/feeds/dinamalar_justice_kut1_20190605_2.xml",
+		models.Article{
+			Title:         "ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
+			ShortContent:  "",
+			PublishedDate: time.Date(2019, 6, 4, 20, 13, 0, 0, time.UTC), // Wed, 05 Jun 2019 01:43:00 +0530
+			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2291013",
+			Categories:    []string{"justice"},
+			ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2291013_150_100.jpg",
 			Source:        "dinamalar"}}}
 
 func TestCreateArticle(t *testing.T) {
