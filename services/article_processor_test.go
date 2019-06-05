@@ -3,10 +3,26 @@ package services
 import (
 	"io/ioutil"
 	"testing"
+	"time"
 
 	"github.com/BurntSushi/toml"
 	"github.com/kodebot/newsfeed/models"
 )
+
+type testFunc func(t *testing.T)
+
+func test(t *testing.T, name string, test testFunc) {
+	t.Helper()
+	t.Run(name, func(t *testing.T) {
+		t.Helper()
+		test(t)
+		if t.Failed() {
+			t.Errorf(">>>%s FAILED\n\n", name)
+			return
+		}
+		t.Logf("%s SUCCEEDED\n\n", name)
+	})
+}
 
 func loadFeedConfig(t *testing.T, filePath string) models.FeedConfig {
 	if filePath == "" {
@@ -35,40 +51,6 @@ func getFeedConfigItemByName(t *testing.T, feedConfigName string, filePath strin
 
 func TestCreateArticle_dinamalar_politics(t *testing.T) {
 
-	/*
-	       name = "dinamalar_politics"
-	       url = "http://rss.dinamalar.com/?cat=ara1"
-	       origin = "dinamalar"
-	       defaultCategory = "politics"
-
-	       [feed.itemThumbImageExtractor]
-	           sourceField = "Description"
-	           scrapingRequired = true
-	           selectorType = "regexp"
-	           selector = "<img[^>]+src='(?P<Data>[^']+)"
-
-	       [feed.itemUrlExtractor]
-	           sourceField = "Link"
-	           scrapingRequired = false
-	           # selectorType = "regexp"
-	           # selector = "<a[^>]+href='(?P<Data>[^']+)"
-
-	   		General:
-	   		1. check number of articles matches expected
-
-	   		Fields:
-	   			Title         string
-	   			ShortContent  string
-	   			PublishedDate time.Time
-	   			Categories    []string
-	   			ThumbImageURL string
-	   			SourceURL     string
-	   			Source        string
-	   			OriginalFeed  gofeed.Item
-	   			CreatedAt     time.Time
-
-
-	*/
 	feedConfigName := "dinamalar_politics"
 	feedConfig := getFeedConfigItemByName(t, feedConfigName, "")
 
@@ -100,17 +82,66 @@ func TestCreateArticle_dinamalar_politics(t *testing.T) {
 		}
 	}()
 
-	testFeedItem := parsedFeeds[0]
-	// Field level tests
+	// todo: test fixing illegal chars
+
+	testArticles := CreateArticles(parsedFeeds, *feedConfig)
+
+	testArticle := testArticles[0]
 
 	// Title tests
-	func() {
-		// title should be trimmed
+	test(t, "Title should be same without leading and tailing whitespaces", func(t *testing.T) {
 		expected := "கட்சி தாவுகிறாரா திவ்யா ஸ்பந்தனா"
-		actual := testFeedItem.Title
+		actual := testArticle.Title
 		if actual != expected {
-			t.Fatalf("expect Title to be **%s** but found **%s**", expected, actual)
+			t.Errorf("expect Title to be **%s** but found **%s**", expected, actual)
 		}
-	}()
+	})
+
+	// SourceUrl tests
+	test(t, "SourceURL should match the link in feed", func(t *testing.T) {
+		expected := "http://www.dinamalar.com/news_detail.asp?id=2289413"
+		actual := testArticle.SourceURL
+		if actual != expected {
+			t.Errorf("expect Title to be **%s** but found **%s**", expected, actual)
+		}
+	})
+
+	// ShortContent tests
+	test(t, "ShortContent should be empty", func(t *testing.T) {
+		expected := ""
+		actual := testArticle.ShortContent
+		if actual != expected {
+			t.Errorf("expect ShortContent to be **%s** but found **%s**", expected, actual)
+		}
+	})
+
+	test(t, "ShortContent should match feed when available", func(t *testing.T) {
+		// title should be as is
+		t.Skipf("todo test data not available\n\n")
+	})
+
+	// PublishedDate
+	test(t, "PublishedDate should be UTC equivalent of feed date", func(t *testing.T) {
+		expected := time.Date(2019, 6, 2, 16, 3, 0, 0, time.UTC) // Sun, 02 Jun 2019 21:33:00 +0530
+		actual := testArticle.PublishedDate
+		if !actual.Equal(expected) {
+			t.Errorf("expect PublishedDate to be **%s** but found **%s**", expected, actual)
+		}
+	})
+
+	/*
+			type Article struct {
+			ID            primitive.ObjectID `bson:"_id,omitempty"`
+			Title         string
+			ShortContent  string
+			PublishedDate time.Time
+			Categories    []string
+			ThumbImageURL string
+			SourceURL     string
+			Source        string
+			OriginalFeed  gofeed.Item
+			CreatedAt     time.Time
+		}
+	*/
 
 }
