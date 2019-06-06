@@ -3,7 +3,6 @@ package models
 import (
 	"time"
 
-	"github.com/mmcdole/gofeed"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -32,11 +31,12 @@ type Article struct {
 	ID            primitive.ObjectID `bson:"_id,omitempty"`
 	Title         string
 	ShortContent  string
+	Content       string
 	PublishedDate time.Time
 	Categories    []string
 	ThumbImageURL string
 	SourceURL     string
 	Source        string
-	OriginalFeed  gofeed.Item
+	OriginalFeed  interface{}
 	CreatedAt     time.Time
 }
