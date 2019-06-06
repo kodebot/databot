@@ -69,6 +69,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name = "dinamalar_tamilnadu"
     url = "http://rss.dinamalar.com/tamilnadunews.asp"
     origin = "dinamalar"
     defaultCategory = "tamilnadu"
@@ -84,6 +85,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name = "dinamalar_delhi"
     url = "http://rss.dinamalar.com/Delhinews.asp"
     origin = "dinamalar"
     defaultCategory = "delhi"
@@ -99,6 +101,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name = "dinamalar_world"
     url = "http://rss.dinamalar.com/?cat=INL1"
     origin = "dinamalar"
     defaultCategory = "world"
@@ -114,6 +117,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name="dinamalar_business"
     url = "http://rss.dinamalar.com/?cat=business1"
     origin = "dinamalar"
     defaultCategory = "business"
@@ -129,6 +133,7 @@ allowedOrigins =["vikadan", "dinamalar"]
         scrapingRequired = false
 
 [[feed]]
+    name="dinamalar_cinema"
     url = "https://cinema.dinamalar.com/rss.php"
     origin = "dinamalar"
     defaultCategory = "cinema"
@@ -150,6 +155,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name="dinamalar_sports_cricket"
     url = "https://sports.dinamalar.com/rss/Cricket"
     origin = "dinamalar"
     defaultCategory = "sports"
@@ -177,6 +183,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name = "dinamar_sports_football"
     url = "https://sports.dinamalar.com/rss/Football"
     origin = "dinamalar"
     defaultCategory = "sports"
@@ -204,6 +211,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name="dinamalar_sports_tennis"
     url = "https://sports.dinamalar.com/rss/Tennis"
     origin = "dinamalar"
     defaultCategory = "sports"
@@ -231,6 +239,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name = "dinamalar_sport_hockey"
     url = "https://sports.dinamalar.com/rss/Hockey"
     origin = "dinamalar"
     defaultCategory = "sports"
@@ -258,6 +267,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name="dinamalar_sports_badminton"
     url = "https://sports.dinamalar.com/rss/Badminton"
     origin = "dinamalar"
     defaultCategory = "sports"
@@ -285,6 +295,7 @@ allowedOrigins =["vikadan", "dinamalar"]
 
 
 [[feed]]
+    name = "dinamalar_sports_others"
     url = "https://sports.dinamalar.com/rss/other-sports"
     origin = "dinamalar"
     defaultCategory = "sports"

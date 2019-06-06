@@ -1,0 +1,25 @@
+<?xml
+version='1.0' encoding='utf-8'?>
+<rss version='2.0'>
+    <channel>
+        <title>Cinema.Dinamalar.com | 2019-06-05</title>
+        <link>http://www.dinamalar.com</link>
+        <managingEditor>coordinator@dinamalar.com(Editor)</managingEditor>
+        <image>
+            <title>cinema.dinamalar.com</title>
+            <url>https://img.dinamalar.com/images/top.png</url>
+            <link>http://www.cinema.dinamalar.com</link>
+            <width>150</width>
+            <height>40</height>
+            <description>Visit cinema.dinamalar.com</description>
+        </image>
+        <item>
+            <title>&#39;காப்பான்&#39;காப்பார், சூர்யா ரசிகர்கள் நம்பிக்கை</title>
+            <link>http://cinema.dinamalar.com/tamil-news/78707/cinema/Kollywood/Suriya-fans-trust-Kaappaan-movie.htm</link>
+            <category></category>
+            <language>ta</language>
+            <pubDate>06/05/19</pubDate>
+            <description><![CDATA[<a href='http://cinema.dinamalar.com'><img src='https://img1.dinamalar.com/cini//CNewsImages/Thumb/NT_20190605135822141943_150_100.jpg' border='0' style='margin: 10px 0 0 10px; padding: 4px; ' align='left'  /></a>...]]></description>
+        </item>
+    </channel>
+</rss>

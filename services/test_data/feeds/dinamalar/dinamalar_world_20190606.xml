@@ -1,0 +1,25 @@
+<?xml
+version='1.0' encoding='utf-8'?>
+<rss version='2.0'>
+    <channel>
+        <title>Dinamalar.com |ஜூன் 06,2019</title>
+        <link>http://www.dinamalar.com</link>
+        <managingEditor>coordinator@dinamalar.com(Editor)</managingEditor>
+        <image>
+            <title>dinamalar.com</title>
+            <url>http://img.dinamalar.com/images/top.png</url>
+            <link>http://www.dinamalar.com</link>
+            <width>150</width>
+            <height>40</height>
+            <description>Visit dinamalar.com</description>
+        </image>
+        <item>
+            <title>பட்ஜெட் ஒதுக்கீடு: பாக்., ராணுவம் முடிவு</title>
+            <link>http://www.dinamalar.com/news_detail.asp?id=2291765</link>
+            <category></category>
+            <language>ta</language>
+            <pubDate>Thu, 06 Jun 2019</pubDate>
+            <description><![CDATA[<p>...</p>]]></description>
+        </item>
+    </channel>
+</rss>

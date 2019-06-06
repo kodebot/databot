@@ -1,0 +1,23 @@
+<?xml
+version='1.0' encoding='utf-8'?>
+<rss version='2.0'>
+    <channel>
+        <title><![CDATA[தினமலர் வர்த்தகம் | business.dinamalar.com]]></title>
+        <description><![CDATA[தினமலர் வர்த்தக செய்திகள் | சென்செக்ஸ் | கரன்சி | மளிகை மார்க்கெட் | தங்கம்,வெள்ளி விலை நிலவரம் ]]></description>
+        <link>http://business.dinamalar.com</link>
+        <managingEditor>coordinator@dinamalar.com(Editor)</managingEditor>
+        <image>
+            <title>business.dinamalar.com | வர்த்தக செய்திகள்</title>
+            <url>http://img.dinamalar.com/images/top.png</url>
+            <link>http://business.dinamalar.com</link>
+        </image>
+        <item>
+            <title>சேவைகள் துறை 12 மாதங்கள் காணாத சரிவு:‘நிக்கி – மார்க்கிட்’ ஆய்வறிக்கை வெளியீடு</title>
+            <link>http://business.dinamalar.com/news_details.asp?News_id=45050 &amp;cat=1</link>
+            <category>வர்த்தக செய்திகள்</category>
+            <language>ta</language>
+            <pubDate>Wed, 05 Jun 2019 23:34:00 +0530</pubDate>
+            <description><![CDATA[<a href='http://business.dinamalar.com/news_details.asp?News_id=45050&amp;cat=1'><img src='http://img.dinamalar.com/business/news/thumb_1559757869.jpg' border='0' style='margin: 10px 0 0 10px; padding: 4px; ' align='left'  /></a><p>...</p>]]></description>
+        </item>
+    </channel>
+</rss>

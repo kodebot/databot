@@ -46,7 +46,7 @@ type SingleCreateArticleTest struct {
 var createArticleTestCases = []SingleCreateArticleTest{
 	{
 		"dinamalar_politics",
-		"./test_data/feeds/dinamalar_politics_20190603.xml",
+		"./test_data/feeds/dinamalar/dinamalar_politics_20190603.xml",
 		models.Article{
 			Title:         "கட்சி தாவுகிறாரா திவ்யா ஸ்பந்தனா",
 			ShortContent:  "",
@@ -57,7 +57,7 @@ var createArticleTestCases = []SingleCreateArticleTest{
 			Source:        "dinamalar"}},
 	{
 		"dinamalar_general_pot1",
-		"./test_data/feeds/dinamalar_general_pot1_20190605.xml",
+		"./test_data/feeds/dinamalar/dinamalar_general_pot1_20190605.xml",
 		models.Article{
 			Title:         "பறவைகளுக்கு விலாசம் சொன்னது யார்?",
 			ShortContent:  "",
@@ -68,7 +68,7 @@ var createArticleTestCases = []SingleCreateArticleTest{
 			Source:        "dinamalar"}},
 	{
 		"dinamalar_incidents_sam1",
-		"./test_data/feeds/dinamalar_incidents_sam1_20190605.xml",
+		"./test_data/feeds/dinamalar/dinamalar_incidents_sam1_20190605.xml",
 		models.Article{
 			Title:         "கேரள மாணவருக்கு, 'நிபா'தனி வார்டில் தீவிர சிகிச்சை",
 			ShortContent:  "",
@@ -79,7 +79,7 @@ var createArticleTestCases = []SingleCreateArticleTest{
 			Source:        "dinamalar"}},
 	{
 		"dinamalar_justice_kut1",
-		"./test_data/feeds/dinamalar_justice_kut1_20190605_1.xml",
+		"./test_data/feeds/dinamalar/dinamalar_justice_kut1_20190605_1.xml",
 		models.Article{
 			Title:         "புதுச்சேரி முதல்வருக்கு, 'நோட்டீஸ்'",
 			ShortContent:  "",
@@ -90,7 +90,18 @@ var createArticleTestCases = []SingleCreateArticleTest{
 			Source:        "dinamalar"}},
 	{
 		"dinamalar_justice_kut1",
-		"./test_data/feeds/dinamalar_justice_kut1_20190605_2.xml",
+		"./test_data/feeds/dinamalar/dinamalar_justice_kut1_20190605_2.xml",
+		models.Article{
+			Title:         "ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
+			ShortContent:  "",
+			PublishedDate: time.Date(2019, 6, 4, 20, 13, 0, 0, time.UTC), // Wed, 05 Jun 2019 01:43:00 +0530
+			SourceURL:     "http://www.dinamalar.com/news_detail.asp?id=2291013",
+			Categories:    []string{"justice"},
+			ThumbImageURL: "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2291013_150_100.jpg",
+			Source:        "dinamalar"}},
+	{
+		"dinamalar_tamilnadu",
+		"./test_data/feeds/dinamalar/dinamalar_tamilnadu_20190606.xml",
 		models.Article{
 			Title:         "ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
 			ShortContent:  "",
