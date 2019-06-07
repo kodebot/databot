@@ -8,7 +8,7 @@ import (
 	transformers_model "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
 
-func TestParse_rss(t *testing.T) {
+func TestParse_feed(t *testing.T) {
 
 	data := `<?xml
 	version='1.0' encoding='utf-8'?>
