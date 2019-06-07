@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/kodebot/newsfeed/datafeed/collectors/model"
+	dmodel "github.com/kodebot/newsfeed/datafeed/model"
 )
 
 func TestCollect_feed(t *testing.T) {
@@ -52,13 +53,14 @@ func TestCollect_feed(t *testing.T) {
 	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
 		Field:      "ImageUrl",
 		Type:       model.Regexp,
-		Parameters: map[string]interface{}{"Source": "Description", "Expr": "<img[^>]+src='(?P<data>[^']+)"}})
+		Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}})
 
 	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
-		Field: "PublishedDate",
-		Type:  model.Value})
+		Field:      "PublishedDate",
+		Type:       model.Value,
+		Parameters: map[string]interface{}{"source": "PublishedParsed"}})
 
-	actualResults := Collect(data, model.Feed, fieldSettings)
+	actualResults := Collect(data, dmodel.RssAtom, fieldSettings)
 
 	if count := len(actualResults); count != 2 {
 		t.Fatalf("expected 2 actual record but found %d", count)
@@ -87,7 +89,7 @@ func TestCollect_feed(t *testing.T) {
 			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
-		if publishedDate := *(actualResults[i])["PublishedDate"]; publishedDate.(time.Time).String() != expectedResult.PublishedDate {
+		if publishedDate := *(actualResults[i])["PublishedDate"]; publishedDate.(*time.Time).String() != expectedResult.PublishedDate {
 			t.Fatalf("parsed item PublishedDate doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.PublishedDate, publishedDate)
 		}
 	}

@@ -46,7 +46,6 @@ func TestParse_feed(t *testing.T) {
 
 	var settings model.RecordSetting
 
-	settings.Type = cmodel.Feed
 	settings.FieldSettings = []model.FieldSetting{
 		{
 			Name: "Title",
@@ -59,34 +58,34 @@ func TestParse_feed(t *testing.T) {
 			Name: "ImageUrl",
 			CollectorSetting: cmodel.FieldCollectorSetting{
 				Type:       cmodel.Regexp,
-				Parameters: map[string]interface{}{"Source": "Description", "Expr": "<img[^>]+src='(?P<data>[^']+)"}}},
+				Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}},
 		{
-			Name: "PublishedDate",
+			Name: "Published",
 			CollectorSetting: cmodel.FieldCollectorSetting{
 				Type: cmodel.Value},
 			TransformerSettings: []tmodel.TransformerSetting{{
 				Transformer: tmodel.FormatDate}}},
 	}
 
-	parsed := Parse(data, settings)
+	parsed := Parse(data, model.RssAtom, settings)
 
 	if count := len(parsed); count != 2 {
 		t.Fatalf("expected 2 parsed record but found %d", count)
 	}
 
 	expectedResults := []struct {
-		Title         string
-		ImageURL      string
-		PublishedDate string
+		Title     string
+		ImageURL  string
+		Published string
 	}{
 		{
 			"பறவைகளுக்கு விலாசம் சொன்னது யார்?",
 			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg",
-			"2019-06-04 18:04:00 +0000 UTC"},
+			"Tue, 04 Jun 2019 23:34:00 +0530"},
 		{
 			"ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
 			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2291013_150_100.jpg",
-			"2019-06-04 20:13:00 +0000 UTC"}}
+			"Wed, 05 Jun 2019 01:43:00 +0530"}}
 
 	for i, expectedResult := range expectedResults {
 		if title := *(parsed[i])["Title"]; title != expectedResult.Title {
@@ -97,8 +96,8 @@ func TestParse_feed(t *testing.T) {
 			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
-		if publishedDate := *(parsed[i])["PublishedDate"]; publishedDate != expectedResult.PublishedDate {
-			t.Fatalf("parsed item PublishedDate doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.PublishedDate, publishedDate)
+		if published := *(parsed[i])["Published"]; published.(string) != expectedResult.Published {
+			t.Fatalf("parsed item published doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.Published, published)
 		}
 	}
 }

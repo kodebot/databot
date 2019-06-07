@@ -28,14 +28,12 @@ func readAsString(url string) (string, error) {
 	return bodyString, nil
 }
 
-func readRecordSettings(filePath string) []model.RecordSetting {
+func readDataFeedSetting(filePath string) model.DataFeedSetting {
 
-	var recordSettings struct {
-		Record []model.RecordSetting
-	}
-	_, err := toml.DecodeFile(filePath, &recordSettings)
+	var dataFeedSettings model.DataFeedSetting
+	_, err := toml.DecodeFile(filePath, &dataFeedSettings)
 	if err != nil {
 		glog.Errorf("error when loading feed config: %s\n", err.Error())
 	}
-	return recordSettings.Record
+	return dataFeedSettings
 }

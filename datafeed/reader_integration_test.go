@@ -4,30 +4,41 @@ package datafeed
 
 import "testing"
 
-func TestReadRecordSettings(t *testing.T) {
-	recordSettings := readRecordSettings("./test_data/feed_parsing_config1.toml")
-
-	if count := len(recordSettings); count != 1 {
-		t.Fatalf("expecting one record settings but found %d", count)
-	}
-
-	first := recordSettings[0]
-
-	expectedType := "feed"
-	if actualType := string(first.Type); actualType != expectedType {
-		t.Fatalf("record setting type does not match. Expected: %s ** Actual: %s", expectedType, actualType)
-	}
+func TestIntegrationReadDataFeedSetting(t *testing.T) {
+	dataFeedSetting := readDataFeedSetting("./test_data/feed_parsing_config1.toml")
 
 	expectedSource := "http://rss.dinamalar.com/?cat=ara1"
-	if actualSource := string(first.Source); actualSource != expectedSource {
+	if actualSource := string(dataFeedSetting.Source); actualSource != expectedSource {
 		t.Fatalf("record Source does not match. Expected: %s ** Actual: %s", expectedSource, actualSource)
 	}
 
-	if fieldCount := len(first.FieldSettings); fieldCount != 6 {
+	expectedSourceType := "rss/atom"
+	if actualSourceType := string(dataFeedSetting.SourceType); actualSourceType != expectedSourceType {
+		t.Fatalf("record sourceType does not match. Expected: %s ** Actual: %s", expectedSourceType, actualSourceType)
+	}
+
+	expectedSourceName := "dinamalar"
+	if actualSourceName := string(dataFeedSetting.SourceName); actualSourceName != expectedSourceName {
+		t.Fatalf("record SourceName does not match. Expected: %s ** Actual: %s", expectedSourceName, actualSourceName)
+	}
+
+	expectedCategory := "politics"
+	if actualCategory := string(dataFeedSetting.Category); actualCategory != expectedCategory {
+		t.Fatalf("record Category does not match. Expected: %s ** Actual: %s", expectedCategory, actualCategory)
+	}
+
+	expectedSchedule := "every 5 minutes"
+	if actualSchedule := string(dataFeedSetting.Schedule); actualSchedule != expectedSchedule {
+		t.Fatalf("record Schedule does not match. Expected: %s ** Actual: %s", expectedSchedule, actualSchedule)
+	}
+
+	record := dataFeedSetting.Record
+
+	if fieldCount := len(record.FieldSettings); fieldCount != 6 {
 		t.Fatalf("expecting 6 field settings but found %d", fieldCount)
 	}
 
-	lastField := first.FieldSettings[5]
+	lastField := record.FieldSettings[5]
 
 	expectedName := "ThumbImageUrl"
 	if actualName := lastField.Name; actualName != expectedName {
@@ -40,7 +51,7 @@ func TestReadRecordSettings(t *testing.T) {
 	}
 
 	expectedCollectorTypeParamSource := "Description"
-	if actualCollectorTypeParamSource := lastField.CollectorSetting.Parameters["Source"].(string); actualCollectorTypeParamSource != expectedCollectorTypeParamSource {
+	if actualCollectorTypeParamSource := lastField.CollectorSetting.Parameters["source"].(string); actualCollectorTypeParamSource != expectedCollectorTypeParamSource {
 		t.Fatalf("field collector type parameter (Source) does not match. Expected: %s ** Actual: %s", expectedCollectorTypeParamSource, actualCollectorTypeParamSource)
 	}
 }

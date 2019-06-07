@@ -2,7 +2,7 @@ sourceName = "dinamalar"
 source ="http://rss.dinamalar.com/?cat=ara1"
 sourceType= "rss/atom"
 category = "politics"
-schedule = "every 5 minutes"
+schedule = "every 30 minutes"
 [record]
     [[record.field]]
         name= "Title"

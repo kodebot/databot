@@ -14,7 +14,6 @@ func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 	url := "http://rss.dinamalar.com/?cat=ara1"
 
 	recordSetting := model.RecordSetting{
-		Type: cmodel.Feed,
 		FieldSettings: []model.FieldSetting{
 			{
 				Name: "Title",
@@ -37,17 +36,17 @@ func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Regexp,
 					Parameters: map[string]interface{}{
-						"Expr":   "<img[^>]+src='(?P<data>[^']+)",
-						"Source": "Description"}}},
+						"expr":   "<img[^>]+src='(?P<data>[^']+)",
+						"source": "Description"}}},
 			{
 				Name: "SourceUrl",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Value,
 					Parameters: map[string]interface{}{
-						"Source": "Link"}}},
+						"source": "Link"}}},
 		}}
 
-	records := ParseFromURL(url, recordSetting)
+	records := ParseFromURL(url, model.RssAtom, recordSetting)
 
 	if count := len(records); count < 1 {
 		t.Fatalf("should have at least one record but found %d", count)

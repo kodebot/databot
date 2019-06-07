@@ -2,22 +2,23 @@ package collectors
 
 import (
 	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/datafeed/collectors/feed"
 	"github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/rssAtom"
+	dmodel "github.com/kodebot/newsfeed/datafeed/model"
 )
 
 // Collect returns one or more articles from given data using given collector type
 func Collect(
 	data string,
-	collector model.RecordCollectorType,
+	sourceType dmodel.DataFeedSourceType,
 	fieldSettings []model.FieldCollectorSetting) []map[string]*interface{} {
 
-	switch collector {
-	case model.Feed:
-		return feed.Collect(data, fieldSettings)
+	switch sourceType {
+	case dmodel.RssAtom:
+		return rssAtom.Collect(data, fieldSettings)
 
 	default:
-		glog.Errorf("collector type %s is not implemented", collector)
+		glog.Errorf("source type %s is not supported", sourceType)
 		return nil
 	}
 

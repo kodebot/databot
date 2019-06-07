@@ -18,7 +18,7 @@ func (c Collector) Collect() *interface{} {
 
 	fieldRawValueString := c.Field.(string)
 	var expr string
-	if ok := c.Parameters["Expr"]; ok != nil {
+	if ok := c.Parameters["expr"]; ok != nil {
 		expr = ok.(string)
 	} else {
 		glog.Errorf("no regular expression parameter found")

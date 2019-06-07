@@ -10,18 +10,17 @@ import (
 )
 
 // ParseFromURL returns structured data as per the record setting from the given url
-func ParseFromURL(url string, setting model.RecordSetting) []map[string]*interface{} {
+func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]*interface{} {
 	data, err := readAsString(url)
 	if err != nil {
 		glog.Errorf("unable to read from url %s", url)
 		return make([]map[string]*interface{}, 0)
 	}
-	return Parse(data, setting)
+	return Parse(data, sourceType, setting)
 }
 
 // Parse returns structured data as per the record setting from the given data string
-func Parse(data string, setting model.RecordSetting) []map[string]*interface{} {
-
+func Parse(data string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]*interface{} {
 	var fieldCollectorSettings []cmodel.FieldCollectorSetting
 	fieldTransformerSettingsMap := make(map[string][]tmodel.TransformerSetting)
 
@@ -32,7 +31,7 @@ func Parse(data string, setting model.RecordSetting) []map[string]*interface{} {
 		fieldTransformerSettingsMap[fieldSetting.Name] = fieldSetting.TransformerSettings
 	}
 
-	collectedRecords := collectors.Collect(data, setting.Type, fieldCollectorSettings)
+	collectedRecords := collectors.Collect(data, sourceType, fieldCollectorSettings)
 
 	for _, record := range collectedRecords {
 		for fieldName, fieldVal := range record {

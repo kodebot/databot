@@ -1,4 +1,4 @@
-package feed
+package rssAtom
 
 import (
 	"testing"
@@ -56,7 +56,7 @@ func TestCollectRegExpCollector(t *testing.T) {
 		Field: "Description",
 		Type:  model.Regexp,
 		Parameters: map[string]interface{}{
-			"Expr": "<img[^>]+src='(?P<data>[^']+)"}}}
+			"expr": "<img[^>]+src='(?P<data>[^']+)"}}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 
@@ -76,7 +76,7 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 		Field: "Description",
 		Type:  model.Regexp,
 		Parameters: map[string]interface{}{
-			"Expr": "<img[^>]+src='([^']+)"}}}
+			"expr": "<img[^>]+src='([^']+)"}}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 

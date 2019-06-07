@@ -1,4 +1,4 @@
-package feed
+package rssAtom
 
 import (
 	"reflect"
@@ -17,7 +17,7 @@ func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[s
 		for _, fieldCollector := range fieldCollectors {
 
 			var sourceField string
-			if ok := fieldCollector.Parameters["Source"]; ok != nil {
+			if ok := fieldCollector.Parameters["source"]; ok != nil {
 				sourceField = ok.(string)
 			} else {
 				sourceField = fieldCollector.Field
