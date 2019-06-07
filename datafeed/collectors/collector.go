@@ -13,7 +13,7 @@ func Collect(
 	fieldSettings []model.FieldCollectorSetting) []map[string]*interface{} {
 
 	switch collector {
-	case model.FEED:
+	case model.Feed:
 		return feed.Collect(data, fieldSettings)
 
 	default:

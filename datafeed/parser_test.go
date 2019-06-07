@@ -46,7 +46,7 @@ func TestParse_feed(t *testing.T) {
 
 	var settings model.RecordSetting
 
-	settings.Type = collectors_model.FEED
+	settings.Type = collectors_model.Feed
 	settings.FieldSettings = []model.FieldSetting{
 		{
 			Field: "Title",

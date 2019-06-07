@@ -1,12 +1,12 @@
 package model
 
 // RecordCollectorType provides available record collector types
-type RecordCollectorType int
+type RecordCollectorType string
 
 const (
-	// FEED represents rss/atom FEED field group collector
-	FEED RecordCollectorType = iota
+	// Feed represents rss/atom FEED field group collector
+	Feed RecordCollectorType = "feed"
 
 	// HTML field group collector
-	HTML
+	HTML RecordCollectorType = "html"
 )
