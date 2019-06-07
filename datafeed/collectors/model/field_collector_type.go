@@ -1,17 +1,17 @@
 package model
 
 // FieldCollectorType provides available field collector types
-type FieldCollectorType int
+type FieldCollectorType string
 
 const (
-	// VALUE field collector - the result will be same as source field
-	VALUE FieldCollectorType = iota
-	// REGEXP field collector
-	REGEXP
+	// Value field collector - the result will be same as source field
+	Value FieldCollectorType = "value"
+	// Regexp field collector
+	Regexp FieldCollectorType = "regexp"
 
 	// CSS field collector
-	CSS
+	CSS FieldCollectorType = "css"
 
 	// Unknown field collector
-	Unknown
+	Unknown FieldCollectorType = "unknown"
 )

@@ -3,9 +3,9 @@ package datafeed
 import (
 	"testing"
 
-	collectors_model "github.com/kodebot/newsfeed/datafeed/collectors/model"
+	cmodel "github.com/kodebot/newsfeed/datafeed/collectors/model"
 	"github.com/kodebot/newsfeed/datafeed/model"
-	transformers_model "github.com/kodebot/newsfeed/datafeed/transformers/model"
+	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
 
 func TestParse_feed(t *testing.T) {
@@ -46,26 +46,26 @@ func TestParse_feed(t *testing.T) {
 
 	var settings model.RecordSetting
 
-	settings.Type = collectors_model.Feed
+	settings.Type = cmodel.Feed
 	settings.FieldSettings = []model.FieldSetting{
 		{
 			Field: "Title",
-			CollectorSetting: collectors_model.FieldCollectorSetting{
-				Type: collectors_model.VALUE},
-			TransformerSettings: []transformers_model.TransformerSetting{{
-				Transformer: transformers_model.Trim}},
+			CollectorSetting: cmodel.FieldCollectorSetting{
+				Type: cmodel.Value},
+			TransformerSettings: []tmodel.TransformerSetting{{
+				Transformer: tmodel.Trim}},
 		},
 		{
 			Field: "ImageUrl",
-			CollectorSetting: collectors_model.FieldCollectorSetting{
-				Type:       collectors_model.REGEXP,
+			CollectorSetting: cmodel.FieldCollectorSetting{
+				Type:       cmodel.Regexp,
 				Parameters: map[string]interface{}{"Source": "Description", "Expr": "<img[^>]+src='(?P<data>[^']+)"}}},
 		{
 			Field: "PublishedDate",
-			CollectorSetting: collectors_model.FieldCollectorSetting{
-				Type: collectors_model.VALUE},
-			TransformerSettings: []transformers_model.TransformerSetting{{
-				Transformer: transformers_model.FormatDate}}},
+			CollectorSetting: cmodel.FieldCollectorSetting{
+				Type: cmodel.Value},
+			TransformerSettings: []tmodel.TransformerSetting{{
+				Transformer: tmodel.FormatDate}}},
 	}
 
 	parsed := Parse(data, settings)

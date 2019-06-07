@@ -47,16 +47,16 @@ func TestCollect_feed(t *testing.T) {
 
 	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
 		Field: "Title",
-		Type:  model.VALUE})
+		Type:  model.Value})
 
 	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
 		Field:      "ImageUrl",
-		Type:       model.REGEXP,
+		Type:       model.Regexp,
 		Parameters: map[string]interface{}{"Source": "Description", "Expr": "<img[^>]+src='(?P<data>[^']+)"}})
 
 	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
 		Field: "PublishedDate",
-		Type:  model.VALUE})
+		Type:  model.Value})
 
 	actualResults := Collect(data, model.Feed, fieldSettings)
 

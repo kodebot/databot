@@ -36,7 +36,7 @@ func TestCollectValueCollector(t *testing.T) {
 
 	fieldCollectors := []model.FieldCollectorSetting{{
 		Field: "Title",
-		Type:  model.VALUE}}
+		Type:  model.Value}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 
@@ -54,7 +54,7 @@ func TestCollectRegExpCollector(t *testing.T) {
 
 	fieldCollectors := []model.FieldCollectorSetting{{
 		Field: "Description",
-		Type:  model.REGEXP,
+		Type:  model.Regexp,
 		Parameters: map[string]interface{}{
 			"Expr": "<img[^>]+src='(?P<data>[^']+)"}}}
 
@@ -74,7 +74,7 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 
 	fieldCollectors := []model.FieldCollectorSetting{{
 		Field: "Description",
-		Type:  model.REGEXP,
+		Type:  model.Regexp,
 		Parameters: map[string]interface{}{
 			"Expr": "<img[^>]+src='([^']+)"}}}
 
@@ -93,7 +93,7 @@ func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 
 	fieldCollectors := []model.FieldCollectorSetting{{
 		Field: "Description",
-		Type:  model.REGEXP,
+		Type:  model.Regexp,
 		Parameters: map[string]interface{}{
 			"Expr": "<img[^>]+src='?<P([^']+)"}}}
 
@@ -112,7 +112,7 @@ func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
 
 	fieldCollectors := []model.FieldCollectorSetting{{
 		Field: "Description",
-		Type:  model.REGEXP}}
+		Type:  model.Regexp}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 

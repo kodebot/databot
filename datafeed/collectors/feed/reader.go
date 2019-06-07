@@ -2,26 +2,12 @@ package feed
 
 import (
 	"strings"
-	"time"
 
 	"github.com/golang/glog"
 	"github.com/mmcdole/gofeed"
 )
 
-type feedItem struct {
-	Title               string
-	Description         string
-	ImageURL            string
-	ImageTitle          string
-	PublishedDateString string
-	PublishedDate       time.Time
-	Category            string
-	Content             string
-	SiteURL             string
-	OriginalItem        interface{}
-}
-
-func readFromXML(xmlString string) []*feedItem {
+func readFromXML(xmlString string) []*gofeed.Item {
 	glog.Infof("parsing feed xml")
 	parser := gofeed.NewParser()
 	xmlString = fixIllegalXMLCharacters(xmlString)
@@ -39,12 +25,7 @@ func readFromXML(xmlString string) []*feedItem {
 		glog.Infof("%d items found\n", totalItems)
 	}
 
-	var feedItems []*feedItem
-	for _, item := range feed.Items {
-		feedItems = append(feedItems, toFeedItem(item))
-	}
-
-	return feedItems
+	return feed.Items
 }
 
 func fixIllegalXMLCharacters(xmlString string) string {
@@ -61,28 +42,4 @@ func fixIllegalXMLCharacters(xmlString string) string {
 	}
 
 	return correctedBodyString
-}
-
-func toFeedItem(i *gofeed.Item) *feedItem {
-	o := new(feedItem)
-
-	o.Title = i.Title
-	o.Description = i.Description
-
-	if i.Image != nil {
-		o.ImageURL = i.Image.URL
-		o.ImageTitle = i.Image.Title
-	}
-
-	o.PublishedDateString = i.Published
-	o.PublishedDate = *i.PublishedParsed
-
-	if len(i.Categories) > 0 {
-		o.Category = i.Categories[0]
-	}
-
-	o.Content = i.Content
-	o.SiteURL = i.Link
-	o.OriginalItem = i
-	return o
 }

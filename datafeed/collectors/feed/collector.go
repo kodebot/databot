@@ -23,21 +23,28 @@ func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[s
 				sourceField = fieldCollector.Field
 			}
 
-			fieldRawValue := reflect.Indirect(reflect.ValueOf(feed)).FieldByName(sourceField).Interface()
+			fieldData := reflect.Indirect(reflect.ValueOf(feed)).FieldByName(sourceField)
+			var fieldRawValue interface{}
+			if !fieldData.IsValid() {
+				glog.Warningf("the field %s doesn't exist", sourceField)
+				fieldRawValue = nil
+			} else {
+				fieldRawValue = fieldData.Interface()
+			}
 
 			switch fieldCollector.Type {
-			case model.VALUE:
+			case model.Value:
 				valueCollector := field.ValueCollector{}
 				valueCollector.Field = fieldRawValue
 				valueCollector.Parameters = fieldCollector.Parameters
 				record[fieldCollector.Field] = valueCollector.Collect()
-			case model.REGEXP:
+			case model.Regexp:
 				regexpCollector := field.RegexpCollector{}
 				regexpCollector.Field = fieldRawValue
 				regexpCollector.Parameters = fieldCollector.Parameters
 				record[fieldCollector.Field] = regexpCollector.Collect()
 			default:
-				glog.Errorf("collector type %d is not implemented", fieldCollector.Type)
+				glog.Errorf("collector type %s is not implemented", fieldCollector.Type)
 				record[fieldCollector.Field] = nil
 				break
 			}
