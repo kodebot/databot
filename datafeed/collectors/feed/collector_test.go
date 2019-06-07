@@ -84,9 +84,8 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 		t.Fatalf("expected 1 collected record but found %d", count)
 	}
 
-	expectedValue := ""
-	if value := *(result[0])["Description"]; value != expectedValue {
-		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
+	if actualValue := (result[0])["Description"]; actualValue != nil {
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
 	}
 }
 
@@ -104,9 +103,8 @@ func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 		t.Fatalf("expected 1 collected record but found %d", count)
 	}
 
-	expectedValue := ""
-	if value := *(result[0])["Description"]; value != expectedValue {
-		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
+	if actualValue := (result[0])["Description"]; actualValue != nil {
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
 	}
 }
 

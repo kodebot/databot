@@ -58,7 +58,7 @@ func TestCollect_feed(t *testing.T) {
 		Field: "PublishedDate",
 		Type:  model.VALUE})
 
-	actualResults := Collect(data, model.FEED, fieldSettings)
+	actualResults := Collect(data, model.Feed, fieldSettings)
 
 	if count := len(actualResults); count != 2 {
 		t.Fatalf("expected 2 actual record but found %d", count)

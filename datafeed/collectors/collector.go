@@ -17,7 +17,7 @@ func Collect(
 		return feed.Collect(data, fieldSettings)
 
 	default:
-		glog.Errorf("collector type %d is not implemented", collector)
+		glog.Errorf("collector type %s is not implemented", collector)
 		return nil
 	}
 
