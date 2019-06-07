@@ -8,13 +8,12 @@ import (
 	"github.com/kodebot/newsfeed/datafeed/collectors/model"
 )
 
-// Collect returns collected fields from the given feed using given field collector settings
-func Collect(url string, fieldCollectors []model.FieldCollectorSetting) []map[string]interface{} {
-
-	feeds := readFromURL(url)
-	var records []map[string]interface{}
+// Collect returns collected fields from the given data using given field collector settings
+func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[string]*interface{} {
+	feeds := readFromXML(data)
+	var records []map[string]*interface{}
 	for _, feed := range feeds {
-		record := make(map[string]interface{})
+		record := map[string]*interface{}{}
 		for _, fieldCollector := range fieldCollectors {
 
 			var sourceField string
@@ -24,25 +23,26 @@ func Collect(url string, fieldCollectors []model.FieldCollectorSetting) []map[st
 				sourceField = fieldCollector.Field
 			}
 
-			fieldRawValue := reflect.Indirect(reflect.ValueOf(feed)).FieldByName(sourceField)
+			fieldRawValue := reflect.Indirect(reflect.ValueOf(feed)).FieldByName(sourceField).Interface()
 
 			switch fieldCollector.Type {
 			case model.VALUE:
-				record[fieldCollector.Field] = fieldRawValue
+				record[fieldCollector.Field] = &fieldRawValue
 			case model.REGEXP:
-				fieldRawValueString := fieldRawValue.String() // todo: check if this works for all the types
+				fieldRawValueString := fieldRawValue.(string) // todo: check if this works for all the types
 				var expr string
 				if ok := fieldCollector.Parameters["Expr"]; ok != nil {
 					expr = ok.(string)
 				} else {
 					glog.Errorf("no regular expression parameter found")
-					record[fieldCollector.Field] = ""
+					record[fieldCollector.Field] = nil
 					break
 				}
-				record[fieldCollector.Field] = common.CollectUsingRegexp(fieldRawValueString, expr)
+				var result interface{} = common.CollectUsingRegexp(fieldRawValueString, expr)
+				record[fieldCollector.Field] = &result
 			default:
 				glog.Errorf("collector type %d is not implemented", fieldCollector.Type)
-				record[fieldCollector.Field] = ""
+				record[fieldCollector.Field] = nil
 				break
 			}
 		}

@@ -8,11 +8,11 @@ import (
 	transformers_model "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
 
-// Parse the data from the given URL and provides them as structured map
-func Parse(url string, setting model.RecordSetting) []map[string]interface{} {
+// Parse returns structured data as per the record setting from the given data string
+func Parse(data string, setting model.RecordSetting) []map[string]*interface{} {
 
 	var fieldCollectorSettings []collectors_model.FieldCollectorSetting
-	var fieldTransformerSettingsMap map[string][]transformers_model.TransformerSetting
+	fieldTransformerSettingsMap := make(map[string][]transformers_model.TransformerSetting)
 
 	for _, fieldSetting := range setting.FieldSettings {
 		fieldSetting.CollectorSetting.Field = fieldSetting.Field
@@ -21,7 +21,7 @@ func Parse(url string, setting model.RecordSetting) []map[string]interface{} {
 		fieldTransformerSettingsMap[fieldSetting.Field] = fieldSetting.TransformerSettings
 	}
 
-	collectedRecords := collectors.Collect(url, setting.Type, fieldCollectorSettings)
+	collectedRecords := collectors.Collect(data, setting.Type, fieldCollectorSettings)
 
 	for _, record := range collectedRecords {
 		for fieldName, fieldVal := range record {

@@ -1,8 +1,6 @@
 package feed
 
 import (
-	"io/ioutil"
-	"net/http"
 	"strings"
 	"time"
 
@@ -23,23 +21,10 @@ type feedItem struct {
 	OriginalItem        interface{}
 }
 
-func readFromURL(URL string) []*feedItem {
-	glog.Infof("reading feed from URL: %s \n", URL)
-	defer glog.Infof("ending loading feed from URL: %s", URL)
-
-	xmlString, err := getRawFeedAsString(URL)
-	if err != nil {
-		glog.Errorf("retrieving feed xml failed with error %s. Skipping this source.\n", err.Error())
-		return nil
-	}
-
-	xmlString = fixIllegalXMLCharacters(xmlString)
-	return readFromXML(xmlString)
-}
-
 func readFromXML(xmlString string) []*feedItem {
 	glog.Infof("parsing feed xml")
 	parser := gofeed.NewParser()
+	xmlString = fixIllegalXMLCharacters(xmlString)
 	feed, err := parser.ParseString(xmlString)
 	if err != nil {
 		glog.Errorf("parsing feed failed with error %s.", err.Error())
@@ -60,24 +45,6 @@ func readFromXML(xmlString string) []*feedItem {
 	}
 
 	return feedItems
-}
-
-func getRawFeedAsString(url string) (string, error) {
-	var client http.Client
-	resp, err := client.Get(url)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		glog.Errorf("error when retrieving raw feed from url %s status code: %d. error: %s\n", url, resp.StatusCode, err.Error())
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		glog.Errorf("error when reading body from url %s. error: %s\n", url, err.Error())
-		return "", err
-	}
-	bodyString := string(bodyBytes)
-	return bodyString, nil
 }
 
 func fixIllegalXMLCharacters(xmlString string) string {
