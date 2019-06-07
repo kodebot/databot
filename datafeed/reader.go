@@ -4,7 +4,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/BurntSushi/toml"
 	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/datafeed/model"
 )
 
 // readAsString returns http response as a string for given url
@@ -24,4 +26,16 @@ func readAsString(url string) (string, error) {
 	}
 	bodyString := string(bodyBytes)
 	return bodyString, nil
+}
+
+func readRecordSettings(filePath string) []model.RecordSetting {
+
+	var recordSettings struct {
+		Record []model.RecordSetting
+	}
+	_, err := toml.DecodeFile(filePath, &recordSettings)
+	if err != nil {
+		glog.Errorf("error when loading feed config: %s\n", err.Error())
+	}
+	return recordSettings.Record
 }

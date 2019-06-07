@@ -49,19 +49,19 @@ func TestParse_feed(t *testing.T) {
 	settings.Type = cmodel.Feed
 	settings.FieldSettings = []model.FieldSetting{
 		{
-			Field: "Title",
+			Name: "Title",
 			CollectorSetting: cmodel.FieldCollectorSetting{
 				Type: cmodel.Value},
 			TransformerSettings: []tmodel.TransformerSetting{{
 				Transformer: tmodel.Trim}},
 		},
 		{
-			Field: "ImageUrl",
+			Name: "ImageUrl",
 			CollectorSetting: cmodel.FieldCollectorSetting{
 				Type:       cmodel.Regexp,
 				Parameters: map[string]interface{}{"Source": "Description", "Expr": "<img[^>]+src='(?P<data>[^']+)"}}},
 		{
-			Field: "PublishedDate",
+			Name: "PublishedDate",
 			CollectorSetting: cmodel.FieldCollectorSetting{
 				Type: cmodel.Value},
 			TransformerSettings: []tmodel.TransformerSetting{{

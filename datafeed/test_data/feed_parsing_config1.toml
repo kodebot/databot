@@ -1,0 +1,41 @@
+
+[[record]]
+    source ="http://rss.dinamalar.com/?cat=ara1"
+    type= "feed"
+    [[record.field]]
+        name= "Title"
+        [record.field.collectorSetting]
+            type= "value"
+
+    [[record.field]]
+        name= "Description"
+        [record.field.collectorSetting]
+            type= "value"
+
+    [[record.field]]
+        name= "Content"
+        [record.field.collectorSetting]
+            type= "value"
+
+    [[record.field]]
+        name= "PublishedDate"
+        [record.field.collectorSetting]
+            type= "value"
+            [parameters]
+                "Source" = "Published"
+
+    [[record.field]]
+        name= "SourceUrl"
+        [record.field.collectorSetting]
+            type= "value"
+            [record.field.collectorSetting.parameters]
+                "Source" = "Link"
+    [[record.field]]
+    name= "ThumbImageUrl"
+    [record.field.collectorSetting]
+        type= "regexp"
+        [record.field.collectorSetting.parameters]
+            "Source" = "Description"
+            "Expr" = "<img[^>]+src='(?P<data>[^']+)"
+
+   

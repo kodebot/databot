@@ -1,4 +1,4 @@
-// build integration
+// +build integration
 
 package datafeed
 
@@ -17,30 +17,30 @@ func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 		Type: cmodel.Feed,
 		FieldSettings: []model.FieldSetting{
 			{
-				Field: "Title",
+				Name: "Title",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Value}},
 			{
-				Field: "Description",
+				Name: "Description",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Value}},
 			{
-				Field: "Content",
+				Name: "Content",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Value}},
 			{
-				Field: "Published",
+				Name: "Published",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Value}},
 			{
-				Field: "ThumbImageUrl",
+				Name: "ThumbImageUrl",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Regexp,
 					Parameters: map[string]interface{}{
 						"Expr":   "<img[^>]+src='(?P<data>[^']+)",
 						"Source": "Description"}}},
 			{
-				Field: "SourceUrl",
+				Name: "SourceUrl",
 				CollectorSetting: cmodel.FieldCollectorSetting{
 					Type: cmodel.Value,
 					Parameters: map[string]interface{}{

@@ -7,7 +7,7 @@ import (
 
 // FieldSetting allows to specify field setting when parsing
 type FieldSetting struct {
-	Field               string
+	Name                string
 	CollectorSetting    cmodel.FieldCollectorSetting
 	TransformerSettings []tmodel.TransformerSetting
 }

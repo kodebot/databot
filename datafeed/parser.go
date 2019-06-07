@@ -3,10 +3,10 @@ package datafeed
 import (
 	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/datafeed/collectors"
-	collectors_model "github.com/kodebot/newsfeed/datafeed/collectors/model"
+	cmodel "github.com/kodebot/newsfeed/datafeed/collectors/model"
 	"github.com/kodebot/newsfeed/datafeed/model"
 	"github.com/kodebot/newsfeed/datafeed/transformers"
-	transformers_model "github.com/kodebot/newsfeed/datafeed/transformers/model"
+	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
 
 // ParseFromURL returns structured data as per the record setting from the given url
@@ -22,14 +22,14 @@ func ParseFromURL(url string, setting model.RecordSetting) []map[string]*interfa
 // Parse returns structured data as per the record setting from the given data string
 func Parse(data string, setting model.RecordSetting) []map[string]*interface{} {
 
-	var fieldCollectorSettings []collectors_model.FieldCollectorSetting
-	fieldTransformerSettingsMap := make(map[string][]transformers_model.TransformerSetting)
+	var fieldCollectorSettings []cmodel.FieldCollectorSetting
+	fieldTransformerSettingsMap := make(map[string][]tmodel.TransformerSetting)
 
 	for _, fieldSetting := range setting.FieldSettings {
-		fieldSetting.CollectorSetting.Field = fieldSetting.Field
+		fieldSetting.CollectorSetting.Field = fieldSetting.Name
 		fieldCollectorSettings = append(fieldCollectorSettings, fieldSetting.CollectorSetting)
 
-		fieldTransformerSettingsMap[fieldSetting.Field] = fieldSetting.TransformerSettings
+		fieldTransformerSettingsMap[fieldSetting.Name] = fieldSetting.TransformerSettings
 	}
 
 	collectedRecords := collectors.Collect(data, setting.Type, fieldCollectorSettings)
