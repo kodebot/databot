@@ -1,12 +1,23 @@
 package datafeed
 
 import (
+	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/datafeed/collectors"
 	collectors_model "github.com/kodebot/newsfeed/datafeed/collectors/model"
 	"github.com/kodebot/newsfeed/datafeed/model"
 	"github.com/kodebot/newsfeed/datafeed/transformers"
 	transformers_model "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
+
+// ParseFromURL returns structured data as per the record setting from the given url
+func ParseFromURL(url string, setting model.RecordSetting) []map[string]*interface{} {
+	data, err := readAsString(url)
+	if err != nil {
+		glog.Errorf("unable to read from url %s", url)
+		return make([]map[string]*interface{}, 0)
+	}
+	return Parse(data, setting)
+}
 
 // Parse returns structured data as per the record setting from the given data string
 func Parse(data string, setting model.RecordSetting) []map[string]*interface{} {

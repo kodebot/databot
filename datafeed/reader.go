@@ -7,8 +7,8 @@ import (
 	"github.com/golang/glog"
 )
 
-// ReadAsString returns http response as a string for given url
-func ReadAsString(url string) (string, error) {
+// readAsString returns http response as a string for given url
+func readAsString(url string) (string, error) {
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {
