@@ -32,7 +32,7 @@ version='1.0' encoding='utf-8'?>
 	</channel>
 </rss>`
 
-func TestCollect_single_VALUE_collector(t *testing.T) {
+func TestCollectValueCollector(t *testing.T) {
 
 	fieldCollectors := []model.FieldCollectorSetting{{
 		Field: "Title",
@@ -48,5 +48,98 @@ func TestCollect_single_VALUE_collector(t *testing.T) {
 	if title := *(result[0])["Title"]; title != expectedTitle {
 		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedTitle, title)
 	}
+}
 
+func TestCollectRegExpCollector(t *testing.T) {
+
+	fieldCollectors := []model.FieldCollectorSetting{{
+		Field: "Description",
+		Type:  model.REGEXP,
+		Parameters: map[string]interface{}{
+			"Expr": "<img[^>]+src='(?P<data>[^']+)"}}}
+
+	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+
+	if count := len(result); count != 1 {
+		t.Fatalf("expected 1 collected record but found %d", count)
+	}
+
+	expectedValue := "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg"
+	if value := *(result[0])["Description"]; value != expectedValue {
+		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
+	}
+}
+
+func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
+
+	fieldCollectors := []model.FieldCollectorSetting{{
+		Field: "Description",
+		Type:  model.REGEXP,
+		Parameters: map[string]interface{}{
+			"Expr": "<img[^>]+src='([^']+)"}}}
+
+	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+
+	if count := len(result); count != 1 {
+		t.Fatalf("expected 1 collected record but found %d", count)
+	}
+
+	expectedValue := ""
+	if value := *(result[0])["Description"]; value != expectedValue {
+		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
+	}
+}
+
+func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
+
+	fieldCollectors := []model.FieldCollectorSetting{{
+		Field: "Description",
+		Type:  model.REGEXP,
+		Parameters: map[string]interface{}{
+			"Expr": "<img[^>]+src='?<P([^']+)"}}}
+
+	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+
+	if count := len(result); count != 1 {
+		t.Fatalf("expected 1 collected record but found %d", count)
+	}
+
+	expectedValue := ""
+	if value := *(result[0])["Description"]; value != expectedValue {
+		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
+	}
+}
+
+func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
+
+	fieldCollectors := []model.FieldCollectorSetting{{
+		Field: "Description",
+		Type:  model.REGEXP}}
+
+	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+
+	if count := len(result); count != 1 {
+		t.Fatalf("expected 1 collected record but found %d", count)
+	}
+
+	if actualValue := (result[0])["Description"]; actualValue != nil {
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
+	}
+}
+
+func TestCollectUnknownCollector(t *testing.T) {
+
+	fieldCollectors := []model.FieldCollectorSetting{{
+		Field: "Description",
+		Type:  model.Unknown}}
+
+	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+
+	if count := len(result); count != 1 {
+		t.Fatalf("expected 1 collected record but found %d", count)
+	}
+
+	if actualValue := (result[0])["Description"]; actualValue != nil {
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
+	}
 }

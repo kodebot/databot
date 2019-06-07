@@ -11,4 +11,7 @@ const (
 
 	// CSS field collector
 	CSS
+
+	// Unknown field collector
+	Unknown
 )

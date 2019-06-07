@@ -4,7 +4,7 @@ import (
 	"reflect"
 
 	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/datafeed/collectors/common"
+	"github.com/kodebot/newsfeed/datafeed/collectors/field"
 	"github.com/kodebot/newsfeed/datafeed/collectors/model"
 )
 
@@ -27,19 +27,15 @@ func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[s
 
 			switch fieldCollector.Type {
 			case model.VALUE:
-				record[fieldCollector.Field] = &fieldRawValue
+				valueCollector := field.ValueCollector{}
+				valueCollector.Field = fieldRawValue
+				valueCollector.Parameters = fieldCollector.Parameters
+				record[fieldCollector.Field] = valueCollector.Collect()
 			case model.REGEXP:
-				fieldRawValueString := fieldRawValue.(string) // todo: check if this works for all the types
-				var expr string
-				if ok := fieldCollector.Parameters["Expr"]; ok != nil {
-					expr = ok.(string)
-				} else {
-					glog.Errorf("no regular expression parameter found")
-					record[fieldCollector.Field] = nil
-					break
-				}
-				var result interface{} = common.CollectUsingRegexp(fieldRawValueString, expr)
-				record[fieldCollector.Field] = &result
+				regexpCollector := field.RegexpCollector{}
+				regexpCollector.Field = fieldRawValue
+				regexpCollector.Parameters = fieldCollector.Parameters
+				record[fieldCollector.Field] = regexpCollector.Collect()
 			default:
 				glog.Errorf("collector type %d is not implemented", fieldCollector.Type)
 				record[fieldCollector.Field] = nil
