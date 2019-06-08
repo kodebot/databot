@@ -9,6 +9,12 @@ import (
 	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
 
+// ParseFromDataFeedSetting returns structured data as per the given data feed settings
+func ParseFromDataFeedSetting(filePath string) ([]map[string]*interface{}, model.DataFeedSetting) {
+	dataFeedSetting := readDataFeedSetting(filePath)
+	return ParseFromURL(dataFeedSetting.Source, dataFeedSetting.SourceType, dataFeedSetting.Record), dataFeedSetting
+}
+
 // ParseFromURL returns structured data as per the record setting from the given url
 func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]*interface{} {
 	data, err := readAsString(url)

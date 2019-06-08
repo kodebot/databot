@@ -1,9 +1,8 @@
 package jobs
 
 import (
-	"github.com/BurntSushi/toml"
 	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/models"
+	"github.com/kodebot/newsfeed/datafeed"
 	"github.com/kodebot/newsfeed/services"
 )
 
@@ -15,40 +14,17 @@ type PruneArticlesJob struct{}
 
 // Run LoadArticlesFromFeedsJob
 func (j LoadArticlesFromFeedsJob) Run() {
-	var feedConfig models.FeedConfig
-	_, err := toml.DecodeFile("./conf/feed_parsing_config.toml", &feedConfig)
-	if err != nil {
-		glog.Errorf("error when loading feed config: %s\n", err.Error())
-	}
+	dataFeed, dataFeedSetting := datafeed.ParseFromDataFeedSetting("./conf/new_feed_configs/001_dinamalar_politics.toml")
+	articles := services.CreateArticles(dataFeed)
+	if len(articles) == 0 {
+		glog.Warning("no articles found...")
+	} else {
 
-	glog.Infoln("running LoadArticlesFromFeedsJob...")
-	var isFeedOriginAllowed bool
-	for _, feed := range feedConfig.Feed {
-		for _, val := range feedConfig.AllowedOrigins {
-
-			if val == feed.Origin {
-				isFeedOriginAllowed = true
-				break
-			}
+		for _, article := range articles {
+			article.Source = dataFeedSetting.SourceName
+			article.Categories = []string{dataFeedSetting.Category}
 		}
 
-		if isFeedOriginAllowed != true {
-			glog.Warningf("%s is not in allowed origin.. skipping origin\n", feed.Origin)
-			continue
-		}
-
-		glog.Infof("processing feed from %s \n", feed.URL)
-		result := services.ParseFeed(feed, "")
-		if result == nil {
-			glog.Errorln("feed skipped...")
-			continue
-		}
-
-		articles := services.CreateArticles(result, feed)
-		if len(articles) == 0 {
-			glog.Warning("no articles found...")
-			continue
-		}
 		services.LoadArticles(articles)
 	}
 

@@ -24,7 +24,7 @@ schedule = "every 30 minutes"
         [record.field.collectorSetting]
             type= "value"
             [parameters]
-                "source" = "Published"
+                "source" = "PublishedParsed"
 
     [[record.field]]
         name= "SourceUrl"

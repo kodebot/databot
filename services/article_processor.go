@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -11,7 +12,6 @@ import (
 	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/data"
 	"github.com/kodebot/newsfeed/models"
-	"github.com/mmcdole/gofeed"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -46,200 +46,188 @@ func PruneArticles() {
 
 }
 
-// ParseFeed from the given url
-func ParseFeed(feedConfig models.FeedConfigItem, xmlString string) []*gofeed.Item {
-	defer handleLoadFeedPanics(feedConfig)
-	glog.Infof("starting loading articles from URL: %s \n", feedConfig.URL)
-	defer glog.Infof("ending loading feed from URL: %s", feedConfig.URL)
-
-	if xmlString == "" {
-		var err error
-		xmlString, err = getRawFeedAsString(feedConfig.URL)
-		if err != nil {
-			glog.Errorf("retrieving feed xml failed with error %s. Skipping this source.\n", err.Error())
-			return nil
-		}
-	}
-
-	xmlString = fixIllegalXMLCharacters(xmlString)
-
-	parser := gofeed.NewParser()
-	feed, err := parser.ParseString(xmlString)
-	if err != nil {
-		glog.Errorf("parsing feed failed with error %s. Skipping this source.\n", err.Error())
-		dumpErrorInDatabase("parsing feed failed", errorDump{
-			FeedConfig: feedConfig,
-			Error:      err.Error()})
-		return nil
-	}
-
-	totalItems := len(feed.Items)
-	if totalItems == 0 {
-		glog.Infoln("no items found to process")
-	} else {
-
-		glog.Infof("%d items found\n", totalItems)
-	}
-
-	return feed.Items
-
-}
-
 // CreateArticles loads news articles into the database
-func CreateArticles(feedItems []*gofeed.Item, feedConfig models.FeedConfigItem) []*models.Article {
+func CreateArticles(data []map[string]*interface{}) []*models.Article {
 	glog.Info("creating articles...")
 	result := []*models.Article{}
-	totalItems := len(feedItems)
+	totalItems := len(data)
 
-	for i, item := range feedItems {
+	for i, item := range data {
 		glog.Infof("creating article %d of %d\n", i+1, totalItems)
 
-		glog.Infof("item data dump %+v\n", item)
+		// var revisedDate *time.Time
+		// if item.PublishedParsed != nil && feedConfig.ForceReparsePublishedDate != true {
+		// 	revisedDate = item.PublishedParsed
+		// } else if item.PublishedParsed != nil && feedConfig.ForceReparsePublishedDate == true {
+		// 	// todo: check if layout and location is present
+		// 	// when reparse is forced, layout and location must be specified
+		// 	for _, layout := range feedConfig.DateLayouts {
+		// 		var err error
+		// 		var location *time.Location
+		// 		location, err = time.LoadLocation(feedConfig.ReparsePublishedDateDefaultLocation)
+		// 		if err != nil {
+		// 			glog.Warningf("invalid data reparse location %s error: %s\n", feedConfig.ReparsePublishedDateDefaultLocation, err.Error())
+		// 			break
+		// 		}
+		// 		var forceParsedTime time.Time
+		// 		forceParsedTime, err = time.ParseInLocation(layout, item.Published, location)
+		// 		if err != nil {
+		// 			glog.Warningf("unable to parse the date extracted using layout %s error: %s\n", layout, err.Error())
+		// 			continue
+		// 		}
+		// 		revisedDate = &forceParsedTime
+		// 		break
+		// 	}
+		// } else {
+		// 	glog.Infoln("parsed date not found. trying extractors...")
+		// 	for _, extractor := range feedConfig.PublishedDateExtractors {
+		// 		extractedDate, err := extractData(item, extractor)
+		// 		if err != nil {
+		// 			glog.Warningf("unable to extract date using date extractor: %s\n", err.Error())
+		// 			continue
+		// 		}
+		// 		dateString, err := convertTamilToEnglishDate(extractedDate)
 
-		var revisedDate *time.Time
-		if item.PublishedParsed != nil && feedConfig.ForceReparsePublishedDate != true {
-			revisedDate = item.PublishedParsed
-		} else if item.PublishedParsed != nil && feedConfig.ForceReparsePublishedDate == true {
-			// todo: check if layout and location is present
-			// when reparse is forced, layout and location must be specified
-			for _, layout := range feedConfig.DateLayouts {
-				var err error
-				var location *time.Location
-				location, err = time.LoadLocation(feedConfig.ReparsePublishedDateDefaultLocation)
-				if err != nil {
-					glog.Warningf("invalid data reparse location %s error: %s\n", feedConfig.ReparsePublishedDateDefaultLocation, err.Error())
-					break
-				}
-				var forceParsedTime time.Time
-				forceParsedTime, err = time.ParseInLocation(layout, item.Published, location)
-				if err != nil {
-					glog.Warningf("unable to parse the date extracted using layout %s error: %s\n", layout, err.Error())
-					continue
-				}
-				revisedDate = &forceParsedTime
-				break
-			}
-		} else {
-			glog.Infoln("parsed date not found. trying extractors...")
-			for _, extractor := range feedConfig.PublishedDateExtractors {
-				extractedDate, err := extractData(item, extractor)
-				if err != nil {
-					glog.Warningf("unable to extract date using date extractor: %s\n", err.Error())
-					continue
-				}
-				dateString, err := convertTamilToEnglishDate(extractedDate)
+		// 		if err != nil {
+		// 			glog.Warningf("unable to convert extracted tamil date %s to english: %s\n", extractedDate, err.Error())
+		// 			continue
+		// 		}
 
-				if err != nil {
-					glog.Warningf("unable to convert extracted tamil date %s to english: %s\n", extractedDate, err.Error())
-					continue
-				}
+		// 		var parsedExtractedDate time.Time
 
-				var parsedExtractedDate time.Time
+		// 		for _, layout := range feedConfig.DateLayouts {
+		// 			var err error
+		// 			parsedExtractedDate, err = time.Parse(layout, dateString)
+		// 			if err != nil {
+		// 				glog.Warningf("unable to parse the date extracted using layout %s error: %s\n", layout, err.Error())
+		// 				continue
+		// 			}
+		// 			break
+		// 		}
 
-				for _, layout := range feedConfig.DateLayouts {
-					var err error
-					parsedExtractedDate, err = time.Parse(layout, dateString)
-					if err != nil {
-						glog.Warningf("unable to parse the date extracted using layout %s error: %s\n", layout, err.Error())
-						continue
-					}
-					break
-				}
+		// 		revisedDate = &parsedExtractedDate
+		// 		glog.Infof("extracted date %s\n", revisedDate)
+		// 	}
+		// }
 
-				revisedDate = &parsedExtractedDate
-				glog.Infof("extracted date %s\n", revisedDate)
-			}
-		}
+		// if revisedDate == nil && feedConfig.UseCurrentDateTimeWhenPubDateMissing == true {
+		// 	glog.Infoln("published date missing time, setting it current date time...")
+		// 	x := time.Now()
+		// 	revisedDate = &x
+		// }
 
-		if revisedDate == nil && feedConfig.UseCurrentDateTimeWhenPubDateMissing == true {
-			glog.Infoln("published date missing time, setting it current date time...")
-			x := time.Now()
-			revisedDate = &x
-		}
+		// if revisedDate == nil {
+		// 	glog.Errorf("unable to establish date for the article at all. Skipping this item.\n")
+		// 	dumpErrorInDatabase("extracting source link failed", errorDump{
+		// 		FeedConfig: feedConfig,
+		// 		OtherData:  item})
+		// 	continue
+		// }
 
-		if revisedDate == nil {
-			glog.Errorf("unable to establish date for the article at all. Skipping this item.\n")
-			dumpErrorInDatabase("extracting source link failed", errorDump{
-				FeedConfig: feedConfig,
-				OtherData:  item})
-			continue
-		}
+		// if isUtcMidnight(revisedDate) { // this means we don't have time - only date is present - just use current time
+		// 	glog.Infoln("published date missing time, setting it current time...")
+		// 	now := time.Now()
+		// 	if revisedDate.Before(now) {
+		// 		// when processing feed from india late in the evening the feed will come for next day
+		// 		// adding current UK time to next day feed from India result in next day + current UK time
+		// 		// if this happens the feed will have future published date - fall back to time.Now() for this cases
+		// 		x := revisedDate.Add(time.Hour*time.Duration(now.Hour()) +
+		// 			time.Minute*time.Duration(now.Minute()) +
+		// 			time.Second*time.Duration(now.Second()))
+		// 		revisedDate = &x
+		// 	} else {
+		// 		revisedDate = &now
+		// 	}
+		// }
 
-		if isUtcMidnight(revisedDate) { // this means we don't have time - only date is present - just use current time
-			glog.Infoln("published date missing time, setting it current time...")
-			now := time.Now()
-			if revisedDate.Before(now) {
-				// when processing feed from india late in the evening the feed will come for next day
-				// adding current UK time to next day feed from India result in next day + current UK time
-				// if this happens the feed will have future published date - fall back to time.Now() for this cases
-				x := revisedDate.Add(time.Hour*time.Duration(now.Hour()) +
-					time.Minute*time.Duration(now.Minute()) +
-					time.Second*time.Duration(now.Second()))
-				revisedDate = &x
+		// glog.Infoln("extracting source url...")
+		// extractedSourceURL, err := extractData(item, feedConfig.ItemURLExtractor)
+		// glog.Infof("extracted source url %s \n", extractedSourceURL)
+
+		// if err != nil {
+		// 	glog.Errorf("extracting source link failed with error %s. Skipping this item.\n", err.Error())
+		// 	dumpErrorInDatabase("extracting source link failed", errorDump{
+		// 		FeedConfig: feedConfig,
+		// 		OtherData:  item,
+		// 		Error:      err.Error()})
+		// 	continue
+		// }
+
+		// if extractedSourceURL == "" {
+		// 	glog.Errorln("extracting source link failed - no source link found. Skipping this item.")
+		// 	dumpErrorInDatabase("extracting source link failed", errorDump{
+		// 		FeedConfig: feedConfig,
+		// 		OtherData:  item,
+		// 		Error:      err.Error()})
+		// 	continue
+		// }
+
+		// glog.Infoln("extracting thumb image url...")
+		// extactedImageURL, err := extractData(item, feedConfig.ItemThumbImageExtractor)
+		// glog.Infof("extracted thumb image url %s \n", extactedImageURL)
+
+		// if err != nil {
+		// 	glog.Warningf("extracting image link failed with error: %s\n", err.Error())
+		// }
+
+		// if extactedImageURL == "" {
+		// 	glog.Warningln("extracting image link failed - no image link found.")
+		// }
+
+		// extractedShortContent := ""
+		// if feedConfig.ShortContentExtractor != (models.FeedDataExtractorConfig{}) {
+		// 	glog.Infoln("extracting short content...")
+		// 	var err error
+		// 	extractedShortContent, err = extractData(item, feedConfig.ShortContentExtractor)
+
+		// 	if err != nil {
+		// 		glog.Warningf("extracting short content failed with error: %s\n", err.Error())
+		// 	} else if extractedShortContent == "" {
+		// 		glog.Warningln("extracting short content failed - no content found.")
+		// 	} else {
+		// 		glog.Infof("extracted short content successfully")
+		// 	}
+		// }
+
+		article := models.Article{}
+
+		for key, val := range item {
+			if val != nil {
+				fmt.Printf("%s, %+v\n", key, *val)
 			} else {
-				revisedDate = &now
+				fmt.Printf("%s, NIL\n", key)
 			}
 		}
 
-		glog.Infoln("extracting source url...")
-		extractedSourceURL, err := extractData(item, feedConfig.ItemURLExtractor)
-		glog.Infof("extracted source url %s \n", extractedSourceURL)
-
-		if err != nil {
-			glog.Errorf("extracting source link failed with error %s. Skipping this item.\n", err.Error())
-			dumpErrorInDatabase("extracting source link failed", errorDump{
-				FeedConfig: feedConfig,
-				OtherData:  item,
-				Error:      err.Error()})
-			continue
+		if title, ok := (*item["Title"]).(string); ok {
+			article.Title = title
 		}
 
-		if extractedSourceURL == "" {
-			glog.Errorln("extracting source link failed - no source link found. Skipping this item.")
-			dumpErrorInDatabase("extracting source link failed", errorDump{
-				FeedConfig: feedConfig,
-				OtherData:  item,
-				Error:      err.Error()})
-			continue
+		if shortContent, ok := (*item["Description"]).(string); ok {
+			article.ShortContent = shortContent
 		}
 
-		glog.Infoln("extracting thumb image url...")
-		extactedImageURL, err := extractData(item, feedConfig.ItemThumbImageExtractor)
-		glog.Infof("extracted thumb image url %s \n", extactedImageURL)
-
-		if err != nil {
-			glog.Warningf("extracting image link failed with error: %s\n", err.Error())
+		if publishedDate, ok := (*item["PublishedDate"]).(time.Time); ok {
+			article.PublishedDate = publishedDate
 		}
 
-		if extactedImageURL == "" {
-			glog.Warningln("extracting image link failed - no image link found.")
+		// if thumbImageURL, ok := (*item["ThumbImageUrl"]).(string); ok {
+		// 	article.ThumbImageURL = thumbImageURL
+		// }
+
+		if sourceURL, ok := (*item["SourceUrl"]).(string); ok {
+			article.SourceURL = sourceURL
 		}
 
-		extractedShortContent := ""
-		if feedConfig.ShortContentExtractor != (models.FeedDataExtractorConfig{}) {
-			glog.Infoln("extracting short content...")
-			var err error
-			extractedShortContent, err = extractData(item, feedConfig.ShortContentExtractor)
-
-			if err != nil {
-				glog.Warningf("extracting short content failed with error: %s\n", err.Error())
-			} else if extractedShortContent == "" {
-				glog.Warningln("extracting short content failed - no content found.")
-			} else {
-				glog.Infof("extracted short content successfully")
-			}
-		}
-
-		article := models.Article{
-			Title:         item.Title,
-			ShortContent:  extractedShortContent,
-			PublishedDate: *revisedDate,
-			Categories:    []string{feedConfig.DefaultCategory},
-			ThumbImageURL: extactedImageURL,
-			SourceURL:     extractedSourceURL,
-			Source:        feedConfig.Origin,
-			OriginalFeed:  *item,
-			CreatedAt:     time.Now()}
+		// Title:         (*item["Title"]).(string),
+		// ShortContent:  (*item["Description"]).(string),
+		// PublishedDate: (*item["PublishedDate"]),
+		// //Categories:    []string{feedConfig.DefaultCategory},
+		// ThumbImageURL: (*item["ThumbImageUrl"]).(string),
+		// SourceURL:     (*item["SourceUrl"]).(string),
+		//Source:        feedConfig.Origin,
+		//OriginalFeed:  *item,
+		article.CreatedAt = time.Now()
 
 		result = append(result, &article)
 		glog.Infof("finished creating article %d of %d\n", i+1, totalItems)
