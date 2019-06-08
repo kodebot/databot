@@ -1,9 +1,12 @@
 package jobs
 
 import (
+	"io/ioutil"
+
 	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/articles"
+	"github.com/kodebot/newsfeed/data"
 	"github.com/kodebot/newsfeed/datafeed"
-	"github.com/kodebot/newsfeed/services"
 )
 
 // LoadArticlesFromFeedsJob job
@@ -14,24 +17,39 @@ type PruneArticlesJob struct{}
 
 // Run LoadArticlesFromFeedsJob
 func (j LoadArticlesFromFeedsJob) Run() {
-	dataFeed, dataFeedSetting := datafeed.ParseFromDataFeedSetting("./conf/new_feed_configs/001_dinamalar_politics.toml")
-	articles := services.CreateArticles(dataFeed)
-	if len(articles) == 0 {
-		glog.Warning("no articles found...")
-	} else {
-
-		for _, article := range articles {
-			article.Source = dataFeedSetting.SourceName
-			article.Categories = []string{dataFeedSetting.Category}
-		}
-
-		services.LoadArticles(articles)
+	articleCollection, err := data.GetCollection("articles")
+	if err != nil {
+		glog.Errorf("error while loading articles collection %s", err.Error())
+		return
 	}
 
+	feedConfigPath := "./conf/feed/ready/"
+	files, err := ioutil.ReadDir(feedConfigPath)
+
+	for _, file := range files {
+		fullPath := feedConfigPath + file.Name()
+		glog.Infof("loading articles using %s", fullPath)
+		dataFeed, dataFeedSetting := datafeed.ParseFromDataFeedSetting(fullPath)
+
+		if len(dataFeed) == 0 {
+			glog.Warning("no articles found...")
+			return
+		}
+
+		for _, dataFeedItem := range dataFeed {
+			newArticle := articles.NewArticle(dataFeedItem)
+			newArticle.Source = dataFeedSetting.SourceName
+			newArticle.Categories = []string{dataFeedSetting.Category}
+			err := newArticle.Store(articleCollection)
+			if err != nil {
+				glog.Errorf("error while storing article %s", err.Error())
+			}
+		}
+	}
 	glog.Infoln("finished LoadArticlesFromFeedsJob...")
 }
 
 // Run PruneArticlesJob
 func (j PruneArticlesJob) Run() {
-	services.PruneArticles()
+	// todo:
 }

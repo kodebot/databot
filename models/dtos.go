@@ -25,18 +25,3 @@ type ArticleContent struct {
 	SourceURL     string
 	Source        string
 }
-
-// Article model
-type Article struct {
-	ID            primitive.ObjectID `bson:"_id,omitempty"`
-	Title         string
-	ShortContent  string
-	Content       string
-	PublishedDate time.Time
-	Categories    []string
-	ThumbImageURL string
-	SourceURL     string
-	Source        string
-	OriginalFeed  interface{}
-	CreatedAt     time.Time
-}
