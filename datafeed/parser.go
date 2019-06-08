@@ -10,23 +10,23 @@ import (
 )
 
 // ParseFromDataFeedSetting returns structured data as per the given data feed settings
-func ParseFromDataFeedSetting(filePath string) ([]map[string]*interface{}, model.DataFeedSetting) {
+func ParseFromDataFeedSetting(filePath string) ([]map[string]interface{}, model.DataFeedSetting) {
 	dataFeedSetting := readDataFeedSetting(filePath)
 	return ParseFromURL(dataFeedSetting.Source, dataFeedSetting.SourceType, dataFeedSetting.Record), dataFeedSetting
 }
 
 // ParseFromURL returns structured data as per the record setting from the given url
-func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]*interface{} {
+func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]interface{} {
 	data, err := readAsString(url)
 	if err != nil {
 		glog.Errorf("unable to read from url %s", url)
-		return make([]map[string]*interface{}, 0)
+		return make([]map[string]interface{}, 0)
 	}
 	return Parse(data, sourceType, setting)
 }
 
 // Parse returns structured data as per the record setting from the given data string
-func Parse(data string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]*interface{} {
+func Parse(data string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]interface{} {
 	var fieldCollectorSettings []cmodel.FieldCollectorSetting
 	fieldTransformerSettingsMap := make(map[string][]tmodel.TransformerSetting)
 

@@ -12,7 +12,7 @@ type RegexpCollector struct {
 }
 
 // Collect returns regexp collected value
-func (c Collector) Collect() *interface{} {
+func (c Collector) Collect() interface{} {
 
 	glog.Infof("collecting from %s using regexp", c.Field)
 
@@ -50,7 +50,7 @@ func (c Collector) Collect() *interface{} {
 
 	if found := matches[requiredMatchIndex]; found != "" {
 		var result interface{} = found
-		return &result
+		return result
 	}
 	return nil
 

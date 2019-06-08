@@ -1,4 +1,4 @@
-package rssAtom
+package rssatom
 
 import (
 	"strings"

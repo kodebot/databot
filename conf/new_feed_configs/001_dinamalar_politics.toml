@@ -23,7 +23,7 @@ schedule = "every 30 minutes"
         name= "PublishedDate"
         [record.field.collectorSetting]
             type= "value"
-            [parameters]
+            [record.field.collectorSetting.parameters]
                 "source" = "PublishedParsed"
 
     [[record.field]]
@@ -33,10 +33,10 @@ schedule = "every 30 minutes"
             [record.field.collectorSetting.parameters]
                 "source" = "Link"
     [[record.field]]
-    name= "ThumbImageUrl"
-    [record.field.collectorSetting]
-        type= "regexp"
-        [record.field.collectorSetting.parameters]
-            "source" = "Description"
-            "expr" = "<img[^>]+src='(?P<data>[^']+)"
+        name= "ThumbImageUrl"
+        [record.field.collectorSetting]
+            type= "regexp"
+            [record.field.collectorSetting.parameters]
+                "source" = "Description"
+                "expr" = "<img[^>]+src='(?P<data>[^']+)"
    

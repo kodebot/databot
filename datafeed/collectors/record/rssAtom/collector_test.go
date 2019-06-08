@@ -1,4 +1,4 @@
-package rssAtom
+package rssatom
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/kodebot/newsfeed/datafeed/collectors/model"
 )
 
-var testFeedDataWithSingleItem string = `<?xml
+var testFeedDataWithSingleItem = `<?xml
 version='1.0' encoding='utf-8'?>
 <rss version='2.0'>
 	<channel>
@@ -45,7 +45,7 @@ func TestCollectValueCollector(t *testing.T) {
 	}
 
 	expectedTitle := "பறவைகளுக்கு விலாசம் சொன்னது யார்?"
-	if title := *(result[0])["Title"]; title != expectedTitle {
+	if title := result[0]["Title"]; title != expectedTitle {
 		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedTitle, title)
 	}
 }
@@ -65,7 +65,7 @@ func TestCollectRegExpCollector(t *testing.T) {
 	}
 
 	expectedValue := "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg"
-	if value := *(result[0])["Description"]; value != expectedValue {
+	if value := result[0]["Description"]; value != expectedValue {
 		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
 	}
 }
@@ -85,7 +85,7 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 	}
 
 	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
 	}
 }
 
@@ -104,7 +104,7 @@ func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 	}
 
 	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
 	}
 }
 
@@ -121,7 +121,7 @@ func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
 	}
 
 	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
 	}
 }
 
@@ -138,6 +138,6 @@ func TestCollectUnknownCollector(t *testing.T) {
 	}
 
 	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", *actualValue)
+		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
 	}
 }

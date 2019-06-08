@@ -2,7 +2,7 @@ package field
 
 // collector behaviors
 type collector interface {
-	Collect() string
+	Collect() interface{}
 }
 
 // Collector is generic field collector

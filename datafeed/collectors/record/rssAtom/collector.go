@@ -1,4 +1,4 @@
-package rssAtom
+package rssatom
 
 import (
 	"reflect"
@@ -9,11 +9,11 @@ import (
 )
 
 // Collect returns collected fields from the given data using given field collector settings
-func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[string]*interface{} {
+func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[string]interface{} {
 	feeds := readFromXML(data)
-	var records []map[string]*interface{}
+	var records []map[string]interface{}
 	for _, feed := range feeds {
-		record := map[string]*interface{}{}
+		record := map[string]interface{}{}
 		for _, fieldCollector := range fieldCollectors {
 
 			var sourceField string

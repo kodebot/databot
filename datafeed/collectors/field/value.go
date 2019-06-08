@@ -10,7 +10,7 @@ type ValueCollector struct {
 }
 
 // Collect returns regexp collected value
-func (c *ValueCollector) Collect() *interface{} {
+func (c *ValueCollector) Collect() interface{} {
 	glog.Infof("collecting from %s using value collector from", c.Field)
-	return &c.Field
+	return c.Field
 }

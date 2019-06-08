@@ -81,15 +81,15 @@ func TestCollect_feed(t *testing.T) {
 			"2019-06-04 20:13:00 +0000 UTC"}}
 
 	for i, expectedResult := range expectedResults {
-		if title := *(actualResults[i])["Title"]; title != expectedResult.Title {
+		if title := actualResults[i]["Title"]; title != expectedResult.Title {
 			t.Fatalf("parsed item Title doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.Title, title)
 		}
 
-		if imageURL := *(actualResults[i])["ImageUrl"]; imageURL != expectedResult.ImageURL {
+		if imageURL := actualResults[i]["ImageUrl"]; imageURL != expectedResult.ImageURL {
 			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
-		if publishedDate := *(actualResults[i])["PublishedDate"]; publishedDate.(*time.Time).String() != expectedResult.PublishedDate {
+		if publishedDate := actualResults[i]["PublishedDate"]; publishedDate.(*time.Time).String() != expectedResult.PublishedDate {
 			t.Fatalf("parsed item PublishedDate doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.PublishedDate, publishedDate)
 		}
 	}

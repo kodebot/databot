@@ -88,15 +88,15 @@ func TestParse_feed(t *testing.T) {
 			"Wed, 05 Jun 2019 01:43:00 +0530"}}
 
 	for i, expectedResult := range expectedResults {
-		if title := *(parsed[i])["Title"]; title != expectedResult.Title {
+		if title := parsed[i]["Title"]; title != expectedResult.Title {
 			t.Fatalf("parsed item Title doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.Title, title)
 		}
 
-		if imageURL := *(parsed[i])["ImageUrl"]; imageURL != expectedResult.ImageURL {
+		if imageURL := parsed[i]["ImageUrl"]; imageURL != expectedResult.ImageURL {
 			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
-		if published := *(parsed[i])["Published"]; published.(string) != expectedResult.Published {
+		if published := parsed[i]["Published"]; published.(string) != expectedResult.Published {
 			t.Fatalf("parsed item published doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.Published, published)
 		}
 	}
