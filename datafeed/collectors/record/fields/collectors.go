@@ -1,4 +1,4 @@
-package field
+package fields
 
 import (
 	"regexp"
@@ -6,19 +6,19 @@ import (
 	"github.com/golang/glog"
 )
 
-// RegexpCollector collects data using regexp
-type RegexpCollector struct {
-	Collector
+// Value returns source value without any changes
+func Value(source interface{}, parameters map[string]interface{}) interface{} {
+	return source
 }
 
-// Collect returns regexp collected value
-func (c Collector) Collect() interface{} {
+// Regexp returns regexp collected value
+func Regexp(source interface{}, parameters map[string]interface{}) interface{} {
 
-	glog.Infof("collecting from %s using regexp", c.Field)
+	glog.Infof("collecting from %s using regexp", source)
 
-	fieldRawValueString := c.Field.(string)
+	fieldRawValueString := source.(string)
 	var expr string
-	if ok := c.Parameters["expr"]; ok != nil {
+	if ok := parameters["expr"]; ok != nil {
 		expr = ok.(string)
 	} else {
 		glog.Errorf("no regular expression parameter found")
