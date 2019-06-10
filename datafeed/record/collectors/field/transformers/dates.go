@@ -29,7 +29,7 @@ func parseDate(value interface{}, parameters map[string]interface{}) interface{}
 	}
 
 	layoutString := time.RFC3339
-	if parameters == nil || parameters["layout"] != nil {
+	if parameters != nil && parameters["layout"] != nil {
 		layoutString = parameters["layout"].(string)
 	}
 

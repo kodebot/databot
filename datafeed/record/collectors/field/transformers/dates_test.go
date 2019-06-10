@@ -25,7 +25,9 @@ var parseDateTests = []TransformerTest{
 	{nil, nil, nil},
 	{"06/10/19", "2019-06-10 00:00:00 +0000 UTC", map[string]interface{}{
 		"layout": "01/02/06"}},
-	{"07/10/19", "2019-06-10 00:00:00 +0000 UTC", nil},
+	{"07/10/19", "07/10/19", nil},
+	{"2019-05-04T15:04:05Z07:00", "2019-05-04T15:04:05Z07:00", nil},
+	{"2019-05-04T15:04:05Z07:00", "2019-05-04T15:04:05Z07:00", map[string]interface{}{}},
 	{nil, nil, nil},
 	{"not a date", "not a date", nil}}
 
