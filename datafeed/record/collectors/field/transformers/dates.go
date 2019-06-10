@@ -29,16 +29,15 @@ func parseDate(value interface{}, parameters map[string]interface{}) interface{}
 	}
 
 	layoutString := time.RFC3339
-	layout := parameters["layout"]
-	if layout != nil {
-		layoutString = layout.(string)
+	if parameters == nil || parameters["layout"] != nil {
+		layoutString = parameters["layout"].(string)
 	}
 
 	valueString := value.(string)
 	result, err := time.Parse(layoutString, valueString)
 
 	if err != nil {
-		glog.Errorf("parsing date failed with layout %s", layout)
+		glog.Errorf("parsing date failed with layout %s", layoutString)
 		return value
 	}
 

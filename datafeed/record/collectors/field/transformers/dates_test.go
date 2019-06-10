@@ -25,22 +25,15 @@ var parseDateTests = []TransformerTest{
 	{nil, nil, nil},
 	{"06/10/19", "2019-06-10 00:00:00 +0000 UTC", map[string]interface{}{
 		"layout": "01/02/06"}},
-	{"06/10/19", "2019-06-10 00:00:00 +0000 UTC", nil},
+	{"07/10/19", "2019-06-10 00:00:00 +0000 UTC", nil},
 	{nil, nil, nil},
 	{"not a date", "not a date", nil}}
 
 func TestParseDate(t *testing.T) {
 	for _, test := range parseDateTests {
 		actual := parseDate(test.input, test.parameters)
-		if test.expected != actual {
+		if !compareDateStr(test.expected, actual) {
 			fail(t, "parseDate not working", test.expected, actual)
 		}
 	}
-}
-
-func compareDateStr(expected interface{}, actual interface{}) bool {
-	if (expected == nil || actual == nil) && expected == actual {
-		return true
-	}
-
 }
