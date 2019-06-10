@@ -23,8 +23,8 @@ schedule = "every 5 minutes"
         name= "PublishedDate"
         [record.field.collectorInfo]
             type= "value"
-            [parameters]
-                "source" = "Published"
+            [record.field.collectorInfo.parameters]
+                "source" = "PublishedParsed"
 
     [[record.field]]
         name= "SourceUrl"
