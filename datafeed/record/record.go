@@ -23,7 +23,7 @@ func Create(data string, sourceType rcollectors.SourceType, recordInfo Info) []m
 		glog.Errorf("source type %s is not implemented", sourceType)
 	}
 
-	// todo: transformers
+	// todo: transformers (record level - not supported at the moment)
 
 	return result
 }

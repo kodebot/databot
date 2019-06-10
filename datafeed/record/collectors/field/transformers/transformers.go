@@ -8,12 +8,22 @@ import (
 )
 
 const (
-	// Trim removes whitespaces at start and end
-	Trim string = "trim"
-
-	// FormatDate formats the date
+	// FormatDate transformer
 	FormatDate string = "formatDate"
+
+	// Trim transformer
+	Trim string = "trim"
 )
+
+type transformFuncType func(value interface{}, parameters map[string]interface{}) interface{}
+
+var transformersMap map[string]transformFuncType
+
+func init() {
+	transformersMap = map[string]transformFuncType{
+		FormatDate: formatDate,
+		Trim:       trim}
+}
 
 // TransformerInfo provides model to specify transformer settings
 type TransformerInfo struct {
@@ -21,8 +31,22 @@ type TransformerInfo struct {
 	Parameters  map[string]interface{}
 }
 
+// Transform returns transformed data
+func Transform(value interface{}, transformersInfo []TransformerInfo) interface{} {
+
+	for _, info := range transformersInfo {
+		transformerFunc := transformersMap[info.Transformer]
+		if transformerFunc != nil {
+			value = transformerFunc(value, info.Parameters)
+		}
+		glog.Warningf("transformer %s is not found", info.Transformer)
+	}
+	return value
+
+}
+
 // TransformFormatDate returns formattted date
-func TransformFormatDate(value interface{}, parameters map[string]interface{}) interface{} {
+func formatDate(value interface{}, parameters map[string]interface{}) interface{} {
 	if valueTime, ok := value.(*time.Time); ok {
 		return valueTime.String()
 	}
@@ -32,8 +56,7 @@ func TransformFormatDate(value interface{}, parameters map[string]interface{}) i
 
 }
 
-// TransformTrim return value without leading and ending whitespaces
-func TransformTrim(value interface{}, parameters map[string]interface{}) interface{} {
+func trim(value interface{}, parameters map[string]interface{}) interface{} {
 
 	if valueString, ok := value.(string); ok {
 		return strings.TrimSpace(valueString)

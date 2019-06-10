@@ -28,13 +28,35 @@ const (
 	Unknown CollectorType = "unknown"
 )
 
+type collectorFuncType func(value interface{}, parameters map[string]interface{}) interface{}
+
+var collectorsMap map[CollectorType]collectorFuncType
+
+func init() {
+	collectorsMap = map[CollectorType]collectorFuncType{
+		Value:  value,
+		Regexp: regex}
+}
+
+// Collect value from the source
+func Collect(source interface{}, info CollectorInfo) interface{} {
+	collector := collectorsMap[info.Type]
+
+	if collector != nil {
+		return collector(source, info.Parameters)
+	}
+
+	glog.Warningf("invalid collector type %s", info.Type)
+	return nil
+}
+
 // CollectValue returns source value without any changes
-func CollectValue(source interface{}, parameters map[string]interface{}) interface{} {
+func value(source interface{}, parameters map[string]interface{}) interface{} {
 	return source
 }
 
 // CollectRegexp returns regexp collected value
-func CollectRegexp(source interface{}, parameters map[string]interface{}) interface{} {
+func regex(source interface{}, parameters map[string]interface{}) interface{} {
 
 	glog.Infof("collecting from %s using regexp", source)
 
