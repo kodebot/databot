@@ -23,7 +23,7 @@ type TransformerInfo struct {
 
 // TransformFormatDate returns formattted date
 func TransformFormatDate(value interface{}, parameters map[string]interface{}) interface{} {
-	if valueTime, ok := value.(time.Time); ok {
+	if valueTime, ok := value.(*time.Time); ok {
 		return valueTime.String()
 	}
 

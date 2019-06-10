@@ -62,7 +62,7 @@ func TestParse_feed(t *testing.T) {
 				Type:       fcollectors.Regexp,
 				Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}},
 		{
-			Name: "Published",
+			Name: "PublishedParsed",
 			CollectorInfo: fcollectors.CollectorInfo{
 				Type: fcollectors.Value},
 			TransformersInfo: []ftransformers.TransformerInfo{{
@@ -76,18 +76,18 @@ func TestParse_feed(t *testing.T) {
 	}
 
 	expectedResults := []struct {
-		Title     string
-		ImageURL  string
-		Published string
+		Title           string
+		ImageURL        string
+		PublishedParsed string
 	}{
 		{
 			"பறவைகளுக்கு விலாசம் சொன்னது யார்?",
 			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg",
-			"Tue, 04 Jun 2019 23:34:00 +0530"},
+			"2019-06-04 18:04:00 +0000 UTC"},
 		{
 			"ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
 			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2291013_150_100.jpg",
-			"Wed, 05 Jun 2019 01:43:00 +0530"}}
+			"2019-06-04 20:13:00 +0000 UTC"}}
 
 	for i, expectedResult := range expectedResults {
 		if title := parsed[i]["Title"]; title != expectedResult.Title {
@@ -98,8 +98,8 @@ func TestParse_feed(t *testing.T) {
 			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
-		if published := parsed[i]["Published"]; published.(string) != expectedResult.Published {
-			t.Fatalf("parsed item published doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.Published, published)
+		if publishedParsed := parsed[i]["PublishedParsed"]; (publishedParsed.(string)) != expectedResult.PublishedParsed {
+			t.Fatalf("parsed item published doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.PublishedParsed, (publishedParsed.(string)))
 		}
 	}
 }
