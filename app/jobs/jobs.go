@@ -10,7 +10,9 @@ import (
 )
 
 // LoadArticlesFromFeedsJob job
-type LoadArticlesFromFeedsJob struct{}
+type LoadArticlesFromFeedsJob struct {
+	FeedInfoPath string
+}
 
 // PruneArticlesJob job
 type PruneArticlesJob struct{}
@@ -23,7 +25,11 @@ func (j LoadArticlesFromFeedsJob) Run() {
 		return
 	}
 
-	feedConfigPath := "./conf/feed/ready/"
+	feedConfigPath := j.FeedInfoPath
+	if feedConfigPath == "" {
+		feedConfigPath = "./conf/feed/ready/"
+	}
+
 	files, err := ioutil.ReadDir(feedConfigPath)
 
 	for _, file := range files {
