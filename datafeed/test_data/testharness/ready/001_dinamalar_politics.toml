@@ -12,12 +12,12 @@ schedule = "every 5 minutes"
     [[record.field]]
         name= "Description"
         [record.field.collectorInfo]
-            type= "value"
+            type= "empty"
 
     [[record.field]]
         name= "Content"
         [record.field.collectorInfo]
-            type= "value"
+            type= "empty"
 
     [[record.field]]
         name= "PublishedDate"
