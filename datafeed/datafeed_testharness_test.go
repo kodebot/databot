@@ -12,7 +12,6 @@ import (
 )
 
 func TestHarnessDataFeedFromFeedInfo(t *testing.T) {
-
 	feedConfigPath := "./test_data/testharness/ready/"
 	outputDir := "./test_data/testharness/output/"
 
@@ -56,6 +55,8 @@ func dataFeedToString(feed []map[string]interface{}) string {
 			valueString := "NIL"
 			if value != nil {
 				if valueDate, ok := value.(*time.Time); ok {
+					valueString = valueDate.String()
+				} else if valueDate, ok := value.(time.Time); ok {
 					valueString = valueDate.String()
 				} else {
 					valueString = value.(string)

@@ -5,34 +5,42 @@ import (
 	"time"
 )
 
+var timePointer = time.Date(2016, 10, 10, 1, 1, 1, 1, time.UTC)
+var formatDateTests = []TransformerTest{
+	{time.Date(2016, 10, 10, 1, 1, 1, 1, time.UTC), "2016-10-10 01:01:01.000000001 +0000 UTC", nil},
+	{&timePointer, "2016-10-10 01:01:01.000000001 +0000 UTC", nil},
+	{nil, nil, nil},
+	{"not a date", "not a date", nil}}
+
 func TestFormatDate(t *testing.T) {
+	for _, test := range formatDateTests {
+		actual := formatDate(test.input, test.parameters)
+		if test.expected != actual {
+			fail(t, "formatDate not working", test.expected, actual)
+		}
+	}
+}
 
-	date := time.Date(2016, 10, 10, 1, 1, 1, 1, time.UTC)
+var parseDateTests = []TransformerTest{
+	{nil, nil, nil},
+	{"06/10/19", "2019-06-10 00:00:00 +0000 UTC", map[string]interface{}{
+		"layout": "01/02/06"}},
+	{"06/10/19", "2019-06-10 00:00:00 +0000 UTC", nil},
+	{nil, nil, nil},
+	{"not a date", "not a date", nil}}
 
-	actual := formatDate(date, nil)
-	expected := "2016-10-10 01:01:01.000000001 +0000 UTC"
+func TestParseDate(t *testing.T) {
+	for _, test := range parseDateTests {
+		actual := parseDate(test.input, test.parameters)
+		if test.expected != actual {
+			fail(t, "parseDate not working", test.expected, actual)
+		}
+	}
+}
 
-	if expected != actual {
-		t.Fatalf("date (value) is not formated using default format. EXPECTED: >>%s<<, ACTUAL: >>%s<<", expected, actual)
+func compareDateStr(expected interface{}, actual interface{}) bool {
+	if (expected == nil || actual == nil) && expected == actual {
+		return true
 	}
 
-	actual = formatDate(&date, nil)
-	expected = "2016-10-10 01:01:01.000000001 +0000 UTC"
-
-	if expected != actual {
-		t.Fatalf("date (pointer) is not formated using default format. EXPECTED: >>%s<<, ACTUAL: >>%s<<", expected, actual)
-	}
-
-	actual = formatDate(nil, nil)
-
-	if nil != actual {
-		t.Fatalf("nil value causes failure. EXPECTED: >>NIL<<, ACTUAL: >>%s<<", actual)
-	}
-
-	nonDateValue := "not a date"
-	actual = formatDate(nonDateValue, nil)
-
-	if nonDateValue != actual {
-		t.Fatalf("nil value causes failure. EXPECTED: >>%s<<, ACTUAL: >>%s<<", nonDateValue, actual)
-	}
 }

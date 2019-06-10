@@ -1,0 +1,42 @@
+sourceName = "dinamalar"
+source ="http://rss.dinamalar.com/?cat=INL1"
+sourceType= "rss/atom"
+category = "world"
+schedule = "every 5 minutes"
+[record]
+    [[record.field]]
+        name= "Title"
+        [record.field.collectorInfo]
+            type= "value"
+
+    [[record.field]]
+        name= "Description"
+        [record.field.collectorInfo]
+            type= "empty"
+
+    [[record.field]]
+        name= "Content"
+        [record.field.collectorInfo]
+            type= "empty"
+
+    [[record.field]]
+        name= "PublishedDate"
+        [record.field.collectorInfo]
+            type= "value"
+            [record.field.collectorInfo.parameters]
+                "source" = "PublishedParsed"
+
+    [[record.field]]
+        name= "SourceUrl"
+        [record.field.collectorInfo]
+            type= "value"
+            [record.field.collectorInfo.parameters]
+                "source" = "Link"
+    [[record.field]]
+    name= "ThumbImageUrl"
+    [record.field.collectorInfo]
+        type= "regexp"
+        [record.field.collectorInfo.parameters]
+            "source" = "Description"
+            "expr" = "<img[^>]+src='(?P<data>[^']+)"
+   

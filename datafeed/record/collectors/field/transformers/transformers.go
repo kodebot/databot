@@ -7,6 +7,10 @@ import (
 const (
 	// FormatDate transformer
 	FormatDate string = "formatDate"
+	// ParseDate transformer
+	ParseDate string = "parseDate"
+	// UTCMidnightToNow transformer
+	UTCMidnightToNow string = "utcMidnightToNow"
 	// Trim transformer
 	Trim string = "trim"
 	// TrimLeft transformer
@@ -21,10 +25,12 @@ var transformersMap map[string]transformFuncType
 
 func init() {
 	transformersMap = map[string]transformFuncType{
-		FormatDate: formatDate,
-		Trim:       trim,
-		TrimLeft:   trimLeft,
-		TrimRight:  trimRight}
+		FormatDate:       formatDate,
+		ParseDate:        parseDate,
+		UTCMidnightToNow: utcMidnightToNow,
+		Trim:             trim,
+		TrimLeft:         trimLeft,
+		TrimRight:        trimRight}
 }
 
 // TransformerInfo provides model to specify transformer settings
@@ -35,7 +41,6 @@ type TransformerInfo struct {
 
 // Transform returns transformed data
 func Transform(value interface{}, transformersInfo []TransformerInfo) interface{} {
-
 	for _, info := range transformersInfo {
 		transformerFunc := transformersMap[info.Transformer]
 		if transformerFunc != nil {
@@ -44,5 +49,4 @@ func Transform(value interface{}, transformersInfo []TransformerInfo) interface{
 		glog.Warningf("transformer %s is not found", info.Transformer)
 	}
 	return value
-
 }
