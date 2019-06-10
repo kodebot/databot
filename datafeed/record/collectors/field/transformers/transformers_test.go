@@ -61,7 +61,3 @@ func TestTransformMultipleTransformersAndUnknown(t *testing.T) {
 		fail(t, "valid transformers not appear to be applied", expected, actual.(string))
 	}
 }
-
-func fail(t *testing.T, message string, expected string, actual string) {
-	t.Fatalf("%s. EXPECTED: >>%s<<, ACTUAL: >>%s<<", message, expected, actual)
-}
