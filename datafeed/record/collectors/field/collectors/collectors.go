@@ -1,4 +1,4 @@
-package fields
+package collectors
 
 import (
 	"regexp"
@@ -8,7 +8,6 @@ import (
 
 // CollectorInfo settings for collecting field
 type CollectorInfo struct {
-	Field      string
 	Type       CollectorType
 	Parameters map[string]interface{}
 }
@@ -29,12 +28,12 @@ const (
 	Unknown CollectorType = "unknown"
 )
 
-// Value returns source value without any changes
+// CollectValue returns source value without any changes
 func CollectValue(source interface{}, parameters map[string]interface{}) interface{} {
 	return source
 }
 
-// Regexp returns regexp collected value
+// CollectRegexp returns regexp collected value
 func CollectRegexp(source interface{}, parameters map[string]interface{}) interface{} {
 
 	glog.Infof("collecting from %s using regexp", source)

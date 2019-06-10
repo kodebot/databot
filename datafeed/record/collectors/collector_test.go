@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
-	dmodel "github.com/kodebot/newsfeed/datafeed/model"
+	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
+	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
 )
 
 func TestCollect_feed(t *testing.T) {
@@ -44,23 +44,26 @@ func TestCollect_feed(t *testing.T) {
 		</channel>
 	</rss>`
 
-	var fieldSettings []fields.CollectorInfo
+	var fieldsInfo []field.Info
 
-	fieldSettings = append(fieldSettings, fields.CollectorInfo{
-		Field: "Title",
-		Type:  fields.Value})
+	fieldsInfo = append(fieldsInfo, field.Info{
+		Name: "Title",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Value}})
 
-	fieldSettings = append(fieldSettings, fields.CollectorInfo{
-		Field:      "ImageUrl",
-		Type:       fields.Regexp,
-		Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}})
+	fieldsInfo = append(fieldsInfo, field.Info{
+		Name: "ImageUrl",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type:       fcollectors.Regexp,
+			Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}})
 
-	fieldSettings = append(fieldSettings, fields.CollectorInfo{
-		Field:      "PublishedDate",
-		Type:       fields.Value,
-		Parameters: map[string]interface{}{"source": "PublishedParsed"}})
+	fieldsInfo = append(fieldsInfo, field.Info{
+		Name: "PublishedDate",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type:       fcollectors.Value,
+			Parameters: map[string]interface{}{"source": "PublishedParsed"}}})
 
-	actualResults := Collect(data, dmodel.RssAtom, fieldSettings)
+	actualResults := Collect(data, RssAtom, fieldsInfo)
 
 	if count := len(actualResults); count != 2 {
 		t.Fatalf("expected 2 actual record but found %d", count)

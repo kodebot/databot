@@ -6,7 +6,6 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/datafeed/model"
 )
 
 // readAsString returns http response as a string for given url
@@ -28,12 +27,12 @@ func readAsString(url string) (string, error) {
 	return bodyString, nil
 }
 
-func readDataFeedSetting(filePath string) model.DataFeedSetting {
+func readFeedInfo(filePath string) FeedInfo {
 
-	var dataFeedSettings model.DataFeedSetting
-	_, err := toml.DecodeFile(filePath, &dataFeedSettings)
+	var feedInfo FeedInfo
+	_, err := toml.DecodeFile(filePath, &feedInfo)
 	if err != nil {
-		glog.Errorf("error when loading feed config: %s\n", err.Error())
+		glog.Errorf("error when loading feed info: %s\n", err.Error())
 	}
-	return dataFeedSettings
+	return feedInfo
 }

@@ -3,7 +3,9 @@ package rssatom
 import (
 	"testing"
 
-	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
+	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
+
+	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
 )
 
 var testFeedDataWithSingleItem = `<?xml
@@ -34,11 +36,12 @@ version='1.0' encoding='utf-8'?>
 
 func TestCollectValueCollector(t *testing.T) {
 
-	fieldCollectors := []fields.CollectorInfo{{
-		Field: "Title",
-		Type:  fields.Value}}
+	fieldsInfo := []field.Info{{
+		Name: "Title",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Value}}}
 
-	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
 	if count := len(result); count != 1 {
 		t.Fatalf("expected 1 collected record but found %d", count)
@@ -52,13 +55,14 @@ func TestCollectValueCollector(t *testing.T) {
 
 func TestCollectRegExpCollector(t *testing.T) {
 
-	fieldCollectors := []fields.CollectorInfo{{
-		Field: "Description",
-		Type:  fields.Regexp,
-		Parameters: map[string]interface{}{
-			"expr": "<img[^>]+src='(?P<data>[^']+)"}}}
+	fieldsInfo := []field.Info{{
+		Name: "Description",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Regexp,
+			Parameters: map[string]interface{}{
+				"expr": "<img[^>]+src='(?P<data>[^']+)"}}}}
 
-	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
 	if count := len(result); count != 1 {
 		t.Fatalf("expected 1 collected record but found %d", count)
@@ -72,13 +76,14 @@ func TestCollectRegExpCollector(t *testing.T) {
 
 func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 
-	fieldCollectors := []fields.CollectorInfo{{
-		Field: "Description",
-		Type:  fields.Regexp,
-		Parameters: map[string]interface{}{
-			"expr": "<img[^>]+src='([^']+)"}}}
+	fieldsInfo := []field.Info{{
+		Name: "Description",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Regexp,
+			Parameters: map[string]interface{}{
+				"expr": "<img[^>]+src='([^']+)"}}}}
 
-	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
 	if count := len(result); count != 1 {
 		t.Fatalf("expected 1 collected record but found %d", count)
@@ -91,13 +96,14 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 
 func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 
-	fieldCollectors := []fields.CollectorInfo{{
-		Field: "Description",
-		Type:  fields.Regexp,
-		Parameters: map[string]interface{}{
-			"Expr": "<img[^>]+src='?<P([^']+)"}}}
+	fieldsInfo := []field.Info{{
+		Name: "Description",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Regexp,
+			Parameters: map[string]interface{}{
+				"Expr": "<img[^>]+src='?<P([^']+)"}}}}
 
-	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
 	if count := len(result); count != 1 {
 		t.Fatalf("expected 1 collected record but found %d", count)
@@ -110,11 +116,12 @@ func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 
 func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
 
-	fieldCollectors := []fields.CollectorInfo{{
-		Field: "Description",
-		Type:  fields.Regexp}}
+	fieldsInfo := []field.Info{{
+		Name: "Description",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Regexp}}}
 
-	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
 	if count := len(result); count != 1 {
 		t.Fatalf("expected 1 collected record but found %d", count)
@@ -127,11 +134,12 @@ func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
 
 func TestCollectUnknownCollector(t *testing.T) {
 
-	fieldCollectors := []fields.CollectorInfo{{
-		Field: "Description",
-		Type:  fields.Unknown}}
+	fieldsInfo := []field.Info{{
+		Name: "Description",
+		CollectorInfo: fcollectors.CollectorInfo{
+			Type: fcollectors.Unknown}}}
 
-	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
+	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
 	if count := len(result); count != 1 {
 		t.Fatalf("expected 1 collected record but found %d", count)

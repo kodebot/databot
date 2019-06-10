@@ -2,50 +2,37 @@ package datafeed
 
 import (
 	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/datafeed/collectors"
-	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
-	"github.com/kodebot/newsfeed/datafeed/model"
-	"github.com/kodebot/newsfeed/datafeed/transformers"
-	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
+	"github.com/kodebot/newsfeed/datafeed/record"
+	rcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors"
 )
 
-// ParseFromDataFeedSetting returns structured data as per the given data feed settings
-func ParseFromDataFeedSetting(filePath string) ([]map[string]interface{}, model.DataFeedSetting) {
-	dataFeedSetting := readDataFeedSetting(filePath)
-	return ParseFromURL(dataFeedSetting.Source, dataFeedSetting.SourceType, dataFeedSetting.Record), dataFeedSetting
+// FeedInfo provides shape for config data used to create data feed
+type FeedInfo struct {
+	SourceName string
+	Source     string
+	SourceType rcollectors.SourceType
+	Category   string
+	Schedule   string
+	Record     record.Info
 }
 
-// ParseFromURL returns structured data as per the record setting from the given url
-func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordInfo) []map[string]interface{} {
+// ParseFromFeedInfo returns structured data as per the given data feed settings
+func ParseFromFeedInfo(filePath string) ([]map[string]interface{}, FeedInfo) {
+	feedInfo := readFeedInfo(filePath)
+	return ParseFromURL(feedInfo.Source, feedInfo.SourceType, feedInfo.Record), feedInfo
+}
+
+// ParseFromURL returns structured data as per the record info from the given url
+func ParseFromURL(url string, sourceType rcollectors.SourceType, recordInfo record.Info) []map[string]interface{} {
 	data, err := readAsString(url)
 	if err != nil {
 		glog.Errorf("unable to read from url %s", url)
 		return make([]map[string]interface{}, 0)
 	}
-	return Parse(data, sourceType, setting)
+	return Parse(data, sourceType, recordInfo)
 }
 
 // Parse returns structured data as per the record setting from the given data string
-func Parse(data string, sourceType model.DataFeedSourceType, setting model.RecordInfo) []map[string]interface{} {
-	var fieldCollectorSettings []fields.CollectorInfo
-	fieldTransformerSettingsMap := make(map[string][]tmodel.TransformerSetting)
-
-	for _, fieldSetting := range setting.Fields {
-		fieldSetting.CollectorSetting.Field = fieldSetting.Name
-		fieldCollectorSettings = append(fieldCollectorSettings, fieldSetting.CollectorSetting)
-
-		fieldTransformerSettingsMap[fieldSetting.Name] = fieldSetting.TransformerSettings
-	}
-
-	collectedRecords := collectors.Collect(data, sourceType, fieldCollectorSettings)
-
-	for _, record := range collectedRecords {
-		for fieldName, fieldVal := range record {
-			if fieldTransformerSettings := fieldTransformerSettingsMap[fieldName]; fieldCollectorSettings != nil {
-				record[fieldName] = transformers.Transform(fieldVal, fieldTransformerSettings)
-			}
-		}
-	}
-
-	return collectedRecords
+func Parse(data string, sourceType rcollectors.SourceType, recordInfo record.Info) []map[string]interface{} {
+	return record.Create(data, sourceType, recordInfo)
 }

@@ -1,4 +1,4 @@
-// build integration
+// +build integration
 
 package datafeed
 
@@ -6,53 +6,55 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
-	"github.com/kodebot/newsfeed/datafeed/model"
+	"github.com/kodebot/newsfeed/datafeed/record"
+	rcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors"
+	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
+	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
 )
 
 func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 
 	url := "http://rss.dinamalar.com/?cat=ara1"
 
-	recordSetting := model.RecordInfo{
-		Fields: []model.FieldInfo{
+	recordSetting := record.Info{
+		Fields: []field.Info{
 			{
 				Name: "Title",
-				CollectorSetting: fields.CollectorInfo{
-					Type: fields.Value}},
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type: fcollectors.Value}},
 			{
 				Name: "Description",
-				CollectorSetting: fields.CollectorInfo{
-					Type: fields.Value}},
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type: fcollectors.Value}},
 			{
 				Name: "Content",
-				CollectorSetting: fields.CollectorInfo{
-					Type: fields.Value}},
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type: fcollectors.Value}},
 			{
 				Name: "Published",
-				CollectorSetting: fields.CollectorInfo{
-					Type: fields.Value}},
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type: fcollectors.Value}},
 			{
 				Name: "PublishedDate",
-				CollectorSetting: fields.CollectorInfo{
-					Type:       fields.Value,
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type:       fcollectors.Value,
 					Parameters: map[string]interface{}{"source": "PublishedParsed"}}},
 			{
 				Name: "ThumbImageUrl",
-				CollectorSetting: fields.CollectorInfo{
-					Type: fields.Regexp,
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type: fcollectors.Regexp,
 					Parameters: map[string]interface{}{
 						"expr":   "<img[^>]+src='(?P<data>[^']+)",
 						"source": "Description"}}},
 			{
 				Name: "SourceUrl",
-				CollectorSetting: fields.CollectorInfo{
-					Type: fields.Value,
+				CollectorSetting: fcollectors.CollectorInfo{
+					Type: fcollectors.Value,
 					Parameters: map[string]interface{}{
 						"source": "Link"}}},
 		}}
 
-	records := ParseFromURL(url, model.RssAtom, recordSetting)
+	records := ParseFromURL(url, rcollectors.RssAtom, recordSetting)
 
 	if count := len(records); count < 1 {
 		t.Fatalf("should have at least one record but found %d", count)
@@ -83,13 +85,13 @@ func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 	}
 
 	if published, ok := first["Published"].(string); !ok {
-		t.Fatalf("unable to retrieve publihsed")
+		t.Fatalf("unable to retrieve published")
 	} else {
 		t.Logf("published retrieved successfully, Published: %s", published)
 	}
 
 	if publishedDate, ok := first["PublishedDate"].(*time.Time); !ok {
-		t.Fatalf("unable to retrieve publihsed date ")
+		t.Fatalf("unable to retrieve published date ")
 	} else {
 		t.Logf("published date retrieved successfully, PublishedDate: %s", publishedDate)
 	}

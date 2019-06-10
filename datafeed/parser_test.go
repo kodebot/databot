@@ -3,9 +3,11 @@ package datafeed
 import (
 	"testing"
 
-	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
-	"github.com/kodebot/newsfeed/datafeed/model"
-	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
+	"github.com/kodebot/newsfeed/datafeed/record"
+	rcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors"
+	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
+	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
+	ftransformers "github.com/kodebot/newsfeed/datafeed/record/collectors/field/transformers"
 )
 
 func TestParse_feed(t *testing.T) {
@@ -44,30 +46,30 @@ func TestParse_feed(t *testing.T) {
 		</channel>
 	</rss>`
 
-	var settings model.RecordInfo
+	var recordInfo record.Info
 
-	settings.Fields = []model.FieldInfo{
+	recordInfo.Fields = []field.Info{
 		{
 			Name: "Title",
-			CollectorSetting: fields.CollectorInfo{
-				Type: fields.Value},
-			TransformerSettings: []tmodel.TransformerSetting{{
-				Transformer: tmodel.Trim}},
+			CollectorInfo: fcollectors.CollectorInfo{
+				Type: fcollectors.Value},
+			TransformersInfo: []ftransformers.TransformerInfo{{
+				Transformer: ftransformers.Trim}},
 		},
 		{
 			Name: "ImageUrl",
-			CollectorSetting: fields.CollectorInfo{
-				Type:       fields.Regexp,
+			CollectorInfo: fcollectors.CollectorInfo{
+				Type:       fcollectors.Regexp,
 				Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}},
 		{
 			Name: "Published",
-			CollectorSetting: fields.CollectorInfo{
-				Type: fields.Value},
-			TransformerSettings: []tmodel.TransformerSetting{{
-				Transformer: tmodel.FormatDate}}},
+			CollectorInfo: fcollectors.CollectorInfo{
+				Type: fcollectors.Value},
+			TransformersInfo: []ftransformers.TransformerInfo{{
+				Transformer: ftransformers.FormatDate}}},
 	}
 
-	parsed := Parse(data, model.RssAtom, settings)
+	parsed := Parse(data, rcollectors.RssAtom, recordInfo)
 
 	if count := len(parsed); count != 2 {
 		t.Fatalf("expected 2 parsed record but found %d", count)
