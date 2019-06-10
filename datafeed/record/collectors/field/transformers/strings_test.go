@@ -2,13 +2,9 @@ package transformers
 
 import "testing"
 
-type StringTransformerTest struct {
-	input      interface{}
-	expected   interface{}
-	parameters map[string]interface{}
-}
 
-var trimTests = []StringTransformerTest{
+
+var trimTests = []TransformerTest{
 	{" ", "", nil},
 	{"test ", "test", nil},
 	{134, 134, nil},
@@ -23,7 +19,7 @@ func TestTrim(t *testing.T) {
 	}
 }
 
-var trimLeftTests = []StringTransformerTest{
+var trimLeftTests = []TransformerTest{
 	{" ", "", nil},
 	{" test", "test", nil},
 	{" test ", "test ", nil},
@@ -39,7 +35,7 @@ func TestLeftTrim(t *testing.T) {
 	}
 }
 
-var trimRightTests = []StringTransformerTest{
+var trimRightTests = []TransformerTest{
 	{" ", "", nil},
 	{"test ", "test", nil},
 	{" test ", " test", nil},

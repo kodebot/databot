@@ -1,9 +1,9 @@
-package transformers
+package collectors
 
 import "testing"
 
-// TransformerTest helps to create table driven tests for transformers
-type TransformerTest struct {
+// CollectorTest helps to create table driven tests for collectors
+type CollectorTest struct {
 	input      interface{}
 	expected   interface{}
 	parameters map[string]interface{}
