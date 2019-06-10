@@ -19,6 +19,9 @@ const (
 	// Regexp field collector
 	Regexp CollectorType = "regexp"
 
+	// Empty sets collector value to empty string
+	Empty CollectorType = "empty"
+
 	// CSS field collector
 	CSS CollectorType = "css"
 
@@ -33,7 +36,8 @@ var collectorsMap map[CollectorType]collectorFuncType
 func init() {
 	collectorsMap = map[CollectorType]collectorFuncType{
 		Value:  value,
-		Regexp: regex}
+		Regexp: regex,
+		Empty:  empty}
 }
 
 // Collect value from the source
