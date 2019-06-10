@@ -1,18 +1,18 @@
 package transformers
 
 import (
-	"strings"
-	"time"
-
 	"github.com/golang/glog"
 )
 
 const (
 	// FormatDate transformer
 	FormatDate string = "formatDate"
-
 	// Trim transformer
 	Trim string = "trim"
+	// TrimLeft transformer
+	TrimLeft string = "trimLeft"
+	// TrimRight transfromer
+	TrimRight string = "trimRight"
 )
 
 type transformFuncType func(value interface{}, parameters map[string]interface{}) interface{}
@@ -22,7 +22,9 @@ var transformersMap map[string]transformFuncType
 func init() {
 	transformersMap = map[string]transformFuncType{
 		FormatDate: formatDate,
-		Trim:       trim}
+		Trim:       trim,
+		TrimLeft:   trimLeft,
+		TrimRight:  trimRight}
 }
 
 // TransformerInfo provides model to specify transformer settings
@@ -43,25 +45,4 @@ func Transform(value interface{}, transformersInfo []TransformerInfo) interface{
 	}
 	return value
 
-}
-
-// TransformFormatDate returns formattted date
-func formatDate(value interface{}, parameters map[string]interface{}) interface{} {
-	if valueTime, ok := value.(*time.Time); ok {
-		return valueTime.String()
-	}
-
-	glog.Errorf("formatDate is not allowed on non time.Time type")
-	return value
-
-}
-
-func trim(value interface{}, parameters map[string]interface{}) interface{} {
-
-	if valueString, ok := value.(string); ok {
-		return strings.TrimSpace(valueString)
-	}
-
-	glog.Errorf("trim is not allowed on non string type")
-	return value
 }
