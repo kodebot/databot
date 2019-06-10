@@ -12,7 +12,7 @@ import (
 	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
 )
 
-func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
+func TestIntegrationNewFromURLDinamalarPoliticsRssFeed(t *testing.T) {
 
 	url := "http://rss.dinamalar.com/?cat=ara1"
 
@@ -54,7 +54,7 @@ func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 						"source": "Link"}}},
 		}}
 
-	records := ParseFromURL(url, rcollectors.RssAtom, recordSetting)
+	records := NewFromURL(url, rcollectors.RssAtom, recordSetting)
 
 	if count := len(records); count < 1 {
 		t.Fatalf("should have at least one record but found %d", count)

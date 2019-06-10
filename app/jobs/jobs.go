@@ -29,7 +29,7 @@ func (j LoadArticlesFromFeedsJob) Run() {
 	for _, file := range files {
 		fullPath := feedConfigPath + file.Name()
 		glog.Infof("loading articles using %s", fullPath)
-		dataFeed, dataFeedSetting := datafeed.ParseFromFeedInfo(fullPath)
+		dataFeed, dataFeedSetting := datafeed.NewFromFeedInfo(fullPath)
 
 		if len(dataFeed) == 0 {
 			glog.Warning("no articles found...")

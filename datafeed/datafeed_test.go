@@ -10,7 +10,7 @@ import (
 	ftransformers "github.com/kodebot/newsfeed/datafeed/record/collectors/field/transformers"
 )
 
-func TestParse_feed(t *testing.T) {
+func TestNewRssAtom(t *testing.T) {
 
 	data := `<?xml
 	version='1.0' encoding='utf-8'?>
@@ -69,10 +69,10 @@ func TestParse_feed(t *testing.T) {
 				Transformer: ftransformers.FormatDate}}},
 	}
 
-	parsed := Parse(data, rcollectors.RssAtom, recordInfo)
+	records := New(data, rcollectors.RssAtom, recordInfo)
 
-	if count := len(parsed); count != 2 {
-		t.Fatalf("expected 2 parsed record but found %d", count)
+	if count := len(records); count != 2 {
+		t.Fatalf("expected 2 records but found %d", count)
 	}
 
 	expectedResults := []struct {
@@ -90,15 +90,15 @@ func TestParse_feed(t *testing.T) {
 			"2019-06-04 20:13:00 +0000 UTC"}}
 
 	for i, expectedResult := range expectedResults {
-		if title := parsed[i]["Title"]; title != expectedResult.Title {
+		if title := records[i]["Title"]; title != expectedResult.Title {
 			t.Fatalf("parsed item Title doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.Title, title)
 		}
 
-		if imageURL := parsed[i]["ImageUrl"]; imageURL != expectedResult.ImageURL {
+		if imageURL := records[i]["ImageUrl"]; imageURL != expectedResult.ImageURL {
 			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
-		if publishedParsed := parsed[i]["PublishedParsed"]; (publishedParsed.(string)) != expectedResult.PublishedParsed {
+		if publishedParsed := records[i]["PublishedParsed"]; (publishedParsed.(string)) != expectedResult.PublishedParsed {
 			t.Fatalf("parsed item published doesn't match the expected.  Expected: %s ** Actual: %s", expectedResult.PublishedParsed, (publishedParsed.(string)))
 		}
 	}
