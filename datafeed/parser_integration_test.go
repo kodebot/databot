@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	cmodel "github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 	"github.com/kodebot/newsfeed/datafeed/model"
 )
 
@@ -14,40 +14,40 @@ func TestIntegrationParseDinamalarPoliticsRssFeed(t *testing.T) {
 
 	url := "http://rss.dinamalar.com/?cat=ara1"
 
-	recordSetting := model.RecordSetting{
-		FieldSettings: []model.FieldSetting{
+	recordSetting := model.RecordInfo{
+		Fields: []model.FieldInfo{
 			{
 				Name: "Title",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type: cmodel.Value}},
+				CollectorSetting: fields.CollectorInfo{
+					Type: fields.Value}},
 			{
 				Name: "Description",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type: cmodel.Value}},
+				CollectorSetting: fields.CollectorInfo{
+					Type: fields.Value}},
 			{
 				Name: "Content",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type: cmodel.Value}},
+				CollectorSetting: fields.CollectorInfo{
+					Type: fields.Value}},
 			{
 				Name: "Published",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type: cmodel.Value}},
+				CollectorSetting: fields.CollectorInfo{
+					Type: fields.Value}},
 			{
 				Name: "PublishedDate",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type:       cmodel.Value,
+				CollectorSetting: fields.CollectorInfo{
+					Type:       fields.Value,
 					Parameters: map[string]interface{}{"source": "PublishedParsed"}}},
 			{
 				Name: "ThumbImageUrl",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type: cmodel.Regexp,
+				CollectorSetting: fields.CollectorInfo{
+					Type: fields.Regexp,
 					Parameters: map[string]interface{}{
 						"expr":   "<img[^>]+src='(?P<data>[^']+)",
 						"source": "Description"}}},
 			{
 				Name: "SourceUrl",
-				CollectorSetting: cmodel.FieldCollectorSetting{
-					Type: cmodel.Value,
+				CollectorSetting: fields.CollectorInfo{
+					Type: fields.Value,
 					Parameters: map[string]interface{}{
 						"source": "Link"}}},
 		}}

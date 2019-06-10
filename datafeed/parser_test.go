@@ -3,7 +3,7 @@ package datafeed
 import (
 	"testing"
 
-	cmodel "github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 	"github.com/kodebot/newsfeed/datafeed/model"
 	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
@@ -44,25 +44,25 @@ func TestParse_feed(t *testing.T) {
 		</channel>
 	</rss>`
 
-	var settings model.RecordSetting
+	var settings model.RecordInfo
 
-	settings.FieldSettings = []model.FieldSetting{
+	settings.Fields = []model.FieldInfo{
 		{
 			Name: "Title",
-			CollectorSetting: cmodel.FieldCollectorSetting{
-				Type: cmodel.Value},
+			CollectorSetting: fields.CollectorInfo{
+				Type: fields.Value},
 			TransformerSettings: []tmodel.TransformerSetting{{
 				Transformer: tmodel.Trim}},
 		},
 		{
 			Name: "ImageUrl",
-			CollectorSetting: cmodel.FieldCollectorSetting{
-				Type:       cmodel.Regexp,
+			CollectorSetting: fields.CollectorInfo{
+				Type:       fields.Regexp,
 				Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}},
 		{
 			Name: "Published",
-			CollectorSetting: cmodel.FieldCollectorSetting{
-				Type: cmodel.Value},
+			CollectorSetting: fields.CollectorInfo{
+				Type: fields.Value},
 			TransformerSettings: []tmodel.TransformerSetting{{
 				Transformer: tmodel.FormatDate}}},
 	}

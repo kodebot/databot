@@ -3,7 +3,7 @@ package rssatom
 import (
 	"testing"
 
-	"github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 )
 
 var testFeedDataWithSingleItem = `<?xml
@@ -34,9 +34,9 @@ version='1.0' encoding='utf-8'?>
 
 func TestCollectValueCollector(t *testing.T) {
 
-	fieldCollectors := []model.FieldCollectorSetting{{
+	fieldCollectors := []fields.CollectorInfo{{
 		Field: "Title",
-		Type:  model.Value}}
+		Type:  fields.Value}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 
@@ -52,9 +52,9 @@ func TestCollectValueCollector(t *testing.T) {
 
 func TestCollectRegExpCollector(t *testing.T) {
 
-	fieldCollectors := []model.FieldCollectorSetting{{
+	fieldCollectors := []fields.CollectorInfo{{
 		Field: "Description",
-		Type:  model.Regexp,
+		Type:  fields.Regexp,
 		Parameters: map[string]interface{}{
 			"expr": "<img[^>]+src='(?P<data>[^']+)"}}}
 
@@ -72,9 +72,9 @@ func TestCollectRegExpCollector(t *testing.T) {
 
 func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 
-	fieldCollectors := []model.FieldCollectorSetting{{
+	fieldCollectors := []fields.CollectorInfo{{
 		Field: "Description",
-		Type:  model.Regexp,
+		Type:  fields.Regexp,
 		Parameters: map[string]interface{}{
 			"expr": "<img[^>]+src='([^']+)"}}}
 
@@ -91,9 +91,9 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 
 func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 
-	fieldCollectors := []model.FieldCollectorSetting{{
+	fieldCollectors := []fields.CollectorInfo{{
 		Field: "Description",
-		Type:  model.Regexp,
+		Type:  fields.Regexp,
 		Parameters: map[string]interface{}{
 			"Expr": "<img[^>]+src='?<P([^']+)"}}}
 
@@ -110,9 +110,9 @@ func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
 
 func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
 
-	fieldCollectors := []model.FieldCollectorSetting{{
+	fieldCollectors := []fields.CollectorInfo{{
 		Field: "Description",
-		Type:  model.Regexp}}
+		Type:  fields.Regexp}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 
@@ -127,9 +127,9 @@ func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
 
 func TestCollectUnknownCollector(t *testing.T) {
 
-	fieldCollectors := []model.FieldCollectorSetting{{
+	fieldCollectors := []fields.CollectorInfo{{
 		Field: "Description",
-		Type:  model.Unknown}}
+		Type:  fields.Unknown}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldCollectors)
 

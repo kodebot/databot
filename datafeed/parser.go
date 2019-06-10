@@ -3,7 +3,7 @@ package datafeed
 import (
 	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/datafeed/collectors"
-	cmodel "github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 	"github.com/kodebot/newsfeed/datafeed/model"
 	"github.com/kodebot/newsfeed/datafeed/transformers"
 	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
@@ -16,7 +16,7 @@ func ParseFromDataFeedSetting(filePath string) ([]map[string]interface{}, model.
 }
 
 // ParseFromURL returns structured data as per the record setting from the given url
-func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]interface{} {
+func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model.RecordInfo) []map[string]interface{} {
 	data, err := readAsString(url)
 	if err != nil {
 		glog.Errorf("unable to read from url %s", url)
@@ -26,11 +26,11 @@ func ParseFromURL(url string, sourceType model.DataFeedSourceType, setting model
 }
 
 // Parse returns structured data as per the record setting from the given data string
-func Parse(data string, sourceType model.DataFeedSourceType, setting model.RecordSetting) []map[string]interface{} {
-	var fieldCollectorSettings []cmodel.FieldCollectorSetting
+func Parse(data string, sourceType model.DataFeedSourceType, setting model.RecordInfo) []map[string]interface{} {
+	var fieldCollectorSettings []fields.CollectorInfo
 	fieldTransformerSettingsMap := make(map[string][]tmodel.TransformerSetting)
 
-	for _, fieldSetting := range setting.FieldSettings {
+	for _, fieldSetting := range setting.Fields {
 		fieldSetting.CollectorSetting.Field = fieldSetting.Name
 		fieldCollectorSettings = append(fieldCollectorSettings, fieldSetting.CollectorSetting)
 

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 	dmodel "github.com/kodebot/newsfeed/datafeed/model"
 )
 
@@ -44,20 +44,20 @@ func TestCollect_feed(t *testing.T) {
 		</channel>
 	</rss>`
 
-	var fieldSettings []model.FieldCollectorSetting
+	var fieldSettings []fields.CollectorInfo
 
-	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
+	fieldSettings = append(fieldSettings, fields.CollectorInfo{
 		Field: "Title",
-		Type:  model.Value})
+		Type:  fields.Value})
 
-	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
+	fieldSettings = append(fieldSettings, fields.CollectorInfo{
 		Field:      "ImageUrl",
-		Type:       model.Regexp,
+		Type:       fields.Regexp,
 		Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}})
 
-	fieldSettings = append(fieldSettings, model.FieldCollectorSetting{
+	fieldSettings = append(fieldSettings, fields.CollectorInfo{
 		Field:      "PublishedDate",
-		Type:       model.Value,
+		Type:       fields.Value,
 		Parameters: map[string]interface{}{"source": "PublishedParsed"}})
 
 	actualResults := Collect(data, dmodel.RssAtom, fieldSettings)

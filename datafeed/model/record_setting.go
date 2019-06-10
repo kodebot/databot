@@ -1,6 +1,6 @@
 package model
 
-// RecordSetting allows to specified record setting for parsing data
-type RecordSetting struct {
-	FieldSettings []FieldSetting `toml:"field"`
+// RecordInfo allows to specified record setting for parsing data
+type RecordInfo struct {
+	Fields []FieldInfo `toml:"field"`
 }

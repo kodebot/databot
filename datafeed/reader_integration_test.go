@@ -34,11 +34,11 @@ func TestIntegrationReadDataFeedSetting(t *testing.T) {
 
 	record := dataFeedSetting.Record
 
-	if fieldCount := len(record.FieldSettings); fieldCount != 6 {
+	if fieldCount := len(record.Fields); fieldCount != 6 {
 		t.Fatalf("expecting 6 field settings but found %d", fieldCount)
 	}
 
-	lastField := record.FieldSettings[5]
+	lastField := record.Fields[5]
 
 	expectedName := "ThumbImageUrl"
 	if actualName := lastField.Name; actualName != expectedName {

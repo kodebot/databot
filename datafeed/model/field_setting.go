@@ -1,13 +1,13 @@
 package model
 
 import (
-	cmodel "github.com/kodebot/newsfeed/datafeed/collectors/model"
+	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 	tmodel "github.com/kodebot/newsfeed/datafeed/transformers/model"
 )
 
-// FieldSetting allows to specify field setting when parsing
-type FieldSetting struct {
+// FieldInfo allows to specify field setting when parsing
+type FieldInfo struct {
 	Name                string
-	CollectorSetting    cmodel.FieldCollectorSetting
+	CollectorSetting    fields.CollectorInfo
 	TransformerSettings []tmodel.TransformerSetting
 }

@@ -4,12 +4,11 @@ import (
 	"reflect"
 
 	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/datafeed/collectors/model"
 	"github.com/kodebot/newsfeed/datafeed/collectors/record/fields"
 )
 
 // Collect returns collected fields from the given data using given field collector settings
-func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[string]interface{} {
+func Collect(data string, fieldCollectors []fields.CollectorInfo) []map[string]interface{} {
 	feeds := readFromXML(data)
 	var records []map[string]interface{}
 	for _, feed := range feeds {
@@ -33,10 +32,10 @@ func Collect(data string, fieldCollectors []model.FieldCollectorSetting) []map[s
 			}
 
 			switch fieldCollector.Type {
-			case model.Value:
-				record[fieldCollector.Field] = fields.Value(fieldRawValue, fieldCollector.Parameters)
-			case model.Regexp:
-				record[fieldCollector.Field] = fields.Regexp(fieldRawValue, fieldCollector.Parameters)
+			case fields.Value:
+				record[fieldCollector.Field] = fields.CollectValue(fieldRawValue, fieldCollector.Parameters)
+			case fields.Regexp:
+				record[fieldCollector.Field] = fields.CollectRegexp(fieldRawValue, fieldCollector.Parameters)
 			default:
 				glog.Errorf("collector type %s is not implemented", fieldCollector.Type)
 				record[fieldCollector.Field] = nil

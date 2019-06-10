@@ -6,13 +6,36 @@ import (
 	"github.com/golang/glog"
 )
 
+// CollectorInfo settings for collecting field
+type CollectorInfo struct {
+	Field      string
+	Type       CollectorType
+	Parameters map[string]interface{}
+}
+
+// CollectorType provides available field collector types
+type CollectorType string
+
+const (
+	// Value field collector - the result will be same as source field
+	Value CollectorType = "value"
+	// Regexp field collector
+	Regexp CollectorType = "regexp"
+
+	// CSS field collector
+	CSS CollectorType = "css"
+
+	// Unknown field collector
+	Unknown CollectorType = "unknown"
+)
+
 // Value returns source value without any changes
-func Value(source interface{}, parameters map[string]interface{}) interface{} {
+func CollectValue(source interface{}, parameters map[string]interface{}) interface{} {
 	return source
 }
 
 // Regexp returns regexp collected value
-func Regexp(source interface{}, parameters map[string]interface{}) interface{} {
+func CollectRegexp(source interface{}, parameters map[string]interface{}) interface{} {
 
 	glog.Infof("collecting from %s using regexp", source)
 

@@ -7,5 +7,5 @@ type DataFeedSetting struct {
 	SourceType DataFeedSourceType
 	Category   string
 	Schedule   string
-	Record     RecordSetting
+	Record     RecordInfo
 }
