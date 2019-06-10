@@ -5,7 +5,7 @@ package datafeed
 import "testing"
 
 func TestIntegrationReadFeedInfo(t *testing.T) {
-	feedInfo := readFeedInfo("./test_data/feed_parsing_config1.toml")
+	feedInfo := readFeedInfo("./test_data/only_for_reader/feed_parsing_config1.toml")
 
 	expectedSource := "http://rss.dinamalar.com/?cat=ara1"
 	if actualSource := string(feedInfo.Source); actualSource != expectedSource {
