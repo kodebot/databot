@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/kodebot/newsfeed/conf"
+
 	"github.com/kodebot/newsfeed/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,7 +18,7 @@ func init() {
 	// todo: make dataaccess as reusable
 	// todo: take connection string from config
 	var err error
-	dbClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	dbClient, err = mongo.NewClient(options.Client().ApplyURI(conf.AppSettings.ConnectionString))
 	if err != nil {
 		logger.Fatalf("error when creating new mongo client %s", err.Error())
 	}

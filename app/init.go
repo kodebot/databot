@@ -1,10 +1,10 @@
 package app
 
 import (
+	"github.com/kodebot/newsfeed/conf"
 	"net/http"
 
 	app_jobs "github.com/kodebot/newsfeed/app/jobs"
-	"github.com/kodebot/newsfeed/conf"
 	"github.com/revel/modules/jobs/app/jobs"
 	"github.com/revel/revel"
 )
@@ -58,8 +58,8 @@ func init() {
 	}
 
 	revel.OnAppStart(func() {
-		jobs.Schedule("0 */3 * * * ?", app_jobs.LoadArticlesFromFeedsJob{})
-		jobs.Schedule("0 * */6 * * ?", app_jobs.PruneArticlesJob{})
+		jobs.Schedule(conf.AppSettings.LoadArticlesCron, app_jobs.LoadArticlesFromFeedsJob{})
+		jobs.Schedule("0 0 */6 * * ?", app_jobs.PruneArticlesJob{})
 		// jobs.Every(20*time.Second, app_jobs.LoadArticlesFromFeedsJob{})
 		// jobs.Every(1*time.Minute, app_jobs.PruneArticlesJob{})
 	})
@@ -70,10 +70,6 @@ func init() {
 	// revel.OnAppStart(ExampleStartupScript)
 	// revel.OnAppStart(InitDB)
 	// revel.OnAppStart(FillCache)
-
-	revel.OnAppStart(func() {
-		conf.Init()
-	})
 }
 
 // HeaderFilter adds common security headers

@@ -1,16 +1,8 @@
 package logger
 
 import (
-	"flag"
-
 	"github.com/golang/glog"
 )
-
-func init() {
-	flag.Set("alsologtostderr", "true")
-	flag.Set("stderrthreshold", "ERROR")
-	flag.Parse()
-}
 
 // Tracef records trace level log
 func Tracef(format string, args ...interface{}) {

@@ -1,5 +1,6 @@
 package models
 
+// ArticleSource defines the structure for article source
 type ArticleSource struct {
 	ID                  int
 	Source              string
@@ -8,6 +9,7 @@ type ArticleSource struct {
 	AvailableCategories []int
 }
 
+// ArticleCategory defines the structure for article category
 type ArticleCategory struct {
 	ID                  int
 	Category            string
@@ -15,7 +17,10 @@ type ArticleCategory struct {
 	IsPublic            bool
 }
 
+// AppSettings provide application wide configurable settings
 type AppSettings struct {
+	ConnectionString string
+	LoadArticlesCron string
 
 	// ArticleCategory contains all the article categories
 	ArticleCategory []ArticleCategory
