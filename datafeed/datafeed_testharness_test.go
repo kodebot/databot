@@ -1,4 +1,4 @@
-// +build testharness
+// build testharness
 
 package datafeed
 

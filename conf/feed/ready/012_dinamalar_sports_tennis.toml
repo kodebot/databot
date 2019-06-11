@@ -1,7 +1,7 @@
 sourceName = "dinamalar"
-source ="https://cinema.dinamalar.com/rss.php"
+source ="https://sports.dinamalar.com/rss/Tennis"
 sourceType= "rss/atom"
-category = "cinema"
+category = "sports"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]
@@ -13,8 +13,6 @@ schedule = "every 5 minutes"
         name= "Description"
         [record.field.collectorInfo]
             type= "rssAtomField"
-        [[record.field.transformersInfo]]
-            transformer="empty"
 
     [[record.field]]
         name= "Content"
@@ -31,7 +29,7 @@ schedule = "every 5 minutes"
                 "source" = "Published"
         [[record.field.transformersInfo]]
             transformer="utcNow"
-        
+                    
     [[record.field]]
         name= "SourceUrl"
         [record.field.collectorInfo]

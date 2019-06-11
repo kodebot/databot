@@ -30,12 +30,8 @@ schedule = "every 5 minutes"
             [record.field.collectorInfo.parameters]
                 "source" = "Published"
         [[record.field.transformersInfo]]
-            transformer="parseDate"
-            [record.field.transformersInfo.parameters]
-                "layout"= "01/02/06"
-        [[record.field.transformersInfo]]
-            transformer="utcMidnightToNow"
-        
+            transformer="utcNow"
+                    
     [[record.field]]
         name= "SourceUrl"
         [record.field.collectorInfo]
