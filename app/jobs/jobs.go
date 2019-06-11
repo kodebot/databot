@@ -1,7 +1,8 @@
 package jobs
 
 import (
-	"io/ioutil"
+	"os"
+	"path/filepath"
 
 	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/articles"
@@ -30,16 +31,22 @@ func (j LoadArticlesFromFeedsJob) Run() {
 		feedConfigPath = "./conf/feed/ready/"
 	}
 
-	files, err := ioutil.ReadDir(feedConfigPath)
+	filepath.Walk(feedConfigPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			glog.Errorf("error while processing feed %s. error: %s", path, err.Error())
+			return err
+		}
 
-	for _, file := range files {
-		fullPath := feedConfigPath + file.Name()
-		glog.Infof("loading articles using %s", fullPath)
-		dataFeed, feedInfo := datafeed.NewFromFeedInfo(fullPath)
+		if info.IsDir() {
+			return nil
+		}
+
+		glog.Infof("loading articles using %s", path)
+		dataFeed, feedInfo := datafeed.NewFromFeedInfo(path)
 
 		if len(dataFeed) == 0 {
 			glog.Warning("no articles found...")
-			return
+			return nil
 		}
 
 		for _, dataFeedItem := range dataFeed {
@@ -51,7 +58,8 @@ func (j LoadArticlesFromFeedsJob) Run() {
 				glog.Errorf("error while storing article %s", err.Error())
 			}
 		}
-	}
+		return nil
+	})
 	glog.Infoln("finished LoadArticlesFromFeedsJob...")
 }
 
