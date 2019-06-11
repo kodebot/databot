@@ -14,15 +14,10 @@ type CollectorInfo struct {
 type CollectorType string
 
 const (
-	// Value field collector - the result will be same as source field
-	Value CollectorType = "value"
-	// Regexp field collector
-	Regexp CollectorType = "regexp"
+	// RssAtomField collects value from rss/atom field
+	RssAtomField CollectorType = "rssAtomField"
 
-	// Empty sets collector value to empty string
-	Empty CollectorType = "empty"
-
-	// CSS field collector
+	// CSS field collects values using css selector from html document
 	CSS CollectorType = "css"
 
 	// Unknown field collector
@@ -35,9 +30,7 @@ var collectorsMap map[CollectorType]collectorFuncType
 
 func init() {
 	collectorsMap = map[CollectorType]collectorFuncType{
-		Value:  value,
-		Regexp: regex,
-		Empty:  empty}
+		RssAtomField: rssatom}
 }
 
 // Collect value from the source

@@ -10,6 +10,7 @@ import (
 	rcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors"
 	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
 	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
+	ftransformers "github.com/kodebot/newsfeed/datafeed/record/collectors/field/transformers"
 )
 
 func TestIntegrationNewFromURLDinamalarPoliticsRssFeed(t *testing.T) {
@@ -21,35 +22,38 @@ func TestIntegrationNewFromURLDinamalarPoliticsRssFeed(t *testing.T) {
 			{
 				Name: "Title",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type: fcollectors.Value}},
+					Type: fcollectors.RssAtomField}},
 			{
 				Name: "Description",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type: fcollectors.Value}},
+					Type: fcollectors.RssAtomField}},
 			{
 				Name: "Content",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type: fcollectors.Value}},
+					Type: fcollectors.RssAtomField}},
 			{
 				Name: "Published",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type: fcollectors.Value}},
+					Type: fcollectors.RssAtomField}},
 			{
 				Name: "PublishedDate",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type:       fcollectors.Value,
+					Type:       fcollectors.RssAtomField,
 					Parameters: map[string]interface{}{"source": "PublishedParsed"}}},
 			{
 				Name: "ThumbImageUrl",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type: fcollectors.Regexp,
+					Type: fcollectors.RssAtomField,
 					Parameters: map[string]interface{}{
-						"expr":   "<img[^>]+src='(?P<data>[^']+)",
-						"source": "Description"}}},
+						"source": "Description"}},
+				TransformersInfo: []ftransformers.TransformerInfo{{
+					Transformer: ftransformers.Regexp,
+					Parameters: map[string]interface{}{
+						"expr": "<img[^>]+src='(?P<data>[^']+)"}}}},
 			{
 				Name: "SourceUrl",
 				CollectorInfo: fcollectors.CollectorInfo{
-					Type: fcollectors.Value,
+					Type: fcollectors.RssAtomField,
 					Parameters: map[string]interface{}{
 						"source": "Link"}}},
 		}}

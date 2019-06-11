@@ -52,19 +52,13 @@ func TestNewRssAtom(t *testing.T) {
 		{
 			Name: "Title",
 			CollectorInfo: fcollectors.CollectorInfo{
-				Type: fcollectors.Value},
+				Type: fcollectors.RssAtomField},
 			TransformersInfo: []ftransformers.TransformerInfo{{
 				Transformer: ftransformers.Trim}},
-		},
-		{
-			Name: "ImageUrl",
-			CollectorInfo: fcollectors.CollectorInfo{
-				Type:       fcollectors.Regexp,
-				Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}},
-		{
+		}, {
 			Name: "PublishedParsed",
 			CollectorInfo: fcollectors.CollectorInfo{
-				Type: fcollectors.Value},
+				Type: fcollectors.RssAtomField},
 			TransformersInfo: []ftransformers.TransformerInfo{{
 				Transformer: ftransformers.FormatDate}}},
 	}
@@ -77,25 +71,18 @@ func TestNewRssAtom(t *testing.T) {
 
 	expectedResults := []struct {
 		Title           string
-		ImageURL        string
 		PublishedParsed string
 	}{
 		{
 			"பறவைகளுக்கு விலாசம் சொன்னது யார்?",
-			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg",
 			"2019-06-04 18:04:00 +0000 UTC"},
 		{
 			"ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
-			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2291013_150_100.jpg",
 			"2019-06-04 20:13:00 +0000 UTC"}}
 
 	for i, expectedResult := range expectedResults {
 		if title := records[i]["Title"]; title != expectedResult.Title {
 			t.Fatalf("parsed item Title doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.Title, title)
-		}
-
-		if imageURL := records[i]["ImageUrl"]; imageURL != expectedResult.ImageURL {
-			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
 		if publishedParsed := records[i]["PublishedParsed"]; (publishedParsed.(string)) != expectedResult.PublishedParsed {

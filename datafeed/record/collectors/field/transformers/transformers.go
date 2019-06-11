@@ -5,6 +5,12 @@ import (
 )
 
 const (
+	// Regexp value transformer
+	Regexp string = "regexp"
+	// Value transformer returns the original value without changing it
+	Value string = "value"
+	// Empty transformer returns empty value
+	Empty string = "empty"
 	// FormatDate transformer
 	FormatDate string = "formatDate"
 	// ParseDate transformer
@@ -25,6 +31,9 @@ var transformersMap map[string]transformFuncType
 
 func init() {
 	transformersMap = map[string]transformFuncType{
+		Regexp:           regex,
+		Value:            value,
+		Empty:            empty,
 		FormatDate:       formatDate,
 		ParseDate:        parseDate,
 		UTCMidnightToNow: utcMidnightToNow,

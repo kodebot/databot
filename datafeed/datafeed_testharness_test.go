@@ -1,4 +1,4 @@
-// build testharness
+// +build testharness
 
 package datafeed
 
@@ -13,7 +13,7 @@ import (
 
 func TestHarnessDataFeedFromFeedInfo(t *testing.T) {
 	feedConfigPath := "./test_data/testharness/ready/"
-	outputDir := "./test_data/testharness/output/"
+	outputDir := "./test_data/testharness/output"
 
 	err := os.RemoveAll(outputDir)
 	if err != nil {
@@ -38,7 +38,7 @@ func TestHarnessDataFeedFromFeedInfo(t *testing.T) {
 		fullPath := feedConfigPath + file.Name()
 		dataFeed, _ := NewFromFeedInfo(fullPath)
 
-		outputPath := outputDir + file.Name() + ".txt"
+		outputPath := outputDir + "/" + file.Name() + ".txt"
 		dataFeedString := dataFeedToString(dataFeed)
 		err = ioutil.WriteFile(outputPath, []byte(dataFeedString), os.ModePerm)
 		if err != nil {

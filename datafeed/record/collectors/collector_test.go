@@ -8,7 +8,7 @@ import (
 	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
 )
 
-func TestCollect_feed(t *testing.T) {
+func TestCollectRssAtom(t *testing.T) {
 
 	data := `<?xml
 	version='1.0' encoding='utf-8'?>
@@ -49,18 +49,12 @@ func TestCollect_feed(t *testing.T) {
 	fieldsInfo = append(fieldsInfo, field.Info{
 		Name: "Title",
 		CollectorInfo: fcollectors.CollectorInfo{
-			Type: fcollectors.Value}})
-
-	fieldsInfo = append(fieldsInfo, field.Info{
-		Name: "ImageUrl",
-		CollectorInfo: fcollectors.CollectorInfo{
-			Type:       fcollectors.Regexp,
-			Parameters: map[string]interface{}{"source": "Description", "expr": "<img[^>]+src='(?P<data>[^']+)"}}})
+			Type: fcollectors.RssAtomField}})
 
 	fieldsInfo = append(fieldsInfo, field.Info{
 		Name: "PublishedDate",
 		CollectorInfo: fcollectors.CollectorInfo{
-			Type:       fcollectors.Value,
+			Type:       fcollectors.RssAtomField,
 			Parameters: map[string]interface{}{"source": "PublishedParsed"}}})
 
 	actualResults := Collect(data, RssAtom, fieldsInfo)
@@ -71,25 +65,18 @@ func TestCollect_feed(t *testing.T) {
 
 	expectedResults := []struct {
 		Title         string
-		ImageURL      string
 		PublishedDate string
 	}{
 		{
 			"பறவைகளுக்கு விலாசம் சொன்னது யார்?",
-			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg",
 			"2019-06-04 18:04:00 +0000 UTC"},
 		{
 			"ஒட்டுமொத்த கல்வி முறையையும் சீரமையுங்கள்: உச்ச நீதிமன்றம் உத்தரவு",
-			"http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2291013_150_100.jpg",
 			"2019-06-04 20:13:00 +0000 UTC"}}
 
 	for i, expectedResult := range expectedResults {
 		if title := actualResults[i]["Title"]; title != expectedResult.Title {
 			t.Fatalf("parsed item Title doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.Title, title)
-		}
-
-		if imageURL := actualResults[i]["ImageUrl"]; imageURL != expectedResult.ImageURL {
-			t.Fatalf("parsed item ImageUrl doesn't match the expected. Expected: %s ** Actual: %s", expectedResult.ImageURL, imageURL)
 		}
 
 		if publishedDate := actualResults[i]["PublishedDate"]; publishedDate.(*time.Time).String() != expectedResult.PublishedDate {

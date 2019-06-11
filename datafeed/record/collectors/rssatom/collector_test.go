@@ -6,6 +6,7 @@ import (
 	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
 
 	fcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors"
+	ftransformers "github.com/kodebot/newsfeed/datafeed/record/collectors/field/transformers"
 )
 
 var testFeedDataWithSingleItem = `<?xml
@@ -34,12 +35,12 @@ version='1.0' encoding='utf-8'?>
 	</channel>
 </rss>`
 
-func TestCollectValueCollector(t *testing.T) {
+func TestCollectRssAtomFieldCollectorWithFieldName(t *testing.T) {
 
 	fieldsInfo := []field.Info{{
 		Name: "Title",
 		CollectorInfo: fcollectors.CollectorInfo{
-			Type: fcollectors.Value}}}
+			Type: fcollectors.RssAtomField}}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
@@ -53,14 +54,14 @@ func TestCollectValueCollector(t *testing.T) {
 	}
 }
 
-func TestCollectRegExpCollector(t *testing.T) {
+func TestCollectRssAtomFieldCollectorWithSourceParameter(t *testing.T) {
 
 	fieldsInfo := []field.Info{{
-		Name: "Description",
+		Name: "Header",
 		CollectorInfo: fcollectors.CollectorInfo{
-			Type: fcollectors.Regexp,
+			Type: fcollectors.RssAtomField,
 			Parameters: map[string]interface{}{
-				"expr": "<img[^>]+src='(?P<data>[^']+)"}}}}
+				"source": "Title"}}}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
@@ -68,20 +69,20 @@ func TestCollectRegExpCollector(t *testing.T) {
 		t.Fatalf("expected 1 collected record but found %d", count)
 	}
 
-	expectedValue := "http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2290872_150_100.jpg"
-	if value := result[0]["Description"]; value != expectedValue {
+	expectedValue := "பறவைகளுக்கு விலாசம் சொன்னது யார்?"
+	if value := result[0]["Header"]; value != expectedValue {
 		t.Fatalf("collected value doesn't match the expected. Expected: %s ** Actual: %s", expectedValue, value)
 	}
 }
 
-func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
+func TestCollectRssAtomFieldCollectorWithTransformer(t *testing.T) {
 
 	fieldsInfo := []field.Info{{
-		Name: "Description",
+		Name: "Title",
 		CollectorInfo: fcollectors.CollectorInfo{
-			Type: fcollectors.Regexp,
-			Parameters: map[string]interface{}{
-				"expr": "<img[^>]+src='([^']+)"}}}}
+			Type: fcollectors.RssAtomField},
+		TransformersInfo: []ftransformers.TransformerInfo{{
+			Transformer: ftransformers.Empty}}}}
 
 	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
 
@@ -89,46 +90,8 @@ func TestCollectRegExpCollectorWithoutDataGroup(t *testing.T) {
 		t.Fatalf("expected 1 collected record but found %d", count)
 	}
 
-	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
-	}
-}
-
-func TestCollectRegExpCollectorInvalidExpr(t *testing.T) {
-
-	fieldsInfo := []field.Info{{
-		Name: "Description",
-		CollectorInfo: fcollectors.CollectorInfo{
-			Type: fcollectors.Regexp,
-			Parameters: map[string]interface{}{
-				"Expr": "<img[^>]+src='?<P([^']+)"}}}}
-
-	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
-
-	if count := len(result); count != 1 {
-		t.Fatalf("expected 1 collected record but found %d", count)
-	}
-
-	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
-	}
-}
-
-func TestCollectRegExpCollectorWithoutExprParameter(t *testing.T) {
-
-	fieldsInfo := []field.Info{{
-		Name: "Description",
-		CollectorInfo: fcollectors.CollectorInfo{
-			Type: fcollectors.Regexp}}}
-
-	result := Collect(testFeedDataWithSingleItem, fieldsInfo)
-
-	if count := len(result); count != 1 {
-		t.Fatalf("expected 1 collected record but found %d", count)
-	}
-
-	if actualValue := (result[0])["Description"]; actualValue != nil {
-		t.Fatalf("collected value doesn't match the expected. Expected: NIL ** Actual: %s", actualValue)
+	if actualValue := (result[0])["Title"]; actualValue != "" {
+		t.Fatalf("collected value doesn't match the expected. Expected: <<EMPTY>> ** Actual: %s", actualValue)
 	}
 }
 

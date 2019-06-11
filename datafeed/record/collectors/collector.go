@@ -31,5 +31,4 @@ func Collect(
 		glog.Errorf("source type %s is not supported", sourceType)
 		return nil
 	}
-
 }
