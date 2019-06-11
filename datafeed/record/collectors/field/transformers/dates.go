@@ -1,6 +1,7 @@
 package transformers
 
 import (
+	"strings"
 	"time"
 
 	"github.com/kodebot/newsfeed/logger"
@@ -24,8 +25,28 @@ func formatDate(val interface{}, params map[string]interface{}) interface{} {
 }
 
 func parseDate(val interface{}, params map[string]interface{}) interface{} {
+
+	fallbackVal := params["fallbackValue"]
+
+	if fallbackVal != nil {
+		if str, ok := fallbackVal.(string); ok {
+			if strings.HasPrefix(str, "transformer:") {
+				transformer := strings.Replace(str, "transformer:", "", 1)
+				if transFunc := transformersMap[transformer]; transFunc != nil {
+					fallbackVal = transFunc(val, params)
+				} else {
+					logger.Errorf("invalid nested transformer %s", fallbackVal)
+					fallbackVal = val
+				}
+
+			}
+		}
+	} else {
+		fallbackVal = val
+	}
+
 	if val == nil {
-		return val
+		return fallbackVal
 	}
 
 	layoutStr := time.RFC3339
@@ -34,11 +55,24 @@ func parseDate(val interface{}, params map[string]interface{}) interface{} {
 	}
 
 	valStr := val.(string)
-	result, err := time.Parse(layoutStr, valStr)
+
+	parseLocStr := "UTC"
+	if parseLoc := params["location"]; parseLoc != nil {
+		parseLocStr = parseLoc.(string)
+	}
+
+	loc, err := time.LoadLocation(parseLocStr)
+
+	if err != nil {
+		logger.Errorf("parsing location specified is not recognised %s", parseLocStr)
+		return fallbackVal
+	}
+
+	result, err := time.ParseInLocation(layoutStr, valStr, loc)
 
 	if err != nil {
 		logger.Errorf("parsing date failed with layout %s", layoutStr)
-		return val
+		return fallbackVal
 	}
 
 	return result

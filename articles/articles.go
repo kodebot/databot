@@ -40,6 +40,8 @@ func NewArticle(item map[string]interface{}) *Article {
 
 	if publishedDate, ok := item["PublishedDate"].(*time.Time); ok {
 		article.PublishedDate = *publishedDate
+	} else if publishedDate, ok := item["PublishedDate"].(time.Time); ok {
+		article.PublishedDate = publishedDate
 	}
 
 	if thumbImageURL, ok := item["ThumbImageUrl"].(string); ok {
