@@ -7,13 +7,13 @@ import (
 	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
 )
 
-var rssAtomCollectCalled = false
+var recordCollectMockCalled = false
 
 func TestCreateCallRssAtomCollect(t *testing.T) {
-	rssAtomCollect = rssAtomCollectMock
+	rcollect = recordCollectMock
 	result := Create("", rcollectors.RssAtom, *new(Info))
-	if rssAtomCollectCalled != true {
-		t.Errorf("expect RssAtom collector to be called but it is not called")
+	if recordCollectMockCalled != true {
+		t.Errorf("expect record collector to be called but it is not called")
 	}
 
 	if len(result) != 1 {
@@ -23,25 +23,11 @@ func TestCreateCallRssAtomCollect(t *testing.T) {
 	resetMockData()
 }
 
-func TestCreateFailsWhenCollectorIsUnknown(t *testing.T) {
-	rssAtomCollect = rssAtomCollectMock
-	result := Create("", "", *new(Info))
-	if rssAtomCollectCalled == true {
-		t.Errorf("expect RssAtom collector NOT to be called but it is called")
-	}
-
-	if len(result) != 0 {
-		t.Errorf("expected result is not returned from RssAtom collector")
-	}
-
-	resetMockData()
-}
-
-func rssAtomCollectMock(data string, fields []field.Info) []map[string]interface{} {
-	rssAtomCollectCalled = true
+func recordCollectMock(data string, sourceType rcollectors.SourceType, fields []field.Info) []map[string]interface{} {
+	recordCollectMockCalled = true
 	return []map[string]interface{}{{"foo": "bar"}}
 }
 
 func resetMockData() {
-	rssAtomCollectCalled = false
+	recordCollectMockCalled = false
 }

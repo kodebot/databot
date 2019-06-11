@@ -17,6 +17,8 @@ const (
 	HTML SourceType = "html"
 )
 
+var rssAtomCollect = rssatom.Collect
+
 // Collect returns one or more articles from given data using given collector type
 func Collect(
 	data string,
@@ -25,7 +27,7 @@ func Collect(
 
 	switch sourceType {
 	case RssAtom:
-		return rssatom.Collect(data, fieldSettings)
+		return rssAtomCollect(data, fieldSettings)
 
 	default:
 		glog.Errorf("source type %s is not supported", sourceType)
