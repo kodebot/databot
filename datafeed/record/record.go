@@ -12,13 +12,15 @@ type Info struct {
 	Fields []field.Info `toml:"field"`
 }
 
+var rssAtomCollect = rssatom.Collect
+
 // Create return one or more records created using the data provided
 func Create(data string, sourceType rcollectors.SourceType, recordInfo Info) []map[string]interface{} {
 	result := make([]map[string]interface{}, 0)
 
 	switch sourceType {
 	case rcollectors.RssAtom:
-		result = rssatom.Collect(data, recordInfo.Fields)
+		result = rssAtomCollect(data, recordInfo.Fields)
 	default:
 		glog.Errorf("source type %s is not implemented", sourceType)
 	}
