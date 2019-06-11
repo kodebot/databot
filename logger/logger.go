@@ -6,17 +6,17 @@ import (
 
 // Tracef records trace level log
 func Tracef(format string, args ...interface{}) {
-	glog.Infof("TRACE>>>>"+format, args...)
+	// glog.Infof("TRACE>>>>"+format, args...)
 }
 
 // Infof records info level log
 func Infof(format string, args ...interface{}) {
-	glog.Infof(format, args...)
+	//	glog.Infof(format, args...)
 }
 
 // Warnf records warning level log
 func Warnf(format string, args ...interface{}) {
-	glog.Warningf(format, args...)
+	//	glog.Warningf(format, args...)
 }
 
 // Errorf records errors level log
