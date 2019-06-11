@@ -15,8 +15,8 @@ const (
 	FormatDate string = "formatDate"
 	// ParseDate transformer
 	ParseDate string = "parseDate"
-	// UTCMidnightToNow transformer
-	UTCMidnightToNow string = "utcMidnightToNow"
+	// UTCNow returns current server time in UTC
+	UTCNow string = "utcNow"
 	// Trim transformer
 	Trim string = "trim"
 	// TrimLeft transformer
@@ -31,15 +31,15 @@ var transformersMap map[string]transformFuncType
 
 func init() {
 	transformersMap = map[string]transformFuncType{
-		Regexp:           regex,
-		Value:            value,
-		Empty:            empty,
-		FormatDate:       formatDate,
-		ParseDate:        parseDate,
-		UTCMidnightToNow: utcMidnightToNow,
-		Trim:             trim,
-		TrimLeft:         trimLeft,
-		TrimRight:        trimRight}
+		Regexp:     regex,
+		Value:      value,
+		Empty:      empty,
+		FormatDate: formatDate,
+		ParseDate:  parseDate,
+		UTCNow:     utcNow,
+		Trim:       trim,
+		TrimLeft:   trimLeft,
+		TrimRight:  trimRight}
 }
 
 // TransformerInfo provides model to specify transformer settings

@@ -14,7 +14,7 @@ var regexpTests = []TransformerTest{
 
 func TestRegexp(t *testing.T) {
 	for _, test := range regexpTests {
-		actual := regex(test.input, test.parameters)
+		actual := regex(test.input, test.params)
 		if test.expected != actual {
 			fail(t, "regexp collector not working", test.expected, actual)
 		}

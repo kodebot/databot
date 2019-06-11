@@ -7,14 +7,14 @@ import (
 
 // TransformerTest helps to create table driven tests for transformers
 type TransformerTest struct {
-	input      interface{}
-	expected   interface{}
-	parameters map[string]interface{}
+	input    interface{}
+	expected interface{}
+	params   map[string]interface{}
 }
 
-func fail(t *testing.T, message string, expected interface{}, actual interface{}) {
+func fail(t *testing.T, msg string, expected interface{}, actual interface{}) {
 	t.Helper()
-	t.Fatalf("%s. EXPECTED: >>%s<<, ACTUAL: >>%s<<", message, expected, actual)
+	t.Fatalf("%s. EXPECTED: >>%s<<, ACTUAL: >>%s<<", msg, expected, actual)
 }
 
 func compareDateStr(expected interface{}, actual interface{}) bool {
@@ -25,8 +25,8 @@ func compareDateStr(expected interface{}, actual interface{}) bool {
 		return expected == actualTime.String()
 	}
 
-	if actualTimePointer, ok := actual.(*time.Time); ok {
-		return expected == actualTimePointer.String()
+	if actualTimePtr, ok := actual.(*time.Time); ok {
+		return expected == actualTimePtr.String()
 	}
 	return expected == actual // non dates
 }

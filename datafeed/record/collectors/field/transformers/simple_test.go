@@ -9,7 +9,7 @@ var valueTests = []TransformerTest{
 
 func TestValue(t *testing.T) {
 	for _, test := range valueTests {
-		actual := value(test.input, test.parameters)
+		actual := value(test.input, test.params)
 		if test.expected != actual {
 			fail(t, "value transformer not working", test.expected, actual)
 		}
@@ -23,7 +23,7 @@ var emptyTests = []TransformerTest{
 
 func TestEmpty(t *testing.T) {
 	for _, test := range emptyTests {
-		actual := empty(test.input, test.parameters)
+		actual := empty(test.input, test.params)
 		if test.expected != actual {
 			fail(t, "empty transformer not working", test.expected, actual)
 		}

@@ -2,8 +2,6 @@ package transformers
 
 import "testing"
 
-
-
 var trimTests = []TransformerTest{
 	{" ", "", nil},
 	{"test ", "test", nil},
@@ -12,7 +10,7 @@ var trimTests = []TransformerTest{
 
 func TestTrim(t *testing.T) {
 	for _, test := range trimTests {
-		actual := trim(test.input, test.parameters)
+		actual := trim(test.input, test.params)
 		if test.expected != actual {
 			fail(t, "trim not working", test.expected, actual)
 		}
@@ -28,7 +26,7 @@ var trimLeftTests = []TransformerTest{
 
 func TestLeftTrim(t *testing.T) {
 	for _, test := range trimLeftTests {
-		actual := trimLeft(test.input, test.parameters)
+		actual := trimLeft(test.input, test.params)
 		if test.expected != actual {
 			fail(t, "trimLeft not working", test.expected, actual)
 		}
@@ -44,7 +42,7 @@ var trimRightTests = []TransformerTest{
 
 func TestRightTrim(t *testing.T) {
 	for _, test := range trimRightTests {
-		actual := trimRight(test.input, test.parameters)
+		actual := trimRight(test.input, test.params)
 		if test.expected != actual {
 			fail(t, "trimRight not working", test.expected, actual)
 		}
