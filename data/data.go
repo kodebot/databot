@@ -4,8 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/golang/glog"
-
+	"github.com/kodebot/newsfeed/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -19,7 +18,7 @@ func init() {
 	var err error
 	dbClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
-		glog.Fatalf("error when creating new mongo client %s", err.Error())
+		logger.Fatalf("error when creating new mongo client %s", err.Error())
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -27,7 +26,7 @@ func init() {
 
 	err = dbClient.Connect(ctx)
 	if err != nil {
-		glog.Fatalf("error when connecting to mongo database %s", err.Error())
+		logger.Fatalf("error when connecting to mongo database %s", err.Error())
 	}
 }
 
@@ -54,7 +53,7 @@ func Find(collection *mongo.Collection, filter interface{}, decode FindResultDec
 	defer cancel()
 	cursor, err := collection.Find(ctx, filter, opts...)
 	if err != nil {
-		glog.Errorf("find one failed with error %s", err.Error())
+		logger.Errorf("find one failed with error %s", err.Error())
 		return nil, err
 	}
 

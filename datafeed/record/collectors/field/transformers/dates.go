@@ -3,7 +3,7 @@ package transformers
 import (
 	"time"
 
-	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 func formatDate(val interface{}, params map[string]interface{}) interface{} {
@@ -19,7 +19,7 @@ func formatDate(val interface{}, params map[string]interface{}) interface{} {
 		return valTime.String()
 	}
 
-	glog.Errorf("formatDate is not allowed on non time.Time type")
+	logger.Errorf("formatDate is not allowed on non time.Time type")
 	return val
 }
 
@@ -37,7 +37,7 @@ func parseDate(val interface{}, params map[string]interface{}) interface{} {
 	result, err := time.Parse(layoutStr, valStr)
 
 	if err != nil {
-		glog.Errorf("parsing date failed with layout %s", layoutStr)
+		logger.Errorf("parsing date failed with layout %s", layoutStr)
 		return val
 	}
 

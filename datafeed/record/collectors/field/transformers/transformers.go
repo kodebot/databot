@@ -1,8 +1,6 @@
 package transformers
 
-import (
-	"github.com/golang/glog"
-)
+import "github.com/kodebot/newsfeed/logger"
 
 const (
 	// Regexp value transformer
@@ -55,7 +53,7 @@ func Transform(value interface{}, transformersInfo []TransformerInfo) interface{
 		if transformerFunc != nil {
 			value = transformerFunc(value, info.Parameters)
 		}
-		glog.Warningf("transformer %s is not found", info.Transformer)
+		logger.Warnf("transformer %s is not found", info.Transformer)
 	}
 	return value
 }

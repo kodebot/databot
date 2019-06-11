@@ -1,9 +1,9 @@
 package collectors
 
 import (
-	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/datafeed/record/collectors/field"
 	"github.com/kodebot/newsfeed/datafeed/record/collectors/rssatom"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 // SourceType provides available data feed source types
@@ -30,7 +30,7 @@ func Collect(
 		return rssAtomCollect(data, fieldSettings)
 
 	default:
-		glog.Errorf("source type %s is not supported", sourceType)
+		logger.Errorf("source type %s is not supported", sourceType)
 		return nil
 	}
 }

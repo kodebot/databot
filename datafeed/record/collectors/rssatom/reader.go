@@ -3,26 +3,26 @@ package rssatom
 import (
 	"strings"
 
-	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/logger"
 	"github.com/mmcdole/gofeed"
 )
 
 func readFromXML(xmlString string) []*gofeed.Item {
-	glog.Infof("parsing feed xml")
+	logger.Infof("parsing feed xml")
 	parser := gofeed.NewParser()
 	xmlString = fixIllegalXMLCharacters(xmlString)
 	feed, err := parser.ParseString(xmlString)
 	if err != nil {
-		glog.Errorf("parsing feed failed with error %s.", err.Error())
+		logger.Errorf("parsing feed failed with error %s.", err.Error())
 		return nil
 	}
 
 	totalItems := len(feed.Items)
 	if totalItems == 0 {
-		glog.Infoln("no items found")
+		logger.Infof("no items found")
 	} else {
 
-		glog.Infof("%d items found\n", totalItems)
+		logger.Infof("%d items found\n", totalItems)
 	}
 
 	return feed.Items

@@ -3,7 +3,8 @@ package articles
 import (
 	"time"
 
-	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/logger"
+
 	"github.com/kodebot/newsfeed/data"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -60,24 +61,24 @@ func (article *Article) Store(articleCollection *mongo.Collection) error {
 	err := data.FindOne(articleCollection, bson.M{"sourceurl": article.SourceURL}, &existing)
 
 	if err != nil && err != mongo.ErrNoDocuments {
-		glog.Errorf("error when checking if the item has already been loaded. error: %s\n", err.Error())
+		logger.Errorf("error when checking if the item has already been loaded. error: %s\n", err.Error())
 		return err
 	}
 
 	if existing.SourceURL != "" {
 		// todo: update when the item is already found
-		glog.Infoln("item already found, not adding this to the store...")
+		logger.Infof("item already found, not adding this to the store...")
 		return nil
 	}
 
-	glog.Infoln("item not found, adding this to the store...")
+	logger.Infof("item not found, adding this to the store...")
 	var result *mongo.InsertOneResult
 	result, err = data.InsertOne(articleCollection, article)
 	if err != nil {
-		glog.Errorf("adding item to the store failed with error: %s. Skipping this item \n", err.Error())
+		logger.Errorf("adding item to the store failed with error: %s. Skipping this item \n", err.Error())
 		return err
 	}
 
-	glog.Infof("item added to the store successfully. new id: %s\n", result)
+	logger.Infof("item added to the store successfully. new id: %s\n", result)
 	return nil
 }

@@ -6,10 +6,9 @@ import (
 	"strings"
 
 	"github.com/kodebot/newsfeed/conf"
+	"github.com/kodebot/newsfeed/logger"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
-
-	"github.com/golang/glog"
 
 	"go.mongodb.org/mongo-driver/mongo"
 
@@ -31,14 +30,14 @@ type Article struct {
 func (c Article) Get(id string) revel.Result {
 	articleCollection, err := data.GetCollection("articles")
 	if err != nil {
-		glog.Errorf("error while loading articles collection %s", err.Error())
+		logger.Errorf("error while loading articles collection %s", err.Error())
 		c.Response.Status = 500
 		return c.RenderText("Internal error")
 	}
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		glog.Warningf("error while parsing id %s error: %s", id, err.Error())
+		logger.Warnf("error while parsing id %s error: %s", id, err.Error())
 		c.Response.SetStatus(500)
 		c.RenderText("Internal server error")
 	}
@@ -48,7 +47,7 @@ func (c Article) Get(id string) revel.Result {
 
 	err = data.FindOne(articleCollection, filter, &result)
 	if err != nil {
-		glog.Warningf("error while getting article by id %s error: %s", id, err.Error())
+		logger.Warnf("error while getting article by id %s error: %s", id, err.Error())
 	}
 	return c.RenderJSON(result)
 }
@@ -57,14 +56,14 @@ func (c Article) Get(id string) revel.Result {
 func (c Article) RedirectToArticle(id string) revel.Result {
 	articleCollection, err := data.GetCollection("articles")
 	if err != nil {
-		glog.Errorf("error while loading articles collection %s", err.Error())
+		logger.Errorf("error while loading articles collection %s", err.Error())
 		c.Response.Status = 500
 		return c.RenderText("Internal error")
 	}
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		glog.Warningf("error while parsing id %s error: %s", id, err.Error())
+		logger.Warnf("error while parsing id %s error: %s", id, err.Error())
 		c.Response.SetStatus(500)
 		c.RenderText("Internal server error")
 	}
@@ -74,7 +73,7 @@ func (c Article) RedirectToArticle(id string) revel.Result {
 
 	err = data.FindOne(articleCollection, filter, &result)
 	if err != nil {
-		glog.Warningf("error while getting article by id %s error: %s", id, err.Error())
+		logger.Warnf("error while getting article by id %s error: %s", id, err.Error())
 	}
 	return c.Redirect(result.SourceURL)
 }
@@ -92,7 +91,7 @@ func (c Article) List() revel.Result {
 	pageInt, err := strconv.ParseInt(page, 10, 64)
 
 	if err != nil {
-		glog.Warningf("parsing page number failed %s. setting to 1\n", page)
+		logger.Warnf("parsing page number failed %s. setting to 1\n", page)
 		pageInt = 1
 	}
 
@@ -104,7 +103,7 @@ func (c Article) List() revel.Result {
 	fmt.Printf("category: %d", categoryInt)
 
 	if err != nil {
-		glog.Warningf("parsing category number failed %s. setting to 0\n", category)
+		logger.Warnf("parsing category number failed %s. setting to 0\n", category)
 		categoryInt = 0
 	}
 
@@ -112,7 +111,7 @@ func (c Article) List() revel.Result {
 	for _, val := range strings.Split(strings.TrimSpace(sources), ",") {
 		sourceInt, err := strconv.ParseInt(val, 10, 64)
 		if err != nil {
-			glog.Warningf("parsing source number failed %s. skipping...\n", val)
+			logger.Warnf("parsing source number failed %s. skipping...\n", val)
 			continue
 		} else {
 			sourcesInt = append(sourcesInt, sourceInt)
@@ -122,7 +121,7 @@ func (c Article) List() revel.Result {
 	articleCollection, err := data.GetCollection("articles")
 
 	if err != nil {
-		glog.Errorf("error while loading articles collection %s", err.Error())
+		logger.Errorf("error while loading articles collection %s", err.Error())
 		c.Response.Status = 500
 		return c.RenderText("Internal error")
 	}
@@ -159,7 +158,7 @@ func (c Article) List() revel.Result {
 	}
 
 	if len(sourcesToFilter) == 0 {
-		glog.Warningf("no sources specified, using all feeds")
+		logger.Warnf("no sources specified, using all feeds")
 		for _, source := range conf.AppSettings.ArticleSource {
 			sourcesToFilter = append(sourcesToFilter, source.Source)
 		}
@@ -171,7 +170,7 @@ func (c Article) List() revel.Result {
 		var article models.ArticleMinimal
 		err := cursor.Decode(&article)
 		if err != nil {
-			glog.Warningf("error while decoding %+v", cursor.Current)
+			logger.Warnf("error while decoding %+v", cursor.Current)
 		}
 		return article
 

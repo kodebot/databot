@@ -1,8 +1,6 @@
 package collectors
 
-import (
-	"github.com/golang/glog"
-)
+import "github.com/kodebot/newsfeed/logger"
 
 // CollectorInfo settings for collecting field
 type CollectorInfo struct {
@@ -41,6 +39,6 @@ func Collect(source interface{}, info CollectorInfo) interface{} {
 		return collector(source, info.Parameters)
 	}
 
-	glog.Warningf("invalid collector type %s", info.Type)
+	logger.Warnf("invalid collector type %s", info.Type)
 	return nil
 }

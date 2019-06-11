@@ -1,9 +1,9 @@
 package datafeed
 
 import (
-	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/datafeed/record"
 	rcollectors "github.com/kodebot/newsfeed/datafeed/record/collectors"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 // FeedInfo provides shape for config data used to create data feed
@@ -27,7 +27,7 @@ func NewFromFeedInfo(filePath string) ([]map[string]interface{}, FeedInfo) {
 func NewFromURL(url string, sourceType rcollectors.SourceType, recordInfo record.Info) []map[string]interface{} {
 	data, err := readAsString(url)
 	if err != nil {
-		glog.Errorf("unable to read from url %s", url)
+		logger.Errorf("unable to read from url %s", url)
 		return make([]map[string]interface{}, 0)
 	}
 	return New(data, sourceType, recordInfo)

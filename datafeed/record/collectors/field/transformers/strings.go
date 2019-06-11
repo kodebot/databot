@@ -3,7 +3,7 @@ package transformers
 import (
 	"strings"
 
-	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 func trim(value interface{}, parameters map[string]interface{}) interface{} {
@@ -12,7 +12,7 @@ func trim(value interface{}, parameters map[string]interface{}) interface{} {
 		return strings.TrimSpace(valueString)
 	}
 
-	glog.Errorf("trim is not allowed on non string type")
+	logger.Errorf("trim is not allowed on non string type")
 	return value
 }
 
@@ -22,7 +22,7 @@ func trimLeft(value interface{}, parameters map[string]interface{}) interface{} 
 		return strings.TrimPrefix(valueString, " ")
 	}
 
-	glog.Errorf("trimLeft is not allowed on non string type")
+	logger.Errorf("trimLeft is not allowed on non string type")
 	return value
 }
 
@@ -32,6 +32,6 @@ func trimRight(value interface{}, parameters map[string]interface{}) interface{}
 		return strings.TrimSuffix(valueString, " ")
 	}
 
-	glog.Errorf("trimRight is not allowed on non string type")
+	logger.Errorf("trimRight is not allowed on non string type")
 	return value
 }

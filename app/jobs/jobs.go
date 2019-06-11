@@ -4,10 +4,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/articles"
 	"github.com/kodebot/newsfeed/data"
 	"github.com/kodebot/newsfeed/datafeed"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 // LoadArticlesFromFeedsJob job
@@ -22,7 +22,7 @@ type PruneArticlesJob struct{}
 func (j LoadArticlesFromFeedsJob) Run() {
 	articleCollection, err := data.GetCollection("articles")
 	if err != nil {
-		glog.Errorf("error while loading articles collection %s", err.Error())
+		logger.Errorf("error while loading articles collection %s", err.Error())
 		return
 	}
 
@@ -33,7 +33,7 @@ func (j LoadArticlesFromFeedsJob) Run() {
 
 	filepath.Walk(feedConfigPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			glog.Errorf("error while processing feed %s. error: %s", path, err.Error())
+			logger.Errorf("error while processing feed %s. error: %s", path, err.Error())
 			return err
 		}
 
@@ -41,11 +41,11 @@ func (j LoadArticlesFromFeedsJob) Run() {
 			return nil
 		}
 
-		glog.Infof("loading articles using %s", path)
+		logger.Infof("loading articles using %s", path)
 		dataFeed, feedInfo := datafeed.NewFromFeedInfo(path)
 
 		if len(dataFeed) == 0 {
-			glog.Warning("no articles found...")
+			logger.Warnf("no articles found...")
 			return nil
 		}
 
@@ -55,12 +55,12 @@ func (j LoadArticlesFromFeedsJob) Run() {
 			newArticle.Categories = []string{feedInfo.Category}
 			err := newArticle.Store(articleCollection)
 			if err != nil {
-				glog.Errorf("error while storing article %s", err.Error())
+				logger.Errorf("error while storing article %s", err.Error())
 			}
 		}
 		return nil
 	})
-	glog.Infoln("finished LoadArticlesFromFeedsJob...")
+	logger.Infof("finished LoadArticlesFromFeedsJob...")
 }
 
 // Run PruneArticlesJob

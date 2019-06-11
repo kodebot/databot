@@ -3,7 +3,7 @@ package transformers
 import (
 	"regexp"
 
-	"github.com/golang/glog"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 func regex(source interface{}, parameters map[string]interface{}) interface{} {
@@ -19,19 +19,19 @@ func regex(source interface{}, parameters map[string]interface{}) interface{} {
 
 	if sourceString, ok := source.(string); ok {
 
-		glog.Infof("transforming %s using regexp", sourceString)
+		logger.Infof("transforming %s using regexp", sourceString)
 
 		var expr string
 		if ok := parameters["expr"]; ok != nil {
 			expr = ok.(string)
 		} else {
-			glog.Errorf("no regular expression parameter found")
+			logger.Errorf("no regular expression parameter found")
 			return fallback
 		}
 
 		re, err := regexp.Compile(expr)
 		if err != nil {
-			glog.Errorf("invalid regexp: %s error: %s. \n", expr, err.Error())
+			logger.Errorf("invalid regexp: %s error: %s. \n", expr, err.Error())
 			return fallback
 		}
 
@@ -43,12 +43,12 @@ func regex(source interface{}, parameters map[string]interface{}) interface{} {
 		}
 
 		if requiredMatchIndex == 0 {
-			glog.Errorf("invalid regular expression: %s no named group called 'data' is found. \n", expr)
+			logger.Errorf("invalid regular expression: %s no named group called 'data' is found. \n", expr)
 			return fallback
 		}
 		matches := re.FindStringSubmatch(sourceString)
 		if len(matches) < requiredMatchIndex+1 {
-			glog.Warningf("no match found.")
+			logger.Warnf("no match found.")
 			return fallback
 		}
 
@@ -58,6 +58,6 @@ func regex(source interface{}, parameters map[string]interface{}) interface{} {
 		}
 
 	}
-	glog.Errorf("input is not string type")
+	logger.Errorf("input is not string type")
 	return fallback
 }
