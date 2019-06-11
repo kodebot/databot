@@ -12,6 +12,9 @@ type Info struct {
 	TransformersInfo []ftransformers.TransformerInfo
 }
 
+var fcollect = fcollectors.Collect
+var ftransform = ftransformers.Transform
+
 // Create returns collected and transformed value
 func Create(source interface{}, info Info) interface{} {
 	var result interface{}
@@ -24,6 +27,6 @@ func Create(source interface{}, info Info) interface{} {
 		info.CollectorInfo.Parameters["source"] = info.Name
 	}
 
-	result = fcollectors.Collect(source, info.CollectorInfo)
-	return ftransformers.Transform(result, info.TransformersInfo)
+	result = fcollect(source, info.CollectorInfo)
+	return ftransform(result, info.TransformersInfo)
 }
