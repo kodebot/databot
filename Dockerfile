@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y unzip --no-install-recommends && \
     echo '96c191251164b1404332793fb7d1e5d8de2641706b128bf8d65772363758f364  dep.zip' | sha256sum -c - && \
     unzip -d /usr/bin dep.zip && rm dep.zip
 
+ENV env=PROD
+
 ADD . /go/src/github.com/kodebot/newsfeed
 
 RUN go get github.com/revel/revel

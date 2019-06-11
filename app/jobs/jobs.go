@@ -1,61 +1,69 @@
 package jobs
 
 import (
-	"github.com/BurntSushi/toml"
-	"github.com/golang/glog"
-	"github.com/kodebot/newsfeed/models"
-	"github.com/kodebot/newsfeed/services"
+	"os"
+	"path/filepath"
+
+	"github.com/kodebot/newsfeed/articles"
+	"github.com/kodebot/newsfeed/data"
+	"github.com/kodebot/newsfeed/datafeed"
+	"github.com/kodebot/newsfeed/logger"
 )
 
 // LoadArticlesFromFeedsJob job
-type LoadArticlesFromFeedsJob struct{}
+type LoadArticlesFromFeedsJob struct {
+	FeedInfoPath string
+}
 
 // PruneArticlesJob job
 type PruneArticlesJob struct{}
 
 // Run LoadArticlesFromFeedsJob
 func (j LoadArticlesFromFeedsJob) Run() {
-	var feedConfig models.FeedConfig
-	_, err := toml.DecodeFile("./conf/feed_parsing_config.toml", &feedConfig)
+	articleCollection, err := data.GetCollection("articles")
 	if err != nil {
-		glog.Errorf("error when loading feed config: %s\n", err.Error())
+		logger.Errorf("error while loading articles collection %s", err.Error())
+		return
 	}
 
-	glog.Infoln("running LoadArticlesFromFeedsJob...")
-	var isFeedOriginAllowed bool
-	for _, feed := range feedConfig.Feed {
-		for _, val := range feedConfig.AllowedOrigins {
+	feedConfigPath := j.FeedInfoPath
+	if feedConfigPath == "" {
+		feedConfigPath = "./conf/feed/ready/"
+	}
 
-			if val == feed.Origin {
-				isFeedOriginAllowed = true
-				break
+	filepath.Walk(feedConfigPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			logger.Errorf("error while processing feed %s. error: %s", path, err.Error())
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		logger.Infof("loading articles using %s", path)
+		dataFeed, feedInfo := datafeed.NewFromFeedInfo(path)
+
+		if len(dataFeed) == 0 {
+			logger.Warnf("no articles found...")
+			return nil
+		}
+
+		for _, dataFeedItem := range dataFeed {
+			newArticle := articles.NewArticle(dataFeedItem)
+			newArticle.Source = feedInfo.SourceName
+			newArticle.Categories = []string{feedInfo.Category}
+			err := newArticle.Store(articleCollection)
+			if err != nil {
+				logger.Errorf("error while storing article %s", err.Error())
 			}
 		}
-
-		if isFeedOriginAllowed != true {
-			glog.Warningf("%s is not in allowed origin.. skipping origin\n", feed.Origin)
-			continue
-		}
-
-		glog.Infof("processing feed from %s \n", feed.URL)
-		result := services.ParseFeed(feed, "")
-		if result == nil {
-			glog.Errorln("feed skipped...")
-			continue
-		}
-
-		articles := services.CreateArticles(result, feed)
-		if len(articles) == 0 {
-			glog.Warning("no articles found...")
-			continue
-		}
-		services.LoadArticles(articles)
-	}
-
-	glog.Infoln("finished LoadArticlesFromFeedsJob...")
+		return nil
+	})
+	logger.Infof("finished LoadArticlesFromFeedsJob...")
 }
 
 // Run PruneArticlesJob
 func (j PruneArticlesJob) Run() {
-	services.PruneArticles()
+	// todo:
 }

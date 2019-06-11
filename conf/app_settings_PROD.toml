@@ -1,0 +1,2 @@
+connectionString = "mongodb://10.0.0.4:27017"
+loadArticlesCron = "0 */30 * * * ?"

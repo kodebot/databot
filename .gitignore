@@ -1,3 +1,6 @@
 test-results/
 tmp/
 routes/
+datafeed/test_data/testharness/output
+.DS_Store
+*/**/*.test

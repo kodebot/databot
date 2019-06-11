@@ -54,3 +54,12 @@ server {
 }
 ```
 
+## access newsfeed logs
+the logs are in /tmp of the container
+
+
+## developer guide
+
+run test using `go test -v ./...`
+
+run only integration tests using `go test -v ./... -tags=integration -run ^TestIntegration.*$`
