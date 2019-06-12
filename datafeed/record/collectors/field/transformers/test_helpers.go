@@ -22,7 +22,8 @@ func compareDateStr(expected interface{}, actual interface{}) bool {
 		return true
 	}
 	if actualTime, ok := actual.(time.Time); ok {
-		return expected == actualTime.String()
+		x := actualTime.String()
+		return expected == x
 	}
 
 	if actualTimePtr, ok := actual.(*time.Time); ok {

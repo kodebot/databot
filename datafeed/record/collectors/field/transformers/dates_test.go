@@ -23,12 +23,13 @@ func TestFormatDate(t *testing.T) {
 
 func TestParseDate(t *testing.T) {
 	tests := []TransformerTest{
-		{nil, nil, nil},
-		{"06/10/19", "2019-06-10 00:00:00 +0000 UTC", map[string]interface{}{
-			"layout": "01/02/06"}},
-		{"07/10/19", "07/10/19", nil},
-		{"2019-05-04T15:04:05Z07:00", "2019-05-04T15:04:05Z07:00", nil},
-		{"2019-05-04T15:04:05Z07:00", "2019-05-04T15:04:05Z07:00", map[string]interface{}{}},
+		// {nil, nil, nil},
+		// {"06/10/19", "2019-06-10 00:00:00 +0000 UTC", map[string]interface{}{
+		// 	"layout": "01/02/06"}},
+		// {"07/10/19", "07/10/19", nil},
+		// {"2019-05-04T15:04:05Z07:00", "2019-05-04T15:04:05Z07:00", nil},
+		// {"2019-05-04T15:04:05Z07:00", "2019-05-04T15:04:05Z07:00", map[string]interface{}{}},
+		{"Tue, 11 Jun 2019 23:26:00 +0530", "2019-06-11 23:26:00 +0530 +0530", map[string]interface{}{"layout": "Mon, 02 Jan 2006 15:04:05 -0700"}},
 		{nil, nil, nil},
 		{"not a date", "not a date", nil}}
 
