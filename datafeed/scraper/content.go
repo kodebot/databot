@@ -1,4 +1,4 @@
-package transformers
+package scraper
 
 import (
 	"bytes"
@@ -63,18 +63,36 @@ func (c candidateList) String() string {
 	return strings.Join(output, ", ")
 }
 
-func linkToHTMLContent(val interface{}, params map[string]interface{}) interface{} {
-	fallback := params["fallbackValue"]
-	if fallback == nil {
-		fallback = val
+// extractContent returns relevant content.
+func extractContent(source string, sourceType string, initialSelector string) string {
+
+	// todo: update to detect the source type automatically
+	var document *goquery.Document
+	var err error
+
+	if sourceType == "url" {
+		document, err = goquery.NewDocument(source)
 	}
 
-	url := val.(string)
+	if sourceType == "html" {
+		document, err = goquery.NewDocumentFromReader(strings.NewReader(source))
+	}
 
-	document, err := goquery.NewDocument(url)
 	if err != nil {
-		logger.Errorf("error when loading url %s to retrieve content", url)
-		return fallback
+		logger.Errorf("unable to create html document from %s ** error: %s ** sourceType: %s", source, err.Error(), sourceType)
+		return ""
+	}
+
+	if initialSelector != "" {
+		initialHTML, err := document.Find(initialSelector).Html()
+		if err != nil {
+			logger.Errorf("error while applying initial selector %s. error: %s", initialSelector, err.Error())
+		}
+
+		document, err = goquery.NewDocumentFromReader(strings.NewReader(initialHTML))
+		if err != nil {
+			logger.Errorf("error while createing document from initial selector %s. error: %s", initialSelector, err.Error())
+		}
 	}
 
 	document.Find("script,style,noscript").Each(func(i int, s *goquery.Selection) {
@@ -129,6 +147,9 @@ func getArticle(topCandidate *candidate, candidates candidateList) string {
 			}
 
 			removeEmptyNodes(s)
+			stripStyles(s)
+			stripClasses(s)
+			removeAdvertisementLeftovers(s)
 			html, _ := s.Html()
 			fmt.Fprintf(output, "<%s>%s</%s>", tag, html, tag)
 		}
@@ -308,13 +329,34 @@ func removeNodes(s *goquery.Selection) {
 }
 
 func removeEmptyNodes(s *goquery.Selection) {
-	repeat := 3
-	for repeat > 0 {
-		s.Find("p,div,span,ul,li,section").Each(func(i int, s *goquery.Selection) {
-			if html, err := s.Html(); err == nil && len(html) == 0 {
-				removeNodes(s)
-			}
-		})
-		repeat--
-	}
+	//s.Find("p,div,span,ul,li,section").Each(func(i int, s *goquery.Selection) {
+	s.Find("*").Not("img,br").Each(func(i int, s *goquery.Selection) {
+		if len(s.Find("img,br").Nodes) != 0 {
+			return
+		}
+		if len(strings.TrimSpace(s.Text())) == 0 {
+			removeNodes(s)
+		}
+	})
+	//})
+}
+
+func stripStyles(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		s.RemoveAttr("style")
+	})
+}
+
+func stripClasses(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		s.RemoveAttr("class")
+	})
+}
+
+func removeAdvertisementLeftovers(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		if strings.TrimSpace(s.Text()) == "Advertisement" {
+			removeNodes(s)
+		}
+	})
 }

@@ -10,11 +10,17 @@ schedule = "every 5 minutes"
             type= "rssAtomField"
 
     [[record.field]]
-        name= "Description"
-        [record.field.collectorInfo]
-            type= "rssAtomField"
-         [[record.field.transformersInfo]]
-            transformer="empty"
+            name= "Description"
+            [record.field.collectorInfo]
+                type= "rssAtomField"
+                [record.field.collectorInfo.parameters]
+                    "source" = "Link"
+            [[record.field.transformersInfo]]
+                transformer="scrape"
+                [record.field.transformersInfo.parameters]
+                        "selectorType" = "custom"
+                        "custom:selector" = "content"
+                        "custom:initialSelector" = "#mvp-content-wrap"
 
     [[record.field]]
         name= "Content"
