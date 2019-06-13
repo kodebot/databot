@@ -31,7 +31,7 @@ func Scrape(source string, params map[string]interface{}) string {
 	var selectorType string
 	if params["selectorType"] == nil { // default to css
 		selectorType = "css"
-	}else{
+	} else {
 		selectorType = params["selectorType"].(string)
 	}
 
@@ -43,11 +43,13 @@ func Scrape(source string, params map[string]interface{}) string {
 		}
 		switch selector {
 		case "content":
-			var initialSelector string
-			if params["custom:initialSelector"] != nil {
-				initialSelector = params["custom:initialSelector"].(string)
+			var initialSelectors []string
+			if params["custom:initialSelectors"] != nil {
+				for _, initialSelector := range params["custom:initialSelectors"].([]interface{}) {
+					initialSelectors = append(initialSelectors, initialSelector.(string))
+				}
 			}
-			return extractContent(source, sourceType, initialSelector)
+			return extractContent(source, sourceType, initialSelectors)
 		default:
 			logger.Errorf("the custom selector type %s is not implemented", selector)
 		}

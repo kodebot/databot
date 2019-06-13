@@ -64,7 +64,7 @@ func (c candidateList) String() string {
 }
 
 // extractContent returns relevant content.
-func extractContent(source string, sourceType string, initialSelector string) string {
+func extractContent(source string, sourceType string, initialSelectors []string) string {
 
 	// todo: update to detect the source type automatically
 	var document *goquery.Document
@@ -83,16 +83,28 @@ func extractContent(source string, sourceType string, initialSelector string) st
 		return ""
 	}
 
-	if initialSelector != "" {
-		initialHTML, err := document.Find(initialSelector).Html()
-		if err != nil {
-			logger.Errorf("error while applying initial selector %s. error: %s", initialSelector, err.Error())
-		}
+	initialSelectorsUseful := len(initialSelectors) == 0
+	for _, initialSelector := range initialSelectors {
+		if initialSelector != "" {
+			initialHTML, err := document.Find(initialSelector).Html()
+			if err != nil {
+				logger.Errorf("error while applying initial selector %s. error: %s", initialSelector, err.Error())
+			}
 
-		document, err = goquery.NewDocumentFromReader(strings.NewReader(initialHTML))
-		if err != nil {
-			logger.Errorf("error while createing document from initial selector %s. error: %s", initialSelector, err.Error())
+			if len(strings.TrimSpace(initialHTML)) > 0 {
+				document, err = goquery.NewDocumentFromReader(strings.NewReader(initialHTML))
+				if err != nil {
+					logger.Errorf("error while createing document from initial selector %s. error: %s", initialSelector, err.Error())
+				}
+				initialSelectorsUseful = true
+				break
+			}
 		}
+	}
+
+	// initital selector provided but non of them found any useful content
+	if !initialSelectorsUseful {
+		return ""
 	}
 
 	document.Find("script,style,noscript").Each(func(i int, s *goquery.Selection) {

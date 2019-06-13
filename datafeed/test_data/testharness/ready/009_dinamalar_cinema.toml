@@ -20,7 +20,7 @@ schedule = "every 5 minutes"
                 [record.field.transformersInfo.parameters]
                         "selectorType" = "custom"
                         "custom:selector" = "content"
-                        "custom:initialSelector" = "#mvp-content-wrap"
+                        "custom:initialSelectors" = ["#selDetail"]
 
     [[record.field]]
         name= "Content"
@@ -37,7 +37,7 @@ schedule = "every 5 minutes"
                 "source" = "Published"
         [[record.field.transformersInfo]]
             transformer="utcNow"
-                    
+        
     [[record.field]]
         name= "SourceUrl"
         [record.field.collectorInfo]

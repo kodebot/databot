@@ -1,7 +1,7 @@
 sourceName = "dinamalar"
-source ="http://rss.dinamalar.com/?cat=business1"
+source ="https://cinema.dinamalar.com/rss.php"
 sourceType= "rss/atom"
-category = "business"
+category = "cinema"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]
@@ -20,13 +20,13 @@ schedule = "every 5 minutes"
                 [record.field.transformersInfo.parameters]
                         "selectorType" = "custom"
                         "custom:selector" = "content"
-                        "custom:initialSelectors" = ["#txt1"]
+                        "custom:initialSelector" = "#mvp-content-wrap"
 
     [[record.field]]
         name= "Content"
         [record.field.collectorInfo]
             type= "rssAtomField"
-         [[record.field.transformersInfo]]
+        [[record.field.transformersInfo]]
             transformer="empty"
 
     [[record.field]]
@@ -35,12 +35,9 @@ schedule = "every 5 minutes"
             type= "rssAtomField"
             [record.field.collectorInfo.parameters]
                 "source" = "Published"
-            [[record.field.transformersInfo]]
-                transformer="parseDate"
-                [record.field.transformersInfo.parameters]
-                    "layout" = "Mon, 02 Jan 2006 15:04:05 -0700"
-                    "fallbackValue"="transformer:utcNow"
-
+        [[record.field.transformersInfo]]
+            transformer="utcNow"
+                    
     [[record.field]]
         name= "SourceUrl"
         [record.field.collectorInfo]
