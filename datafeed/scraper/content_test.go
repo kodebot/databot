@@ -12,8 +12,13 @@ func TestExtractConent(t *testing.T) {
 	// 	"url",
 	// 	[]string{"#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"})
 
+	// content := extractContent(
+	// 	"http://www.dinamalar.com/news_detail.asp?id=2296595",
+	// 	"url",
+	// 	[]string{"#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"})
+
 	content := extractContent(
-		"http://www.dinamalar.com/news_detail.asp?id=2296595",
+		"https://www.dinamalar.com/news_detail.asp?id=2297248",
 		"url",
 		[]string{"#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"})
 

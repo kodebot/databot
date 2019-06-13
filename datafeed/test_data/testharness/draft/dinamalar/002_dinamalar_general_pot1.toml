@@ -9,12 +9,18 @@ schedule = "every 5 minutes"
         [record.field.collectorInfo]
             type= "rssAtomField"
 
-    [[record.field]]
-        name= "Description"
-        [record.field.collectorInfo]
-            type= "rssAtomField"
-         [[record.field.transformersInfo]]
-            transformer="empty"
+[[record.field]]
+            name= "Description"
+            [record.field.collectorInfo]
+                type= "rssAtomField"
+                [record.field.collectorInfo.parameters]
+                    "source" = "Link"
+            [[record.field.transformersInfo]]
+                transformer="scrape"
+                [record.field.transformersInfo.parameters]
+                        "selectorType" = "custom"
+                        "custom:selector" = "content"
+                        "custom:initialSelectors" = ["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
 
     [[record.field]]
         name= "Content"
@@ -34,7 +40,6 @@ schedule = "every 5 minutes"
                 [record.field.transformersInfo.parameters]
                     "layout" = "Mon, 02 Jan 2006 15:04:05 -0700"
                     "fallbackValue"="transformer:utcNow"
-
 
     [[record.field]]
         name= "SourceUrl"
