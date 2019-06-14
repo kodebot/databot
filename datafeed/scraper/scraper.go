@@ -43,13 +43,21 @@ func Scrape(source string, params map[string]interface{}) string {
 		}
 		switch selector {
 		case "content":
-			var initialSelectors []string
-			if params["custom:initialSelectors"] != nil {
-				for _, initialSelector := range params["custom:initialSelectors"].([]interface{}) {
-					initialSelectors = append(initialSelectors, initialSelector.(string))
+			var focusSelectors []string
+			if params["custom:focusSelectors"] != nil {
+				for _, focusSelector := range params["custom:focusSelectors"].([]interface{}) {
+					focusSelectors = append(focusSelectors, focusSelector.(string))
 				}
 			}
-			return extractContent(source, sourceType, initialSelectors)
+
+			var blacklistedSelectors []string
+			if params["custom:blacklistedSelectors"] != nil {
+				for _, blacklistedSelector := range params["custom:blacklistedSelectors"].([]interface{}) {
+					blacklistedSelectors = append(blacklistedSelectors, blacklistedSelector.(string))
+				}
+			}
+
+			return extractContent(source, sourceType, focusSelectors, blacklistedSelectors)
 		default:
 			logger.Errorf("the custom selector type %s is not implemented", selector)
 		}

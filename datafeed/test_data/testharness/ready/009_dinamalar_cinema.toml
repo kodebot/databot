@@ -20,7 +20,8 @@ schedule = "every 5 minutes"
                 [record.field.transformersInfo.parameters]
                         "selectorType" = "custom"
                         "custom:selector" = "content"
-                        "custom:initialSelectors" = ["#selDetail"]
+                        "custom:focusSelectors" = ["#selDetail"]
+                        "custom:blacklistedSelectors" = ["#selDetail > h2","#selDetail > div.darrow.clsFloatleft","#selDetail > div.date.clsFloatright","#selDetail > div.bar_cont","#selDetail > div:nth-child(4)","#selDetail > div:nth-child(6)"]
 
     [[record.field]]
         name= "Content"

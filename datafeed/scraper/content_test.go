@@ -18,9 +18,15 @@ func TestExtractConent(t *testing.T) {
 	// 	[]string{"#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"})
 
 	content := extractContent(
-		"https://www.dinamalar.com/news_detail.asp?id=2297248",
+		"https://cinema.dinamalar.com/tamil-news/78958/cinema/Kollywood/aruvam-is-social-triller-movie.htm",
 		"url",
-		[]string{"#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"})
+		[]string{"#selDetail"},
+		[]string{"#selDetail > h2",
+			"#selDetail > div.darrow.clsFloatleft",
+			"#selDetail > div.date.clsFloatright",
+			"#selDetail > div.bar_cont",
+			"#selDetail > div:nth-child(4)",
+			"#selDetail > div:nth-child(6)"})
 
 	ioutil.WriteFile("./temp.html", []byte(content), os.ModePerm)
 }

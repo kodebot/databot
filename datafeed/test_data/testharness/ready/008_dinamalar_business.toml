@@ -20,7 +20,7 @@ schedule = "every 5 minutes"
                 [record.field.transformersInfo.parameters]
                         "selectorType" = "custom"
                         "custom:selector" = "content"
-                        "custom:initialSelectors" = ["#txt1"]
+                        "custom:focusSelectors" = ["#txt1"]
 
     [[record.field]]
         name= "Content"

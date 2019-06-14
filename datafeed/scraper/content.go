@@ -64,7 +64,11 @@ func (c candidateList) String() string {
 }
 
 // extractContent returns relevant content.
-func extractContent(source string, sourceType string, initialSelectors []string) string {
+func extractContent(
+	source string,
+	sourceType string,
+	focusSelectors []string,
+	blacklistedSelectors []string) string {
 
 	// todo: update to detect the source type automatically
 	var document *goquery.Document
@@ -83,27 +87,33 @@ func extractContent(source string, sourceType string, initialSelectors []string)
 		return ""
 	}
 
-	initialSelectorsUseful := len(initialSelectors) == 0
-	for _, initialSelector := range initialSelectors {
-		if initialSelector != "" {
-			initialHTML, err := document.Find(initialSelector).Html()
+	for _, blacklistedSelector := range blacklistedSelectors {
+		document.Find(blacklistedSelector).Each(func(i int, s *goquery.Selection) {
+			removeNodes(s)
+		})
+	}
+
+	foucsSelectorsUseful := len(focusSelectors) == 0
+	for _, focusSelector := range focusSelectors {
+		if focusSelector != "" {
+			initialHTML, err := document.Find(focusSelector).Html()
 			if err != nil {
-				logger.Errorf("error while applying initial selector %s. error: %s", initialSelector, err.Error())
+				logger.Errorf("error while applying initial selector %s. error: %s", focusSelector, err.Error())
 			}
 
 			if len(strings.TrimSpace(initialHTML)) > 0 {
 				document, err = goquery.NewDocumentFromReader(strings.NewReader(initialHTML))
 				if err != nil {
-					logger.Errorf("error while createing document from initial selector %s. error: %s", initialSelector, err.Error())
+					logger.Errorf("error while createing document from initial selector %s. error: %s", focusSelector, err.Error())
 				}
-				initialSelectorsUseful = true
+				foucsSelectorsUseful = true
 				break
 			}
 		}
 	}
 
 	// initital selector provided but non of them found any useful content
-	if !initialSelectorsUseful {
+	if !foucsSelectorsUseful {
 		return ""
 	}
 

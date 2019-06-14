@@ -20,7 +20,7 @@ schedule = "every 5 minutes"
                 [record.field.transformersInfo.parameters]
                         "selectorType" = "custom"
                         "custom:selector" = "content"
-                        "custom:initialSelectors" = ["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
+                        "custom:focusSelectors" = ["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
 
     [[record.field]]
         name= "Content"
