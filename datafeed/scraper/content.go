@@ -68,13 +68,17 @@ func extractContent(
 	source string,
 	sourceType string,
 	focusSelectors []string,
-	blacklistedSelectors []string) string {
+	blacklistedSelectors []string,
+	imgFallbackSelector string) string {
 
 	// todo: update to detect the source type automatically
 	var document *goquery.Document
 	var err error
 
 	if sourceType == "url" {
+		if strings.HasPrefix(source, "//"){
+			source = "http:"+source
+		}
 		document, err = goquery.NewDocument(source)
 	}
 
@@ -86,6 +90,8 @@ func extractContent(
 		logger.Errorf("unable to create html document from %s ** error: %s ** sourceType: %s", source, err.Error(), sourceType)
 		return ""
 	}
+
+	imgFallback := document.Find(imgFallbackSelector)
 
 	for _, blacklistedSelector := range blacklistedSelectors {
 		document.Find(blacklistedSelector).Each(func(i int, s *goquery.Selection) {
@@ -130,13 +136,13 @@ func extractContent(
 	topCandidate := getTopCandidate(document, candidates)
 	logger.Tracef("[Readability] TopCandidate: %v", topCandidate)
 
-	output := getArticle(topCandidate, candidates)
+	output := getArticle(topCandidate, candidates, imgFallback)
 	return output
 }
 
 // Now that we have the top candidate, look through its siblings for content that might also be related.
 // Things like preambles, content split by ads that we removed, etc.
-func getArticle(topCandidate *candidate, candidates candidateList) string {
+func getArticle(topCandidate *candidate, candidates candidateList, imgFallback *goquery.Selection) string {
 	output := bytes.NewBufferString("<div>")
 	siblingScoreThreshold := float32(math.Max(10, float64(topCandidate.score*.2)))
 
@@ -178,7 +184,16 @@ func getArticle(topCandidate *candidate, candidates candidateList) string {
 	})
 
 	output.Write([]byte("</div>"))
-	return output.String()
+	result := output.String()
+
+	// add fallback image when no image is found in the article
+	if !strings.Contains(result, "<img") && imgFallback != nil {
+		if fallbackImgURL, exist := imgFallback.Attr("src"); exist {
+			return "<div><img src='" + fallbackImgURL + "'/>" + result + "</div>"
+		}
+	}
+
+	return result
 }
 
 func removeUnlikelyCandidates(document *goquery.Document) {

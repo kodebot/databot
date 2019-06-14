@@ -1,5 +1,5 @@
 sourceName = "dinamalar"
-source ="https://sports.dinamalar.com/rss/Tennis"
+source ="https://sports.dinamalar.com/rss/Cricket"
 sourceType= "rss/atom"
 category = "sports"
 schedule = "every 5 minutes"
@@ -10,19 +10,18 @@ schedule = "every 5 minutes"
             type= "rssAtomField"
 
     [[record.field]]
-        name= "Description"
-        [record.field.collectorInfo]
-            type= "rssAtomField"
-            [record.field.collectorInfo.parameters]
-                "source" = "Link"
-        [[record.field.transformersInfo]]
-            transformer="scrape"
-            [record.field.transformersInfo.parameters]
-                    "selectorType" = "custom"
-                    "custom:selector" = "content"
-                    "custom:focusSelectors" = ["body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp"]
-                    "custom:fallbackImageSelector" = "body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp > div > div:nth-child(4) > div.article-left-sub-cat1 > div > span > img"
-
+                name= "Description"
+                [record.field.collectorInfo]
+                    type= "rssAtomField"
+                    [record.field.collectorInfo.parameters]
+                        "source" = "Link"
+                [[record.field.transformersInfo]]
+                    transformer="scrape"
+                    [record.field.transformersInfo.parameters]
+                            "selectorType" = "custom"
+                            "custom:selector" = "content"
+                            "custom:focusSelectors" = ["body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp"]
+                            "custom:fallbackImageSelector" = "body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp > div > div:nth-child(4) > div.article-left-sub-cat1 > div > span > img"
 
     [[record.field]]
         name= "Content"

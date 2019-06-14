@@ -57,7 +57,12 @@ func Scrape(source string, params map[string]interface{}) string {
 				}
 			}
 
-			return extractContent(source, sourceType, focusSelectors, blacklistedSelectors)
+			var fallbackImageSelector string
+			if params["custom:fallbackImageSelector"] != nil {
+				fallbackImageSelector = params["custom:fallbackImageSelector"].(string)
+			}
+
+			return extractContent(source, sourceType, focusSelectors, blacklistedSelectors, fallbackImageSelector)
 		default:
 			logger.Errorf("the custom selector type %s is not implemented", selector)
 		}
