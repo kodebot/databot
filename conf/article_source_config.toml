@@ -11,3 +11,10 @@
     sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/vikadan.png"
     sourceDisplayName = "Vikadan"
     availableCategories = [0, 1, 2, 3, 4]
+
+[[articleSource]]
+    id = 3
+    source = "puthiyathalaimurai"
+    sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/puthiyathalaimurai.png"
+    sourceDisplayName = "Puthiya Thalaimurai"
+    availableCategories = [0, 1, 2, 3, 4]
