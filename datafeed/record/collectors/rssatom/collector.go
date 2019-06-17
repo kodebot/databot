@@ -1,6 +1,8 @@
 package rssatom
 
 import (
+	"reflect"
+
 	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/articles"
 	datapkg "github.com/kodebot/newsfeed/data"
@@ -16,9 +18,24 @@ func Collect(data string, fieldsInfo []field.Info) []map[string]interface{} {
 	for _, item := range feeds {
 		//hack:
 
+		itemLink := item.Link
+
+		for _, fi := range fieldsInfo {
+			if fi.Name == "SourceUrl" {
+				if s := fi.CollectorInfo.Parameters["source"]; s != nil {
+					sourceFieldName := s.(string)
+					sourceField := reflect.Indirect(reflect.ValueOf(item)).FieldByName(sourceFieldName)
+					if sourceField.IsValid() {
+						itemLink = sourceField.String()
+						break
+					}
+				}
+			}
+		}
+
 		var existing articles.Article
 		articlesCollection, err := datapkg.GetCollection("articles")
-		err = datapkg.FindOne(articlesCollection, bson.M{"sourceurl": item.Link}, &existing)
+		err = datapkg.FindOne(articlesCollection, bson.M{"sourceurl": itemLink}, &existing)
 
 		if err != nil && err != mongo.ErrNoDocuments {
 			continue
