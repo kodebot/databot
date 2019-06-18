@@ -21,6 +21,8 @@ const (
 	TrimLeft string = "trimLeft"
 	// TrimRight transfromer
 	TrimRight string = "trimRight"
+	// Replace transformer
+	Replace string = "replace"
 	// Scrape transformer scrapes html
 	Scrape string = "scrape"
 )
@@ -40,6 +42,7 @@ func init() {
 		Trim:       trim,
 		TrimLeft:   trimLeft,
 		TrimRight:  trimRight,
+		Replace:    replace,
 		Scrape:     scrape}
 }
 

@@ -28,7 +28,18 @@ schedule = "every 5 minutes"
         [record.field.collectorInfo]
             type= "rssAtomField"
             [record.field.collectorInfo.parameters]
-                "source" = "PublishedParsed"
+                "source" = "Published"
+            [[record.field.transformersInfo]]
+                transformer="replace"
+                [record.field.transformersInfo.parameters]
+                    "old" = "+00:00"
+                    "new" = ""
+            [[record.field.transformersInfo]]
+                transformer="parseDate"
+                [record.field.transformersInfo.parameters]
+                    "layout" = "2006-01-02T15:04:05"
+                    "location" = "Asia/Kolkata"
+                    "fallbackValue"="transformer:utcNow"
 
     [[record.field]]
         name= "SourceUrl"
