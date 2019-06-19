@@ -1,7 +1,7 @@
 sourceName = "dinamalar"
 source ="https://cinema.dinamalar.com/rss.php"
 sourceType= "rss/atom"
-category = "cinema"
+category = "entertainment"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

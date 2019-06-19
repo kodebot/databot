@@ -14,7 +14,6 @@ type ArticleCategory struct {
 	ID                  int
 	Category            string
 	CategoryDisplayName string
-	IsPublic            bool
 }
 
 // AppSettings provide application wide configurable settings

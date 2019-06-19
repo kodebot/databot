@@ -1,7 +1,7 @@
 sourceName = "dinamalar"
 source ="http://rss.dinamalar.com/?cat=pot1"
 sourceType= "rss/atom"
-category = "general"
+category = "tamilnadu"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

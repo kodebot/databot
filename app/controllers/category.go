@@ -2,21 +2,15 @@ package controllers
 
 import (
 	"github.com/kodebot/newsfeed/conf"
-	"github.com/kodebot/newsfeed/models"
 	"github.com/revel/revel"
 )
 
+// Category controller
 type Category struct {
 	*revel.Controller
 }
 
+// List returns all available categories
 func (c Category) List() revel.Result {
-	var articleCategories []models.ArticleCategory
-
-	for _, category := range conf.AppSettings.ArticleCategory {
-		if category.IsPublic == true {
-			articleCategories = append(articleCategories, category)
-		}
-	}
-	return c.RenderJSON(articleCategories)
+	return c.RenderJSON(conf.AppSettings.ArticleCategory)
 }

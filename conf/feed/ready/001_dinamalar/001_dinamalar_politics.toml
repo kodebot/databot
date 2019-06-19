@@ -1,7 +1,7 @@
 sourceName = "dinamalar"
 source ="http://rss.dinamalar.com/?cat=ara1"
 sourceType= "rss/atom"
-category = "politics"
+category = "india"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

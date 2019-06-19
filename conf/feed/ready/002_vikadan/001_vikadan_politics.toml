@@ -1,7 +1,7 @@
 sourceName = "vikadan"
 source ="http://rss.vikatan.com/feeds/politics_news.rss"
 sourceType= "rss/atom"
-category = "politics"
+category = "tamilnadu"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

@@ -1,7 +1,7 @@
 sourceName = "puthiyathalaimurai"
 source ="http://feeds.feedburner.com/Puthiyathalaimurai_Politics_News?format=xml"
 sourceType= "rss/atom"
-category = "politics"
+category = "tamilnadu"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

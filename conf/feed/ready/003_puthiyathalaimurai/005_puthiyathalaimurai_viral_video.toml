@@ -1,7 +1,7 @@
 sourceName = "puthiyathalaimurai"
 source ="http://feeds.feedburner.com/Puthiyathalaimurai_Viral_Videos?format=xml"
 sourceType= "rss/atom"
-category = "general"
+category = "others"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

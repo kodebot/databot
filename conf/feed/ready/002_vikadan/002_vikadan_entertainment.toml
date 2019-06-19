@@ -1,7 +1,7 @@
 sourceName = "vikadan"
 source ="http://rss.vikatan.com/feeds/entertainment.rss"
 sourceType= "rss/atom"
-category = "cinema"
+category = "entertainment"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

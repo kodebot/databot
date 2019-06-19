@@ -1,7 +1,7 @@
 sourceName = "dinamalar"
 source ="http://rss.dinamalar.com/Delhinews.asp"
 sourceType= "rss/atom"
-category = "delhi"
+category = "india"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]

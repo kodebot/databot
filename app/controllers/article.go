@@ -137,16 +137,8 @@ func (c Article) List() revel.Result {
 		if category.ID == int(categoryInt) {
 			categoriesToFilter = append(categoriesToFilter, category.Category)
 		}
-
-		if categoryInt == 0 { // general category - add all non public ones
-			for _, cat := range conf.AppSettings.ArticleCategory {
-				if cat.IsPublic != true {
-					categoriesToFilter = append(categoriesToFilter, cat.Category)
-				}
-			}
-
-		}
 	}
+
 	fmt.Println("categories, %A", categoriesToFilter)
 	var sourcesToFilter []string
 	for _, source := range conf.AppSettings.ArticleSource {
