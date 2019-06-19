@@ -52,6 +52,11 @@ func NewArticle(item map[string]interface{}) *Article {
 		article.SourceURL = sourceURL
 	}
 
+	if item["Category"] != nil {
+		if category, ok := item["Category"].(string); ok {
+			article.Categories = append(article.Categories, category)
+		}
+	}
 	article.CreatedAt = time.Now()
 
 	return &article

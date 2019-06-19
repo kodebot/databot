@@ -50,3 +50,20 @@ schedule = "every 5 minutes"
                 transformer="enclosureToURL"
                 [record.field.transformersInfo.parameters]
                     "enclosureType" = "image/jpeg"
+
+    [[record.field]]
+            name= "Category"
+            [record.field.collectorInfo]
+                type= "rssAtomField"
+                [record.field.collectorInfo.parameters]
+                    "source" = "Link"
+            [[record.field.transformersInfo]]
+                transformer="regexp"
+                [record.field.transformersInfo.parameters]
+                    "expr" = "/(?P<data>india|international|tamilnadu)/"
+                    "fallbackValue"=""
+             [[record.field.transformersInfo]]
+                transformer="replace"
+                [record.field.transformersInfo.parameters]
+                    "old" = "international"
+                    "new" = "world"

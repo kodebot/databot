@@ -52,7 +52,9 @@ func (j LoadArticlesFromFeedsJob) Run() {
 		for _, dataFeedItem := range dataFeed {
 			newArticle := articles.NewArticle(dataFeedItem)
 			newArticle.Source = feedInfo.SourceName
-			newArticle.Categories = []string{feedInfo.Category}
+			if len(newArticle.Categories) == 0 { // when category is missing set the default one
+				newArticle.Categories = []string{feedInfo.Category}
+			}
 			err := newArticle.Store(articleCollection)
 			if err != nil {
 				logger.Errorf("error while storing article %s", err.Error())
