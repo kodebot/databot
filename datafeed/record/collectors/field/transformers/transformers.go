@@ -25,6 +25,8 @@ const (
 	Replace string = "replace"
 	// Scrape transformer scrapes html
 	Scrape string = "scrape"
+	// EnclosureToURL transformer
+	EnclosureToURL string = "enclosureToURL"
 )
 
 type transformFuncType func(value interface{}, parameters map[string]interface{}) interface{}
@@ -33,17 +35,18 @@ var transformersMap map[string]transformFuncType
 
 func init() {
 	transformersMap = map[string]transformFuncType{
-		Regexp:     regex,
-		Value:      value,
-		Empty:      empty,
-		FormatDate: formatDate,
-		ParseDate:  parseDate,
-		UTCNow:     utcNow,
-		Trim:       trim,
-		TrimLeft:   trimLeft,
-		TrimRight:  trimRight,
-		Replace:    replace,
-		Scrape:     scrape}
+		Regexp:         regex,
+		Value:          value,
+		Empty:          empty,
+		FormatDate:     formatDate,
+		ParseDate:      parseDate,
+		UTCNow:         utcNow,
+		Trim:           trim,
+		TrimLeft:       trimLeft,
+		TrimRight:      trimRight,
+		Replace:        replace,
+		Scrape:         scrape,
+		EnclosureToURL: enclosureToURL}
 }
 
 // TransformerInfo provides model to specify transformer settings

@@ -18,3 +18,10 @@
     sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/puthiyathalaimurai.png"
     sourceDisplayName = "Puthiya Thalaimurai"
     availableCategories = [1, 2, 3, 4, 5, 99]
+
+[[articleSource]]
+    id = 4
+    source = "oneindia"
+    sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/oneindia.png"
+    sourceDisplayName = "OneIndia"
+    availableCategories = [1, 2, 99]
