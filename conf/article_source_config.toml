@@ -24,4 +24,4 @@
     source = "oneindia"
     sourceImageUrl = "https://api.vaanoli.kodebot.com/news/images/feed-sources/oneindia.png"
     sourceDisplayName = "OneIndia"
-    availableCategories = [1, 2, 99]
+    availableCategories = [1, 2, 3, 99]
