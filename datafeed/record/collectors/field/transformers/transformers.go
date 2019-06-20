@@ -23,6 +23,8 @@ const (
 	TrimRight string = "trimRight"
 	// Replace transformer
 	Replace string = "replace"
+	// ReplaceAll transformer
+	ReplaceAll string = "replaceAll"
 	// Scrape transformer scrapes html
 	Scrape string = "scrape"
 	// EnclosureToURL transformer
@@ -45,6 +47,7 @@ func init() {
 		TrimLeft:       trimLeft,
 		TrimRight:      trimRight,
 		Replace:        replace,
+		ReplaceAll:     replaceAll,
 		Scrape:         scrape,
 		EnclosureToURL: enclosureToURL}
 }
