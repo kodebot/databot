@@ -53,7 +53,7 @@ func NewArticle(item map[string]interface{}) *Article {
 	}
 
 	if item["Category"] != nil {
-		if category, ok := item["Category"].(string); ok {
+		if category, ok := item["Category"].(string); ok && category != "" {
 			article.Categories = append(article.Categories, category)
 		}
 	}
