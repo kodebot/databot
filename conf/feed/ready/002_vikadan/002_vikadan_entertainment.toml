@@ -15,7 +15,27 @@ schedule = "every 5 minutes"
             type= "rssAtomField"
             [record.field.collectorInfo.parameters]
                 "source" = "Content"
-
+         [[record.field.transformersInfo]]
+            transformer="replaceAll"
+            [record.field.transformersInfo.parameters]
+                "old" = "3939 "
+                "new" = "&#39;&#39; "
+        [[record.field.transformersInfo]]
+            transformer="replaceAll"
+            [record.field.transformersInfo.parameters]
+                "old" = "3939 "
+                "new" = "&#39;&#39; "
+        [[record.field.transformersInfo]]
+            transformer="replaceAll"
+            [record.field.transformersInfo.parameters]
+                "old" = "39 "
+                "new" = "&#39; "
+        [[record.field.transformersInfo]]
+            transformer="replaceAll"
+            [record.field.transformersInfo.parameters]
+                "old" = "39 "
+                "new" = "&#39; "
+                
     [[record.field]]
         name= "Content"
         [record.field.collectorInfo]
