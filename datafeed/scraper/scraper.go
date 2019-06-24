@@ -1,6 +1,11 @@
 package scraper
 
-import "github.com/kodebot/newsfeed/logger"
+import (
+	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/kodebot/newsfeed/logger"
+)
 
 /*Scrape returns scrapped string from html
 source - can be url or html string
@@ -72,4 +77,46 @@ func Scrape(source string, params map[string]interface{}) string {
 	}
 
 	return ""
+}
+
+func removeNodes(s *goquery.Selection) {
+	s.Each(func(i int, s *goquery.Selection) {
+		parent := s.Parent()
+		if parent.Length() > 0 {
+			parent.Get(0).RemoveChild(s.Get(0))
+		}
+	})
+}
+
+func removeEmptyNodes(s *goquery.Selection) {
+	//s.Find("p,div,span,ul,li,section").Each(func(i int, s *goquery.Selection) {
+	s.Find("*").Not("img,br").Each(func(i int, s *goquery.Selection) {
+		if len(s.Find("img,br").Nodes) != 0 {
+			return
+		}
+		if len(strings.TrimSpace(s.Text())) == 0 {
+			removeNodes(s)
+		}
+	})
+	//})
+}
+
+func stripStyles(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		s.RemoveAttr("style")
+	})
+}
+
+func stripClasses(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		s.RemoveAttr("class")
+	})
+}
+
+func removeAdvertisementLeftovers(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		if strings.TrimSpace(s.Text()) == "Advertisement" {
+			removeNodes(s)
+		}
+	})
 }
