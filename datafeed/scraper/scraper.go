@@ -46,28 +46,31 @@ func Scrape(source string, params map[string]interface{}) string {
 		if params["custom:selector"] != nil {
 			selector = params["custom:selector"].(string)
 		}
+
+		var focusSelectors []string
+		if params["custom:focusSelectors"] != nil {
+			for _, focusSelector := range params["custom:focusSelectors"].([]interface{}) {
+				focusSelectors = append(focusSelectors, focusSelector.(string))
+			}
+		}
+
+		var blacklistedSelectors []string
+		if params["custom:blacklistedSelectors"] != nil {
+			for _, blacklistedSelector := range params["custom:blacklistedSelectors"].([]interface{}) {
+				blacklistedSelectors = append(blacklistedSelectors, blacklistedSelector.(string))
+			}
+		}
+
+		var fallbackImageSelector string
+		if params["custom:fallbackImageSelector"] != nil {
+			fallbackImageSelector = params["custom:fallbackImageSelector"].(string)
+		}
+
 		switch selector {
 		case "content":
-			var focusSelectors []string
-			if params["custom:focusSelectors"] != nil {
-				for _, focusSelector := range params["custom:focusSelectors"].([]interface{}) {
-					focusSelectors = append(focusSelectors, focusSelector.(string))
-				}
-			}
-
-			var blacklistedSelectors []string
-			if params["custom:blacklistedSelectors"] != nil {
-				for _, blacklistedSelector := range params["custom:blacklistedSelectors"].([]interface{}) {
-					blacklistedSelectors = append(blacklistedSelectors, blacklistedSelector.(string))
-				}
-			}
-
-			var fallbackImageSelector string
-			if params["custom:fallbackImageSelector"] != nil {
-				fallbackImageSelector = params["custom:fallbackImageSelector"].(string)
-			}
-
 			return extractContent(source, sourceType, focusSelectors, blacklistedSelectors, fallbackImageSelector)
+		case "guided":
+			return extractGuidedContent(source, sourceType, focusSelectors, blacklistedSelectors, fallbackImageSelector)
 		default:
 			logger.Errorf("the custom selector type %s is not implemented", selector)
 		}
@@ -117,6 +120,24 @@ func removeAdvertisementLeftovers(s *goquery.Selection) {
 	s.Find("*").Each(func(i int, s *goquery.Selection) {
 		if strings.TrimSpace(s.Text()) == "Advertisement" {
 			removeNodes(s)
+		}
+	})
+}
+
+func removeCommentNodes(s *goquery.Selection) {
+	s.Contents().Each(func(i int, s *goquery.Selection) {
+		if goquery.NodeName(s) == "#comment" {
+			removeNodes(s)
+		}
+	})
+}
+
+func removeAllDataDashAttrs(s *goquery.Selection) {
+	s.Find("*").Each(func(i int, s *goquery.Selection) {
+		for _, a := range s.Get(0).Attr {
+			if strings.HasPrefix(a.Key, "data-") {
+				s.RemoveAttr(a.Key)
+			}
 		}
 	})
 }

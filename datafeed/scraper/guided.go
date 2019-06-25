@@ -1,13 +1,10 @@
 package scraper
 
 import (
-	"bytes"
-	"fmt"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/kodebot/newsfeed/logger"
-	"golang.org/x/net/html"
 )
 
 // extractGuidedContent returns relevant content.
@@ -74,35 +71,21 @@ func extractGuidedContent(
 		removeNodes(s)
 	})
 
-	output := bytes.NewBufferString("<div>")
+	//output := bytes.NewBufferString("<div>")
 	document.Find("*").Each(func(i int, s *goquery.Selection) {
 
 		removeEmptyNodes(s)
 		stripStyles(s)
 		stripClasses(s)
 		removeAdvertisementLeftovers(s)
+		removeCommentNodes(s)
+		removeAllDataDashAttrs(s)
 	})
 
-	candidates := make(map[*html.Node]string)
-	document.Find("*").Contents().Each(func(i int, s *goquery.Selection) {
-		tag := "p"
+	//output.Write([]byte("</div>"))
 
-		//s.Contents().Each(func(i int, s *goquery.Selection) {
-		nodeName := goquery.NodeName(s)
-
-		if nodeName == "#text" {
-			node := s.Get(0).Parent
-			if _, found := candidates[node]; !found {
-				html, _ := s.First().Parent().Html()
-				fmt.Fprintf(output, "<%s>%s</%s>", tag, html, tag)
-				candidates[node] = node.Data
-			}
-		}
-		//})
-	})
-
-	output.Write([]byte("</div>"))
-	result := output.String()
+	result, _ := document.Find("body").First().Html()
+	//result := output.String()
 
 	// add fallback image when no image is found in the article
 	if !strings.Contains(result, "<img") && imgFallback != nil {
