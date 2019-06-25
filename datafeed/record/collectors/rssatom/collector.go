@@ -3,6 +3,8 @@ package rssatom
 import (
 	"reflect"
 
+	"github.com/kodebot/newsfeed/datafeed/scraper"
+
 	"github.com/golang/glog"
 	"github.com/kodebot/newsfeed/articles"
 	datapkg "github.com/kodebot/newsfeed/data"
@@ -46,8 +48,29 @@ func Collect(data string, fieldsInfo []field.Info) []map[string]interface{} {
 			continue
 		}
 
+		isScrapingRequired := false
+
+		for _, fieldInfo := range fieldsInfo {
+			for _, transInfo := range fieldInfo.TransformersInfo {
+				if transInfo.Transformer == "scrape" {
+					isScrapingRequired = true
+					break
+				}
+			}
+		}
+
+		html := ""
+		if isScrapingRequired {
+			html = scraper.GetHtml(itemLink)
+		}
+
 		record := map[string]interface{}{}
 		for _, fieldInfo := range fieldsInfo {
+			for _, transInfo := range fieldInfo.TransformersInfo {
+				if transInfo.Transformer == "scrape" {
+					transInfo.Parameters["scrappedHtml"] = html
+				}
+			}
 			record[fieldInfo.Name] = field.Create(item, fieldInfo)
 		}
 		records = append(records, record)

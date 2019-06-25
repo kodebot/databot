@@ -7,6 +7,29 @@ import (
 	"github.com/kodebot/newsfeed/logger"
 )
 
+// GetHtml returns the unmodified html from the given url
+func GetHtml(url string) string {
+
+	if strings.HasPrefix(url, "//") {
+		url = "http:" + url
+	}
+
+	document, err := goquery.NewDocument(url)
+
+	if err != nil {
+		logger.Errorf("error when creating html from the url")
+		return ""
+	}
+
+	html, err := document.Html()
+
+	if err != nil {
+		logger.Errorf("error when getting the html from the url")
+		return ""
+	}
+	return html
+}
+
 /*Scrape returns scrapped string from html
 source - can be url or html string
 params - can have
@@ -26,7 +49,9 @@ func Scrape(source string, params map[string]interface{}) string {
 
 	// use url when for source type when type param is missing
 	// allowed types are url and html
-	if params["sourceType"] == nil {
+	if params["scrappedHtml"] != nil {
+		sourceType = "html"
+	} else if params["sourceType"] == nil {
 		sourceType = "url"
 	} else {
 		sourceType = params["sourceType"].(string)
