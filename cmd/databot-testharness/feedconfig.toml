@@ -1,0 +1,17 @@
+name = "dinamalar-politics"
+desc = "dinamalar politics feed"
+group = "dinamalar"
+sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+sourceType= 1 # rss/atom
+schedule = "every 5 minutes"
+[record]
+    [[record.field]]
+        name= "Title"
+        [record.field.collector]
+
+    [[record.field]]
+        name= "Description"
+        [record.field.collector]
+            type= "rssAtomField"
+            [record.field.collector.params]
+                "source" = "Link"

@@ -11,7 +11,10 @@
         "ftransform",
         "ftransformers",
         "glog",
+        "gofeed",
+        "initialise",
         "kodebot",
+        "normalise",
         "rcollect",
         "rcollectors"
     ]
