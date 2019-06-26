@@ -43,6 +43,8 @@ func Test(t *testing.T) {
 
 	case databot.HTMLMultiple:
 		panic(errors.New("HTMLMultiple source is not implemented"))
+	default:
+		panic(errors.New("Unsupported source"))
 	}
 
 }
