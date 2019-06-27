@@ -3,6 +3,7 @@ package rssatom
 import (
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/transformers/field"
 	"github.com/mmcdole/gofeed"
 )
 
@@ -44,7 +45,6 @@ func (c *fieldFactory) collect() *interface{} {
 	return collector(c.RssAtomItem, c.CollectorSpec.Params)
 }
 
-func applyFieldTransformers(source *interface{}, transformerSpecs []*databot.FieldTransformerSpec) *interface{} {
-	// todo
-	return source
+func applyFieldTransformers(value *interface{}, transformerSpecs []*databot.FieldTransformerSpec) *interface{} {
+	return field.Transform(value, transformerSpecs)
 }

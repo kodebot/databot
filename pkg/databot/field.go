@@ -18,7 +18,7 @@ type FieldCollectorType string
 
 // FieldTransformerSpec represents transformer config
 type FieldTransformerSpec struct {
-	Type   string
+	Type   FieldTransformerType
 	Params *map[string]*interface{}
 }
 
