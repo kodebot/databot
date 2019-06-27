@@ -1,36 +1,51 @@
 package rssatom
 
 import (
-	"reflect"
-
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/mmcdole/gofeed"
 )
 
-// Field represents config of a field from rss/atom item
-type Field struct {
-	*databot.Field
+// fieldEngine represents a model that enables getting fields from given RSS/Atom item
+type fieldEngine struct {
+	*databot.FieldSpec
 	RssAtomItem *gofeed.Item
 }
 
-// Collect returns data collected using the given rss/atom Field
-func (c *Field) Collect() *interface{} {
+// newFieldEngine returns new RSS/Atom field engine
+func newFieldEngine(fieldSpec *databot.FieldSpec, rssAtomItem *gofeed.Item) *fieldEngine {
+	return &fieldEngine{fieldSpec, rssAtomItem}
+}
+
+func (c *fieldEngine) createField() *interface{} {
 	if c.RssAtomItem == nil {
 		logger.Errorf("Cannot collect field value when RssAtomItem is nil")
 		return nil
 	}
 
-	if src, ok := (*c.Collector.Params)["source"]; ok {
-		srcStr := (*src).(string)
-		data := reflect.Indirect(reflect.ValueOf(c.RssAtomItem)).FieldByName(srcStr)
-		if !data.IsValid() {
-			logger.Warnf("the source field %s doesn't exist in the input", srcStr)
-			return nil
-		}
-		result := data.Interface()
-		return &result
+	collected := c.collect()
+	return applyFieldTransformers(collected, c.TransformerSpecs)
+}
+
+func (c *fieldEngine) collect() *interface{} {
+	collectorType := c.CollectorSpec.Type
+
+	// for RSS/Atom feed set the collector type to Pluck if not specified
+	if collectorType == 0 {
+		collectorType = databot.Pluck
 	}
-	logger.Errorf("source parameter not found for rssatom collector")
-	return nil
+
+	collector := collectorMap[collectorType]
+
+	if collector == nil {
+		logger.Errorf("specified collector %d is missing implementation", collectorType)
+		return nil
+	}
+
+	return collector(c.RssAtomItem, c.CollectorSpec.Params)
+}
+
+func applyFieldTransformers(source *interface{}, transformerSpecs []*databot.TransformerSpec) *interface{} {
+	// todo
+	return source
 }

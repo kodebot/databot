@@ -6,14 +6,14 @@ import (
 	"github.com/kodebot/databot/pkg/logger"
 )
 
-// FeedConfigReader represents toml feed config reader
-type FeedConfigReader struct {
+// FeedSpecReader represents toml feed config reader
+type FeedSpecReader struct {
 }
 
 // Get creates Feed from the given toml file
-func (reader *FeedConfigReader) Get(filePath string) databot.Feed {
+func (reader *FeedSpecReader) Read(filePath string) databot.FeedSpec {
 
-	var feed databot.Feed
+	var feed databot.FeedSpec
 	_, err := toml.DecodeFile(filePath, &feed)
 	if err != nil {
 		logger.Errorf("error when loading feed info: %s\n", err.Error())

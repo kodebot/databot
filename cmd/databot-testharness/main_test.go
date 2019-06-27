@@ -18,8 +18,8 @@ import (
 
 func Test(t *testing.T) {
 
-	feedConfigReader := toml.FeedConfigReader{}
-	feed := feedConfigReader.Get("feedconfig.toml")
+	feedSpecReader := toml.FeedSpecReader{}
+	feed := feedSpecReader.Read("feedconfig.toml")
 
 	switch feed.SourceType {
 	case databot.RssAtom:
@@ -28,11 +28,11 @@ func Test(t *testing.T) {
 		}
 		rssAtomFeed := rssatom.Parse(xml)
 
-		rssAtomRecord := rssatom.Record{Record: feed.Record, RssAtomFeed: rssAtomFeed}
-		result := rssAtomRecord.Collect()
+		engine := rssatom.NewRecordEngine(feed.RecordSpec, rssAtomFeed)
+		recs := engine.CreateRecords()
 
 		outputPath := "./result.txt"
-		resultStr := toString(result)
+		resultStr := toString(recs)
 		err = ioutil.WriteFile(outputPath, []byte(resultStr), os.ModePerm)
 		if err != nil {
 			logger.Fatalf("unable to write to file %s. error: %s", outputPath, err.Error())

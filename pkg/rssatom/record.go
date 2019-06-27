@@ -5,39 +5,57 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-// Record represents the config to create record from rss/atom feed item
-type Record struct {
-	*databot.Record
+// RecordEngine represents a model that enables retrieving record(s) from RSS/Atom feed
+type RecordEngine struct {
+	*databot.RecordSpec
 	RssAtomFeed *gofeed.Feed
 }
 
-// Collect returns one or more records from given rss data
-func (r *Record) Collect() []*map[string]*interface{} {
-	recs := []*map[string]*interface{}{}
-	for _, item := range r.RssAtomFeed.Items {
-		rec := make(map[string]*interface{})
-		for _, field := range r.Record.Fields {
-			normalise(field)
-			src := (*(*field.Collector.Params)["source"]).(string)
-			f := Field{field, item}
-			rec[src] = f.Collect()
-		}
+// NewRecordEngine return new rss/atom record type
+func NewRecordEngine(recordSpec *databot.RecordSpec, rssAtomFeed *gofeed.Feed) *RecordEngine {
+	return &RecordEngine{recordSpec, rssAtomFeed}
+}
 
-		recs = append(recs, &rec)
+// CreateRecords returns one or more records from given rss/atom record spec
+func (r *RecordEngine) CreateRecords() []*map[string]*interface{} {
+	recs := []*map[string]*interface{}{}
+
+	for _, item := range r.RssAtomFeed.Items {
+		// todo: collector guards
+		collected := r.collect(item)
+		// todo: no record transformers are supported now
+		transformed := applyRecTransformers(collected, nil)
+		recs = append(recs, transformed)
 	}
 	return recs
 }
 
-func normalise(field *databot.Field) {
+func (r *RecordEngine) collect(item *gofeed.Item) *map[string]*interface{} {
+	rec := make(map[string]*interface{})
+	for _, field := range r.RecordSpec.FieldSpecs {
+		normalise(field)
+		src := (*(*field.CollectorSpec.Params)["source"]).(string)
+		f := newFieldEngine(field, item)
+		rec[src] = f.createField()
+	}
+	return &rec
+}
+
+func applyRecTransformers(rec *map[string]*interface{}, transformers []*databot.TransformerSpec) *map[string]*interface{} {
+	// todo: apply record transformers if any
+	return rec
+}
+
+func normalise(field *databot.FieldSpec) {
 	// initialise params if nil
-	if params := field.Collector.Params; params == nil {
+	if params := field.CollectorSpec.Params; params == nil {
 		prm := (make(map[string]*interface{}))
-		field.Collector.Params = &prm
+		field.CollectorSpec.Params = &prm
 	}
 
 	// set source same as name if missing
-	if src := (*field.Collector.Params)["source"]; src == nil {
+	if src := (*field.CollectorSpec.Params)["source"]; src == nil {
 		var fieldName interface{} = field.Name
-		(*field.Collector.Params)["source"] = &fieldName
+		(*field.CollectorSpec.Params)["source"] = &fieldName
 	}
 }
