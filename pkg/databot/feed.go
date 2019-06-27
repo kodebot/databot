@@ -18,13 +18,13 @@ type FeedSpecReader interface {
 }
 
 // FeedSourceType represents Feed source type
-type FeedSourceType int
+type FeedSourceType string
 
 const (
-	// RssAtom represents the rss/atom source
-	RssAtom FeedSourceType = iota + 1
-	// HTMLSingle represents single record html source
-	HTMLSingle
-	// HTMLMultiple represents multiple record html source
-	HTMLMultiple
+	// RssAtomFeedSource represents the rss/atom source
+	RssAtomFeedSource FeedSourceType = "rssatom"
+	// HTMLSingleFeedSource represents single record html source
+	HTMLSingleFeedSource = "htmlSingle"
+	// HTMLFeedSource represents multiple record html source
+	HTMLFeedSource = "html"
 )

@@ -6,12 +6,21 @@ sourceType= 1 # rss/atom
 schedule = "every 5 minutes"
 [record]
     [[record.field]]
+        name= "SourceUrl"
+        [record.field.collector]
+            type= 1 # pluck
+            [record.field.collector.params]
+                "source" = "Link"
+    
+    [[record.field]]
         name= "Title"
         [record.field.collector]
+            type= 1 # pluck
+            
 
     [[record.field]]
         name= "Description"
         [record.field.collector]
-            type= "rssAtomField"
+            type= 1 # pluck
             [record.field.collector.params]
                 "source" = "Link"

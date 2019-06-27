@@ -10,8 +10,8 @@ import (
 
 type collector func(source *gofeed.Item, params *map[string]*interface{}) *interface{}
 
-var collectorMap = map[databot.CollectorType]collector{
-	databot.Pluck: pluck}
+var collectorMap = map[databot.FieldCollectorType]collector{
+	databot.PluckFieldCollector: pluck}
 
 func pluck(source *gofeed.Item, params *map[string]*interface{}) *interface{} {
 	if src, ok := (*params)["source"]; ok {

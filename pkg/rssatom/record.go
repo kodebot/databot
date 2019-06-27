@@ -24,8 +24,8 @@ func (r *RecordEngine) CreateRecords() []*map[string]*interface{} {
 		// todo: collector guards
 		collected := r.collect(item)
 		// todo: no record transformers are supported now
-		transformed := applyRecTransformers(collected, nil)
-		recs = append(recs, transformed)
+		// transformed := applyRecTransformers(collected, nil)
+		recs = append(recs, collected)
 	}
 	return recs
 }
@@ -34,17 +34,16 @@ func (r *RecordEngine) collect(item *gofeed.Item) *map[string]*interface{} {
 	rec := make(map[string]*interface{})
 	for _, field := range r.RecordSpec.FieldSpecs {
 		normalise(field)
-		src := (*(*field.CollectorSpec.Params)["source"]).(string)
 		f := newFieldEngine(field, item)
-		rec[src] = f.createField()
+		rec[field.Name] = f.createField()
 	}
 	return &rec
 }
 
-func applyRecTransformers(rec *map[string]*interface{}, transformers []*databot.TransformerSpec) *map[string]*interface{} {
-	// todo: apply record transformers if any
-	return rec
-}
+// func applyRecTransformers(rec *map[string]*interface{}, transformers []*databot.TransformerSpec) *map[string]*interface{} {
+// 	// todo: apply record transformers if any
+// 	return rec
+// }
 
 func normalise(field *databot.FieldSpec) {
 	// initialise params if nil

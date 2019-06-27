@@ -7,8 +7,8 @@ import (
 	"github.com/kodebot/databot/pkg/logger"
 )
 
-// GetRespBodyAsStr returns http response as a string for given url
-func GetRespBodyAsStr(url string) (string, error) {
+// ReadAsString returns http response as a string for given url
+func ReadAsString(url string) (string, error) {
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil || resp.StatusCode != http.StatusOK {

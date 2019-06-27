@@ -31,8 +31,8 @@ func (c *fieldEngine) collect() *interface{} {
 	collectorType := c.CollectorSpec.Type
 
 	// for RSS/Atom feed set the collector type to Pluck if not specified
-	if collectorType == 0 {
-		collectorType = databot.Pluck
+	if collectorType == "" {
+		collectorType = databot.PluckFieldCollector
 	}
 
 	collector := collectorMap[collectorType]
@@ -45,7 +45,7 @@ func (c *fieldEngine) collect() *interface{} {
 	return collector(c.RssAtomItem, c.CollectorSpec.Params)
 }
 
-func applyFieldTransformers(source *interface{}, transformerSpecs []*databot.TransformerSpec) *interface{} {
+func applyFieldTransformers(source *interface{}, transformerSpecs []*databot.FieldTransformerSpec) *interface{} {
 	// todo
 	return source
 }
