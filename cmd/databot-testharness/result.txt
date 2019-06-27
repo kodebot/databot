@@ -1,183 +1,83 @@
-Description: http://www.dinamalar.com/news_detail.asp?id=2306709,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306709,
-Title: இது தவறா!
+Description: http://www.dinamalar.com/news_detail.asp?id=2307551,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307551,
+Title: அர்த்தமில்லாதது
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306711,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306711,
-Title: 'தலைவராக தொடருங்கள்' :கெஞ்சும் எம்.பி.,க்கள்; நழுவும் ராகுல்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307552,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307552,
+Title: 'மாநில மொழியில் பேச முன் அனுமதி அவசியம்'
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306718,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306718,
-Title: சந்திரபாபு கட்டிய அரங்கத்தை இடிக்க துவங்கினார் ஜெகன்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307553,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307553,
+Title: காஷ்மீர் பாதுகாப்பு : அமித் ஷா ஆய்வு
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306719,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306719,
-Title: வயநாடு, ரேபரேலியில் இந்தியா தோற்றதா? காங்., மீது மோடி மீண்டும் தாக்கு
+Description: http://www.dinamalar.com/news_detail.asp?id=2307554,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307554,
+Title: மன்மோகன் சிங்கை சந்தித்தார்  நிர்மலா சீதாரமன்
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306787,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306787,
-Title: ஆதாரங்களை ஒளிபரப்ப  தி.மு.க., தயாரா? லோக்சபாவில் அ.தி.மு.க.,விட்டது சவால்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307555,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307555,
+Title: ராணுவ ஆயுதங்கள் ராஜ்நாத் ஆய்வு
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306888,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306888,
-Title: அமித் ஷா காஷ்மீர் பயணம் பாதுகாப்பு நிலவரத்தை ஆய்வு செய்தார்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307556,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307556,
+Title: சரக்கு ரயிலில் விளம்பரம் மத்திய அரசு அதிரடி
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306903,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306903,
-Title: ராஜ்யசபா தேர்தல் அலுவலர் நியமனம்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307557,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307557,
+Title: பசு பாதுகாப்பு பெயரில் வன்முறையா?: 5 ஆண்டு சிறை நிச்சயம்
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307067,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307067,
-Title: பார்லியில் நேற்று
+Description: http://www.dinamalar.com/news_detail.asp?id=2307569,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307569,
+Title: கோவைக்கு வெளிநாட்டு விமான சேவை கேள்விகளை ஒன்றாக்கி அசரடித்த தி.மு.க.,
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307228,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307228,
-Title: உ.பி இடைத்தேர்தலில் நான்கு முனை போட்டி
+Description: http://www.dinamalar.com/news_detail.asp?id=2307597,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307597,
+Title: உதவியாளர் கேட்டு மோடிக்கு மன்மோகன் கடிதம்
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307251,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307251,
-Title: எம்.பி.,க்களுக்கு, பா.ஜ., கொறடா உத்தரவு
+Description: http://www.dinamalar.com/news_detail.asp?id=2307616,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307616,
+Title: மத்திய கல்வி மசோதா: லோக்சபாவில் தாக்கல்
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307313,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307313,
-Title: ராஜ்யசபாவில், பா.ஜ., பலம் உயர்ந்தது
+Description: http://www.dinamalar.com/news_detail.asp?id=2307956,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307956,
+Title: பார்லிமென்ட் துளிகள்...
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307327,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307327,
-Title: சபரிமலை விவகாரத்தால் தான் தோல்வி; ஒப்புக்கொண்டது மார்க்சிஸ்ட் கம்யூ.,
+Description: http://www.dinamalar.com/news_detail.asp?id=2307610,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307610,
+Title: தி.மு.க.,வில் தங்கத்தமிழ்ச்செல்வன்?
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307511,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307511,
-Title: மா.கம்யூ., தலைவர் மகனுக்கு பிடிவாரன்ட்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307620,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307620,
+Title: தி.மு.க.,வில் சேருகிறார் தங்க தமிழ்செல்வன்?
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307517,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307517,
-Title: மன்மோகனை சந்தித்தார் நிர்மலா சீத்தாராமன்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307647,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307647,
+Title: தி.மு.க. நெருக்கடி: கராத்தே 'சஸ்பெண்ட்'
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307520,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307520,
-Title: அடுத்த 5 நாளும் மழை வாய்ப்பு
+Description: http://www.dinamalar.com/news_detail.asp?id=2307677,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307677,
+Title: சட்டசபை கூட்டத்தொடர் துவக்கம்....இன்று!
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307530,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307530,
-Title: உதவியாளர் கேட்டு மோடிக்கு மன்மோகன் கடிதம்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307703,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307703,
+Title: தமிழக காங்கிரசில் ஒழுங்கு நடவடிக்கை குழு
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306735,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306735,
-Title: நீர்நிலைகளை மேம்படுத்த ரூ.439 கோடி அமைச்சர் வேலுமணி தகவல்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307762,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307762,
+Title: சகாரா பாலைவனமாக்கும் திட்டம் :ஸ்டாலின், அன்புமணி, தினகரன் எதிர்ப்பு
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306755,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306755,
-Title: தி.மு.க., செயல்வீரர்கள் கூட்டம்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307766,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307766,
+Title: கிராமசபை கூட்டம்: தினகரன் யோசனை
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306771,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306771,
-Title: எதற்காக அவசர சட்டம்?  தி.மு.க., திடீர் சந்தேகம்!
+Description: http://www.dinamalar.com/news_detail.asp?id=2307923,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307923,
+Title: புதிய கல்வி கொள்கையால் மாணவர்கள் உயர்வடைவர்: வானதி சீனிவாசன் பேச்சு
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306794,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306794,
-Title: தி.மு.க., வினர் ஆர்ப்பாட்டம்
+Description: http://www.dinamalar.com/news_detail.asp?id=2307961,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307961,
+Title: குழப்பம் ஏற்படுத்த 'அசைன்மென்ட்' தங்கத்தமிழ்செல்வன் மீது புகார்
 **********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306818,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306818,
-Title: அ.தி.மு.க., - எம்.எல்.ஏ.,க்கள்  சென்னையில் நாளை ஆலோசனை
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306826,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306826,
-Title: 7 லட்சம் பேருக்கு  'ஆன்லைன்' பட்டா
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306923,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306923,
-Title: தி.மு.க.,வினர் ஆர்ப்பாட்டம்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306972,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306972,
-Title: மனுநீதிநாள் முகாம்123 மனுக்கள்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306986,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306986,
-Title: வளர்ச்சி பணிகளில் திடீர் அக்கறை உள்ளாட்சி தேர்தலுக்கு ஆயத்தம்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2306999,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2306999,
-Title: 'கொள்கையே இல்லாத கட்சிக்கு கொ.ப.செ., எதுக்கு?
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307000,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307000,
-Title: 'சிஸ்டம்' சரியில்லை!
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307036,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307036,
-Title: வால்பாறை சுற்றுலா மையமாவது எப்போது?
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307047,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307047,
-Title: பல இடங்களில் குடிநீர் விரயம் சீரமைக்க த.மா.கா., யோசனை
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307053,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307053,
-Title: ரூ.945 கோடியில் வளர்ச்சி பணிகள் தீவிரம்!
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307057,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307057,
-Title: ஹிந்தியை கட்டாயமாக்க வேண்டாம்: ராமதாஸ்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307148,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307148,
-Title: தமிழக வளர்ச்சியில் மோடிக்கு  அக்கறை
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307173,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307173,
-Title: நீர்நிலைகளை மேம்படுத்த ரூ.439 கோடி ஒதுக்கீடு
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307182,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307182,
-Title: புத்துயிர் பெறுமா 'பள்ளி முழு வளர்ச்சி திட்டம்'?
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307185,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307185,
-Title: மாவட்ட நிர்வாகம் அறிவிப்பு
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307186,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307186,
-Title: ஊராட்சிகளில் நாளை சிறப்பு கிராம சபை கூட்டம்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307200,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307200,
-Title: காற்றில் கரைந்த டீசல் ஜெயகுமார் வர்ணனை
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307202,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307202,
-Title: காவிரி ஆணையம் எதற்கு?  * தினகரன் கேள்வி
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307205,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307205,
-Title: தங்க தமிழ்செல்வனை அ.தி.மு.க.,வில் சேர்க்க எதிர்ப்பு
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307211,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307211,
-Title: கோடநாடு கொலை வழக்கு விசாரணை ஜூலை 8ம் தேதிக்கு ஒத்திவைப்பு
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307216,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307216,
-Title: தமிழக வளர்ச்சியில் மோடி அக்கறை
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307322,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307322,
-Title: தங்க தமிழ் செல்வன் பேட்டி
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307324,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307324,
-Title: இதுவரை 'ஸ்மார்ட் சிட்டி' திட்டத்தில் ரூ.15 ஆயிரம் கோடி பணிகள் நிறைவு
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307325,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307325,
-Title: ஒரே ஆண்டில் இன்னொரு தேர்தலை சந்திக்கும் இஸ்ரேல்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307521,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307521,
-Title: காங்கிரசிலிருந்து கராத்தே தியாகராஜன் சஸ்பெண்ட்
-**********************************************************************************
-Description: http://www.dinamalar.com/news_detail.asp?id=2307539,
-SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2307539,
-Title: நாளை ( ஜூன் 28)  தி.மு.க.வில் தங்கத்தமிழ்ச்செல்வன் ஐக்கியம் ?
+Description: http://www.dinamalar.com/news_detail.asp?id=2308023,
+SourceUrl: http://www.dinamalar.com/news_detail.asp?id=2308023,
+Title: 'தங்கத்தை' சேர்க்க கூடாது தேனி அ.தி.மு.க., தீர்மானம்

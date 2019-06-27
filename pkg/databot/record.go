@@ -2,8 +2,29 @@ package databot
 
 // RecordSpec is a collection Field s
 type RecordSpec struct {
-	FieldSpecs []*FieldSpec `toml:"field"`
+	CollectorSpec *RecordCollectorSpec `toml:"collector"`
+	FieldSpecs    []*FieldSpec         `toml:"field"`
 }
+
+// RecordCollectorSpec is the spec for record collector
+type RecordCollectorSpec struct {
+	Type RecordCollectorType
+	// Source is usually URL - other sources like file, etc... are not supported
+	SourceURI string
+	Params    *map[string]*interface{}
+}
+
+// RecordCollectorType provides available collectors
+type RecordCollectorType string
+
+const (
+	// RssAtomRecordCollector represents the rss/atom record collector
+	RssAtomRecordCollector RecordCollectorType = "rssatom"
+	// HTMLSingleRecordCollector represents single html record collector
+	HTMLSingleRecordCollector = "htmlSingle"
+	// HTMLRecordCollector represents multiple html record collector
+	HTMLRecordCollector = "html"
+)
 
 // todo: introduce record collector and field collector when needed
 // idea for record collector: on htmlmultiple source type - collecting the link to collect individual record fields can be record collector

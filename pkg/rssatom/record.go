@@ -2,42 +2,50 @@ package rssatom
 
 import (
 	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/html"
+	"github.com/kodebot/databot/pkg/logger"
 	"github.com/mmcdole/gofeed"
 )
 
-// RecordEngine represents a model that enables retrieving record(s) from RSS/Atom feed
-type RecordEngine struct {
+// RecordFactory represents a model that enables retrieving record(s) from RSS/Atom feed
+type RecordFactory struct {
 	*databot.RecordSpec
 	RssAtomFeed *gofeed.Feed
 }
 
-// NewRecordEngine return new rss/atom record type
-func NewRecordEngine(recordSpec *databot.RecordSpec, rssAtomFeed *gofeed.Feed) *RecordEngine {
-	return &RecordEngine{recordSpec, rssAtomFeed}
+// NewRecordFactory returns a new record factory that enables creating one or more records using RSS/Atom feed
+func NewRecordFactory(recordSpec *databot.RecordSpec) *RecordFactory {
+	sourceURI := recordSpec.CollectorSpec.SourceURI
+
+	xml, err := html.ReadAsString(sourceURI)
+	if err != nil {
+		logger.Errorf("unable to retrieve content from URI %s", sourceURI)
+	}
+	rssAtomFeed := Parse(xml)
+	return &RecordFactory{recordSpec, rssAtomFeed}
 }
 
-// CreateRecords returns one or more records from given rss/atom record spec
-func (r *RecordEngine) CreateRecords() []*map[string]*interface{} {
-	recs := []*map[string]*interface{}{}
-
-	for _, item := range r.RssAtomFeed.Items {
-		// todo: collector guards
-		collected := r.collect(item)
-		// todo: no record transformers are supported now
-		// transformed := applyRecTransformers(collected, nil)
-		recs = append(recs, collected)
-	}
+// Create returns one or more records from given rss/atom record spec
+func (r *RecordFactory) Create() []*map[string]*interface{} {
+	recs := r.collect()
+	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
+	// todo: no record transformers are supported now
+	// transformed := applyRecTransformers(collected, nil)
 	return recs
 }
 
-func (r *RecordEngine) collect(item *gofeed.Item) *map[string]*interface{} {
-	rec := make(map[string]*interface{})
-	for _, field := range r.RecordSpec.FieldSpecs {
-		normalise(field)
-		f := newFieldEngine(field, item)
-		rec[field.Name] = f.createField()
+func (r *RecordFactory) collect() []*map[string]*interface{} {
+	recs := []*map[string]*interface{}{}
+	for _, item := range r.RssAtomFeed.Items { // nothing to collect at record level - the feed item is already available
+		rec := make(map[string]*interface{})
+		for _, field := range r.RecordSpec.FieldSpecs {
+			normalise(field)
+			f := newFieldFactory(field, item)
+			rec[field.Name] = f.create()
+		}
+		recs = append(recs, &rec)
 	}
-	return &rec
+	return recs
 }
 
 // func applyRecTransformers(rec *map[string]*interface{}, transformers []*databot.TransformerSpec) *map[string]*interface{} {

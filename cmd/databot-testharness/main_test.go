@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/kodebot/databot/pkg/databot"
-	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/rssatom"
 	"github.com/kodebot/databot/pkg/toml"
@@ -21,30 +20,24 @@ func Test(t *testing.T) {
 	feedSpecReader := toml.FeedSpecReader{}
 	feed := feedSpecReader.Read("feedconfig.toml")
 
-	switch feed.SourceType {
-	case databot.RssAtomFeedSource:
-		xml, err := html.ReadAsString(feed.SourceURI)
-		if err != nil {
-		}
-		rssAtomFeed := rssatom.Parse(xml)
-
-		engine := rssatom.NewRecordEngine(feed.RecordSpec, rssAtomFeed)
-		recs := engine.CreateRecords()
-
+	switch feed.RecordSpec.CollectorSpec.Type {
+	case databot.RssAtomRecordCollector:
+		factory := rssatom.NewRecordFactory(feed.RecordSpec)
+		recs := factory.Create()
 		outputPath := "./result.txt"
 		resultStr := toString(recs)
-		err = ioutil.WriteFile(outputPath, []byte(resultStr), os.ModePerm)
+		err := ioutil.WriteFile(outputPath, []byte(resultStr), os.ModePerm)
 		if err != nil {
 			logger.Fatalf("unable to write to file %s. error: %s", outputPath, err.Error())
 		}
 
-	case databot.HTMLSingleFeedSource:
-		panic(errors.New("HTMLSingle source is not implemented"))
+	case databot.HTMLSingleRecordCollector:
+		panic(errors.New("HTMLSingle record collector is not implemented"))
 
-	case databot.HTMLFeedSource:
-		panic(errors.New("HTMLMultiple source is not implemented"))
+	case databot.HTMLRecordCollector:
+		panic(errors.New("HTMLMultiple record collector is not implemented"))
 	default:
-		panic(errors.New("Unsupported source"))
+		panic(errors.New("Unsupported record collector"))
 	}
 
 }
