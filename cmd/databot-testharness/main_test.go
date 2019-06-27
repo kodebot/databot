@@ -22,8 +22,8 @@ func Test(t *testing.T) {
 	feed := feedSpecReader.Read("feedconfig.toml")
 
 	switch feed.SourceType {
-	case databot.RssAtom:
-		xml, err := html.GetRespBodyAsStr(feed.SourceURI)
+	case databot.RssAtomFeedSource:
+		xml, err := html.ReadAsString(feed.SourceURI)
 		if err != nil {
 		}
 		rssAtomFeed := rssatom.Parse(xml)
@@ -38,10 +38,10 @@ func Test(t *testing.T) {
 			logger.Fatalf("unable to write to file %s. error: %s", outputPath, err.Error())
 		}
 
-	case databot.HTMLSingle:
+	case databot.HTMLSingleFeedSource:
 		panic(errors.New("HTMLSingle source is not implemented"))
 
-	case databot.HTMLMultiple:
+	case databot.HTMLFeedSource:
 		panic(errors.New("HTMLMultiple source is not implemented"))
 	default:
 		panic(errors.New("Unsupported source"))

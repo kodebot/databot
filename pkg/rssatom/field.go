@@ -38,7 +38,7 @@ func (c *fieldEngine) collect() *interface{} {
 	collector := collectorMap[collectorType]
 
 	if collector == nil {
-		logger.Errorf("specified collector %d is missing implementation", collectorType)
+		logger.Errorf("specified collector %s is missing implementation", collectorType)
 		return nil
 	}
 

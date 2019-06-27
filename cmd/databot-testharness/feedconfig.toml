@@ -1,26 +1,25 @@
 name = "dinamalar-politics"
 desc = "dinamalar politics feed"
 group = "dinamalar"
-sourceUri ="http://rss.dinamalar.com/?cat=ara1"
-sourceType= 1 # rss/atom
+sourceUri ="http://rss.dinamalar.com/?cat=ara1" # move this to record collector
+sourceType= "rssatom"
 schedule = "every 5 minutes"
 [record]
     [[record.field]]
         name= "SourceUrl"
         [record.field.collector]
-            type= 1 # pluck
+            type= "pluck"
             [record.field.collector.params]
                 "source" = "Link"
     
     [[record.field]]
         name= "Title"
         [record.field.collector]
-            type= 1 # pluck
+            type= "pluck"
             
 
     [[record.field]]
         name= "Description"
         [record.field.collector]
-            type= 1 # pluck
             [record.field.collector.params]
                 "source" = "Link"
