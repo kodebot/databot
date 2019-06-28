@@ -49,13 +49,17 @@ func TestKeep(t *testing.T) {
 		expected  string
 	}{
 		{
-			"<html><head></head><body><div><span>keepme</span></div></body></html>",
-			[]string{"span"},
-			"<span>keepme</span>"},
+			`<html><head></head><body><div><span>keepme</span></div></body></html>`,
+			[]string{`span`},
+			`<span>keepme</span>`},
 		{
 			`<html><head></head><body><div><span class="keep0">keepme</span><span>dontkeepme</span><span class="keep1">keepme</span></div></body></html>`,
-			[]string{".keep0", ".keep1"},
+			[]string{`.keep0`, `.keep1`},
 			`<span class="keep0">keepme</span><span class="keep1">keepme</span>`},
+		{
+			`<html><head></head><body><div><span>keepme</span></div></body></html>`,
+			[]string{`.keepme`},
+			``},
 	}
 
 	for _, test := range tests {
@@ -67,6 +71,31 @@ func TestKeep(t *testing.T) {
 		}
 		if actual != test.expected {
 			t.Fatalf("keep failed for selector %v. EXPECTED: <<%s>>, ACTUAL: <<%s>>", test.selectors, test.expected, actual)
+		}
+	}
+}
+
+func TestBody(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			`<html><head></head><body><div><span>keepme</span></div></body></html>`,
+			`<div><span>keepme</span></div>`},
+		{
+			`<html><head></head><body></body></html>`,
+			``},
+		{
+			`<div><span></span></div>`,
+			`<div><span></span></div>`},
+	}
+
+	for _, test := range tests {
+		doc := NewDocument(test.input)
+		actual := doc.Body()
+		if actual != test.expected {
+			t.Fatalf("retrieving body failed. EXPECTED: <<%s>>, ACTUAL: <<%s>>", test.expected, actual)
 		}
 	}
 }
