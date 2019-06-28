@@ -12,6 +12,7 @@
         "ftransformers",
         "glog",
         "gofeed",
+        "goquery",
         "initialise",
         "kodebot",
         "normalise",
