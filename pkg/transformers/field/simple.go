@@ -1,9 +1,9 @@
 package field
 
-func value(source interface{}, parameters map[string]interface{}) interface{} {
-	return source
+func value(val interface{}, params map[string]interface{}) interface{} {
+	return val
 }
 
-func empty(source interface{}, parameters map[string]interface{}) interface{} {
+func empty(val interface{}, params map[string]interface{}) interface{} {
 	return ""
 }

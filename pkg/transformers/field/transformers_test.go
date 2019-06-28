@@ -1,15 +1,19 @@
 package field
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/kodebot/databot/pkg/databot"
+)
 
 func TestTransformTransformerFound(t *testing.T) {
 
 	value := " test string "
 
-	tranformersInfo := []TransformerInfo{{
-		Transformer: Trim}}
+	specs := []databot.FieldTransformerSpec{{
+		Type: Trim}}
 
-	actual := Transform(value, tranformersInfo)
+	actual := Transform(value, specs)
 	expected := "test string"
 	if actual != expected {
 		fail(t, "transform not applied", expected, actual.(string))
@@ -19,10 +23,10 @@ func TestTransformTransformerFound(t *testing.T) {
 func TestTransformUnknownTransformer(t *testing.T) {
 	value := " test string "
 
-	tranformersInfo := []TransformerInfo{{
-		Transformer: "Unknown"}}
+	specs := []databot.FieldTransformerSpec{{
+		Type: "Unknown"}}
 
-	actual := Transform(value, tranformersInfo)
+	actual := Transform(value, specs)
 	expected := " test string "
 	if actual != expected {
 		fail(t, "transforms should not be applied but appears to be applied", expected, actual.(string))
@@ -32,13 +36,13 @@ func TestTransformUnknownTransformer(t *testing.T) {
 func TestTransformMultipleTransformers(t *testing.T) {
 	value := " test string "
 
-	tranformersInfo := []TransformerInfo{
+	specs := []databot.FieldTransformerSpec{
 		{
-			Transformer: TrimLeft},
+			Type: TrimLeft},
 		{
-			Transformer: TrimRight}}
+			Type: TrimRight}}
 
-	actual := Transform(value, tranformersInfo)
+	actual := Transform(value, specs)
 	expected := "test string"
 	if actual != expected {
 		fail(t, "not all the transforms appear to be applied", expected, actual.(string))
@@ -48,13 +52,13 @@ func TestTransformMultipleTransformers(t *testing.T) {
 func TestTransformMultipleTransformersAndUnknown(t *testing.T) {
 	value := " test string "
 
-	tranformersInfo := []TransformerInfo{
+	specs := []databot.FieldTransformerSpec{
 		{
-			Transformer: "Unknown"},
+			Type: "Unknown"},
 		{
-			Transformer: TrimRight}}
+			Type: TrimRight}}
 
-	actual := Transform(value, tranformersInfo)
+	actual := Transform(value, specs)
 
 	expected := " test string"
 	if actual != expected {

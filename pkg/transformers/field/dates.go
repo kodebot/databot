@@ -6,14 +6,14 @@ import (
 	"github.com/kodebot/databot/pkg/logger"
 )
 
-func formatDate(val *interface{}, params *map[string]*interface{}) *interface{} {
+func formatDate(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return val
 	}
-	switch v := (*val).(type) {
+	switch v := val.(type) {
 	case *time.Time:
 		var result interface{} = v.String()
-		return &result
+		return result
 	case time.Time:
 		var result interface{} = v.String()
 		return &result
@@ -23,13 +23,13 @@ func formatDate(val *interface{}, params *map[string]*interface{}) *interface{} 
 	}
 }
 
-func parseDate(val *interface{}, params *map[string]*interface{}) *interface{} {
+func parseDate(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return val
 	}
 
 	layoutStr := time.RFC3339
-	if params != nil && (*params)["layout"] != nil {
+	if params != nil && params["layout"] != nil {
 		layoutStr = params["layout"].(string)
 	}
 
@@ -44,14 +44,14 @@ func parseDate(val *interface{}, params *map[string]*interface{}) *interface{} {
 
 	if err != nil {
 		logger.Errorf("parsing location specified is not recognised %s", parseLocStr)
-		return fallbackVal
+		return val
 	}
 
 	result, err := time.ParseInLocation(layoutStr, valStr, loc)
 
 	if err != nil {
 		logger.Errorf("parsing date failed with layout %s", layoutStr)
-		return fallbackVal
+		return val
 	}
 
 	return result

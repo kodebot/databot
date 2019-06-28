@@ -11,7 +11,7 @@ type RecordCollectorSpec struct {
 	Type RecordCollectorType
 	// Source is usually URL - other sources like file, etc... are not supported
 	SourceURI string
-	Params    *map[string]*interface{}
+	Params    map[string]interface{}
 }
 
 // RecordCollectorType provides available collectors

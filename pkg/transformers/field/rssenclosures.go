@@ -4,11 +4,11 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func enclosureToURL(value interface{}, params map[string]interface{}) interface{} {
+func enclosureToURL(val interface{}, params map[string]interface{}) interface{} {
 
 	// todo: make sure value is slice to start with
 
-	if enclosures, ok := value.([]*gofeed.Enclosure); ok {
+	if enclosures, ok := val.([]*gofeed.Enclosure); ok {
 
 		for _, enclosure := range enclosures {
 			if enclosure.Type == params["enclosureType"].(string) {

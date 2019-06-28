@@ -7,42 +7,42 @@ import (
 	"github.com/kodebot/databot/pkg/logger"
 )
 
-func trim(value interface{}, parameters map[string]interface{}) interface{} {
+func trim(val interface{}, params map[string]interface{}) interface{} {
 
-	if valueString, ok := value.(string); ok {
-		return strings.TrimSpace(valueString)
+	if valStr, ok := val.(string); ok {
+		return strings.TrimSpace(valStr)
 	}
 
 	logger.Errorf("trim is not allowed on non string type")
-	return value
+	return val
 }
 
-func trimLeft(value interface{}, parameters map[string]interface{}) interface{} {
+func trimLeft(val interface{}, params map[string]interface{}) interface{} {
 
-	if valueString, ok := value.(string); ok {
-		return strings.TrimPrefix(valueString, " ")
+	if valStr, ok := val.(string); ok {
+		return strings.TrimPrefix(valStr, " ")
 	}
 
 	logger.Errorf("trimLeft is not allowed on non string type")
-	return value
+	return val
 }
 
-func trimRight(value interface{}, parameters map[string]interface{}) interface{} {
+func trimRight(val interface{}, params map[string]interface{}) interface{} {
 
-	if valueString, ok := value.(string); ok {
-		return strings.TrimSuffix(valueString, " ")
+	if valStr, ok := val.(string); ok {
+		return strings.TrimSuffix(valStr, " ")
 	}
 
 	logger.Errorf("trimRight is not allowed on non string type")
-	return value
+	return val
 }
 
-func replace(value interface{}, parameters map[string]interface{}) interface{} {
-	if valueString, ok := value.(string); ok {
+func replace(val interface{}, params map[string]interface{}) interface{} {
+	if valStr, ok := val.(string); ok {
 
 		olds := []string{}
 
-		if old := parameters["old"]; old != nil {
+		if old := params["old"]; old != nil {
 
 			if reflect.TypeOf(old).Kind() == reflect.Slice {
 				for _, oldItem := range old.([]interface{}) {
@@ -52,31 +52,29 @@ func replace(value interface{}, parameters map[string]interface{}) interface{} {
 				olds = append(olds, old.(string))
 			}
 
-			if new := parameters["new"]; new != nil {
+			if new := params["new"]; new != nil {
 				newstr := new.(string)
 				for _, oldstr := range olds {
-					valueString = strings.Replace(valueString, oldstr, newstr, 1)
+					valStr = strings.Replace(valStr, oldstr, newstr, 1)
 				}
 			}
 		}
-
-		return valueString
+		return valStr
 	}
 
 	logger.Errorf("replace is not allowed on non string type")
-	return value
+	return val
 }
 
-func replaceAll(value interface{}, parameters map[string]interface{}) interface{} {
-	if valueString, ok := value.(string); ok {
-
-		if old := parameters["old"]; old != nil {
-			if new := parameters["new"]; new != nil {
-				return strings.Replace(valueString, old.(string), new.(string), -1)
+func replaceAll(val interface{}, params map[string]interface{}) interface{} {
+	if valStr, ok := val.(string); ok {
+		if old := params["old"]; old != nil {
+			if new := params["new"]; new != nil {
+				return strings.Replace(valStr, old.(string), new.(string), -1)
 			}
 		}
 	}
 
 	logger.Errorf("replace is not allowed on non string type")
-	return value
+	return val
 }

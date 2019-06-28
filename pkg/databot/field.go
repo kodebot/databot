@@ -10,7 +10,7 @@ type FieldSpec struct {
 // FieldCollectorSpec represents collector config
 type FieldCollectorSpec struct {
 	Type   FieldCollectorType
-	Params *map[string]*interface{}
+	Params map[string]interface{}
 }
 
 // FieldCollectorType provides available collectors
@@ -19,7 +19,7 @@ type FieldCollectorType string
 // FieldTransformerSpec represents transformer config
 type FieldTransformerSpec struct {
 	Type   FieldTransformerType
-	Params *map[string]*interface{}
+	Params map[string]interface{}
 }
 
 // FieldTransformerType provides available transformer

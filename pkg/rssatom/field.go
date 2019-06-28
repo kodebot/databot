@@ -18,7 +18,7 @@ func newFieldFactory(fieldSpec *databot.FieldSpec, rssAtomItem *gofeed.Item) *fi
 	return &fieldFactory{fieldSpec, rssAtomItem}
 }
 
-func (c *fieldFactory) create() *interface{} {
+func (c *fieldFactory) create() interface{} {
 	if c.RssAtomItem == nil {
 		logger.Errorf("Cannot collect field value when RssAtomItem is nil")
 		return nil
@@ -28,7 +28,7 @@ func (c *fieldFactory) create() *interface{} {
 	return applyFieldTransformers(collected, c.TransformerSpecs)
 }
 
-func (c *fieldFactory) collect() *interface{} {
+func (c *fieldFactory) collect() interface{} {
 	collectorType := c.CollectorSpec.Type
 
 	// for RSS/Atom feed set the collector type to Pluck if not specified
@@ -45,6 +45,6 @@ func (c *fieldFactory) collect() *interface{} {
 	return collector(c.RssAtomItem, c.CollectorSpec.Params)
 }
 
-func applyFieldTransformers(value *interface{}, transformerSpecs []*databot.FieldTransformerSpec) *interface{} {
+func applyFieldTransformers(value interface{}, transformerSpecs []*databot.FieldTransformerSpec) interface{} {
 	return field.Transform(value, transformerSpecs)
 }

@@ -26,7 +26,7 @@ func NewRecordFactory(recordSpec *databot.RecordSpec) *RecordFactory {
 }
 
 // Create returns one or more records from given rss/atom record spec
-func (r *RecordFactory) Create() []*map[string]*interface{} {
+func (r *RecordFactory) Create() []map[string]interface{} {
 	recs := r.collect()
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
@@ -34,16 +34,16 @@ func (r *RecordFactory) Create() []*map[string]*interface{} {
 	return recs
 }
 
-func (r *RecordFactory) collect() []*map[string]*interface{} {
-	recs := []*map[string]*interface{}{}
+func (r *RecordFactory) collect() []map[string]interface{} {
+	recs := []map[string]interface{}{}
 	for _, item := range r.RssAtomFeed.Items { // nothing to collect at record level - the feed item is already available
-		rec := make(map[string]*interface{})
+		rec := make(map[string]interface{})
 		for _, field := range r.RecordSpec.FieldSpecs {
 			normalise(field)
 			f := newFieldFactory(field, item)
 			rec[field.Name] = f.create()
 		}
-		recs = append(recs, &rec)
+		recs = append(recs, rec)
 	}
 	return recs
 }
@@ -56,13 +56,11 @@ func (r *RecordFactory) collect() []*map[string]*interface{} {
 func normalise(field *databot.FieldSpec) {
 	// initialise params if nil
 	if params := field.CollectorSpec.Params; params == nil {
-		prm := (make(map[string]*interface{}))
-		field.CollectorSpec.Params = &prm
+		field.CollectorSpec.Params = make(map[string]interface{})
 	}
 
 	// set source same as name if missing
-	if src := (*field.CollectorSpec.Params)["source"]; src == nil {
-		var fieldName interface{} = field.Name
-		(*field.CollectorSpec.Params)["source"] = &fieldName
+	if src := field.CollectorSpec.Params["source"]; src == nil {
+		field.CollectorSpec.Params["source"] = field.Name
 	}
 }

@@ -3,36 +3,27 @@ package field
 import (
 	"regexp"
 
-	"github.com/kodebot/newsfeed/logger"
+	"github.com/kodebot/databot/pkg/logger"
 )
 
-func regex(source interface{}, parameters map[string]interface{}) interface{} {
+func regex(val interface{}, params map[string]interface{}) interface{} {
 
-	fallback := parameters["fallbackValue"]
-	if fallback == nil {
-		fallback = source
-	}
+	if valStr, ok := val.(string); ok {
 
-	if source == nil {
-		return fallback
-	}
-
-	if sourceString, ok := source.(string); ok {
-
-		logger.Infof("transforming %s using regexp", sourceString)
+		logger.Infof("transforming %s using regexp", valStr)
 
 		var expr string
-		if ok := parameters["expr"]; ok != nil {
+		if ok := params["expr"]; ok != nil {
 			expr = ok.(string)
 		} else {
 			logger.Errorf("no regular expression parameter found")
-			return fallback
+			return val
 		}
 
 		re, err := regexp.Compile(expr)
 		if err != nil {
 			logger.Errorf("invalid regexp: %s error: %s. \n", expr, err.Error())
-			return fallback
+			return val
 		}
 
 		requiredMatchIndex := 0
@@ -44,12 +35,12 @@ func regex(source interface{}, parameters map[string]interface{}) interface{} {
 
 		if requiredMatchIndex == 0 {
 			logger.Errorf("invalid regular expression: %s no named group called 'data' is found. \n", expr)
-			return fallback
+			return val
 		}
-		matches := re.FindStringSubmatch(sourceString)
+		matches := re.FindStringSubmatch(valStr)
 		if len(matches) < requiredMatchIndex+1 {
 			logger.Warnf("no match found.")
-			return fallback
+			return val
 		}
 
 		if found := matches[requiredMatchIndex]; found != "" {
@@ -59,5 +50,5 @@ func regex(source interface{}, parameters map[string]interface{}) interface{} {
 
 	}
 	logger.Errorf("input is not string type")
-	return fallback
+	return val
 }

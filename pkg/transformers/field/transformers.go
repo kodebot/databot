@@ -34,7 +34,7 @@ const (
 	EnclosureToURL databot.FieldTransformerType = "enclosureToURL"
 )
 
-type transformFuncType func(value interface{}, parameters map[string]interface{}) interface{}
+type transformFuncType func(val interface{}, params map[string]interface{}) interface{}
 
 var transformersMap map[databot.FieldTransformerType]transformFuncType
 

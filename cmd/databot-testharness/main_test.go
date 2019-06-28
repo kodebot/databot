@@ -42,19 +42,19 @@ func Test(t *testing.T) {
 
 }
 
-func toString(records []*map[string]*interface{}) string {
+func toString(records []map[string]interface{}) string {
 	result := []string{}
 	for _, record := range records {
 		fields := []string{}
-		for key, value := range *record {
+		for key, value := range record {
 			valueString := "NIL"
 			if value != nil {
-				if valueDate, ok := (*value).(*time.Time); ok {
+				if valueDate, ok := value.(*time.Time); ok {
 					valueString = valueDate.String()
-				} else if valueDate, ok := (*value).(time.Time); ok {
+				} else if valueDate, ok := value.(time.Time); ok {
 					valueString = valueDate.String()
 				} else {
-					valueString = (*value).(string)
+					valueString = value.(string)
 				}
 			}
 			fields = append(fields, key+": "+valueString)
