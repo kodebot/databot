@@ -50,3 +50,13 @@ func (d *Document) Body() string {
 	}
 	return htmlStr
 }
+
+// HTML returns the document body as string
+func (d *Document) HTML() string {
+	htmlStr, err := d.document.Html()
+	if err != nil {
+		logger.Errorf("error when getting the html of the document document. error: %s", err.Error())
+		return ""
+	}
+	return htmlStr
+}

@@ -99,3 +99,31 @@ func TestBody(t *testing.T) {
 		}
 	}
 }
+
+func TestHTML(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			`<html><head></head><body><div><span>keepme</span></div></body></html>`,
+			`<html><head></head><body><div><span>keepme</span></div></body></html>`},
+		{
+			`<html><head></head><body></body></html>`,
+			`<html><head></head><body></body></html>`},
+		{
+			`<div><span></span></div>`,
+			`<html><head></head><body><div><span></span></div></body></html>`},
+		{
+			``,
+			`<html><head></head><body></body></html>`},
+	}
+
+	for _, test := range tests {
+		doc := NewDocument(test.input)
+		actual := doc.HTML()
+		if actual != test.expected {
+			t.Fatalf("retrieving HTML of the document failed. EXPECTED: <<%s>>, ACTUAL: <<%s>>", test.expected, actual)
+		}
+	}
+}
