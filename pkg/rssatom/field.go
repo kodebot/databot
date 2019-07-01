@@ -26,7 +26,7 @@ func (c *fieldFactory) create() interface{} {
 	}
 
 	collected := c.collect()
-	return applyFieldTransformers(collected, c.TransformerSpecs)
+	return transform(collected, c.TransformerSpecs)
 }
 
 func (c *fieldFactory) collect() interface{} {
@@ -34,7 +34,7 @@ func (c *fieldFactory) collect() interface{} {
 
 	// for RSS/Atom feed set the collector type to Pluck if not specified
 	if collectorType == "" {
-		collectorType = databot.PluckFieldCollector
+		collectorType = fieldcollector.PluckField
 	}
 
 	if collector := collectorMap[collectorType]; collector != nil {
@@ -51,6 +51,19 @@ func (c *fieldFactory) collect() interface{} {
 
 }
 
-func applyFieldTransformers(value interface{}, transformerSpecs []*databot.FieldTransformerSpec) interface{} {
-	return fieldtransformer.Transform(value, transformerSpecs)
+func transform(value interface{}, transformerSpecs []*databot.FieldTransformerSpec) interface{} {
+	for _, spec := range transformerSpecs {
+		if transformerFn := transformersMap[spec.Type]; transformerFn != nil {
+			value = transformerFn(value, spec.Params)
+			continue
+		}
+
+		if sharedTransformerFn := fieldtransformer.TransformersMap[spec.Type]; sharedTransformerFn != nil {
+			value = sharedTransformerFn(value, spec.Params)
+			continue
+		}
+
+		logger.Errorf("transform %s not found", spec.Type)
+	}
+	return value
 }

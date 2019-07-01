@@ -2,8 +2,13 @@ package fieldtransformer
 
 import (
 	"github.com/kodebot/databot/pkg/databot"
-	"github.com/kodebot/databot/pkg/logger"
 )
+
+// TransformFuncType is the signature of field transformer
+type TransformFuncType func(val interface{}, params map[string]interface{}) interface{}
+
+// TransformersMap contains all the general field transformers
+var TransformersMap map[databot.FieldTransformerType]TransformFuncType
 
 const (
 	// Regexp value transformer
@@ -42,12 +47,8 @@ const (
 	EnclosureToURL databot.FieldTransformerType = "rssatom:enclosure:toURL"
 )
 
-type transformFuncType func(val interface{}, params map[string]interface{}) interface{}
-
-var transformersMap map[databot.FieldTransformerType]transformFuncType
-
 func init() {
-	transformersMap = map[databot.FieldTransformerType]transformFuncType{
+	TransformersMap = map[databot.FieldTransformerType]TransformFuncType{
 		Regexp:                         regex,
 		FormatDate:                     formatDate,
 		ParseDate:                      parseDate,
@@ -63,19 +64,5 @@ func init() {
 		RemoveHTMLScripts:              removeHTMLScripts,
 		RemoveNonContentHTMLElements:   removeNonContentHTMLElements,
 		RemoveHTMLElementsMatchingText: removeHTMLElementsMatchingText,
-		HTMLMetadata:                   htmlMetadata,
-		EnclosureToURL:                 enclosureToURL}
-}
-
-// Transform returns transformed data
-func Transform(value interface{}, transformerSpecs []*databot.FieldTransformerSpec) interface{} {
-	for _, spec := range transformerSpecs {
-		transformerFunc := transformersMap[spec.Type]
-		if transformerFunc != nil {
-			value = transformerFunc(value, spec.Params)
-		} else {
-			logger.Warnf("transformer %s is not found", spec.Type)
-		}
-	}
-	return value
+		HTMLMetadata:                   htmlMetadata}
 }

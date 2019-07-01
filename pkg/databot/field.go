@@ -24,12 +24,3 @@ type FieldTransformerSpec struct {
 
 // FieldTransformerType provides available transformer
 type FieldTransformerType string
-
-const (
-	// ValueCollector returns the specified constant value.
-	// All sources are supported
-	ValueCollector FieldCollectorType = "value"
-	// PluckFieldCollector represents a type of collector that fetches value from property of an instance
-	// Supports rssatom source
-	PluckFieldCollector FieldCollectorType = "pluck"
-)
