@@ -27,23 +27,23 @@ schedule = "every 5 minutes"
             [record.field.collector.params] # default type is pluck for rssatom type
                 "source" = "Link"
         [[record.field.transformer]]
-            type="httpGet"
+            type="http:get"
         [[record.field.transformer]]
-            type="removeHTMLElementsMatchingText"
+            type="html:elements:text:match:remove"
             [record.field.transformer.params]
                 "matchers"=[".*Advertisement.*"]
         [[record.field.transformer]]
-            type="selectHTMLElements"
+            type="html:elements:select"
             [record.field.transformer.params]
                 "selectors"=["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
         [[record.field.transformer]]
-            type="removeHTMLStyles"
+            type="html:styles:remove"
         [[record.field.transformer]]
-            type="removeHTMLScripts"
+            type="html:scripts:remove"
         [[record.field.transformer]]
-            type="removeNonContentHTMLElements"
+            type="html:elements:non-content:remove"
         [[record.field.transformer]]
-            type="selectHTMLElements"
+            type="html:elements:select"
             [record.field.transformer.params]
                 "selectors"=["body"]
             
@@ -54,15 +54,15 @@ schedule = "every 5 minutes"
             [record.field.collector.params] # default type is pluck for rssatom type
                 "source" = "Link"
         [[record.field.transformer]]
-            type="httpGet"
+            type="http:get"
         [[record.field.transformer]]
-            type="htmlMetadata"
+            type="html:metadata:select"
             [record.field.transformer.params]
                 "keyAttr"="property"
                 "keyVal"="article:published_time"
                 "valAttr"="content"
         [[record.field.transformer]]
-            type="parseDate"
+            type="date:parse"
             [record.field.transformer.params]
                 "layout" = "2006-01-02T15:04:05-07:00"
     
@@ -73,7 +73,7 @@ schedule = "every 5 minutes"
             [record.field.collector.params] # default type is pluck for rssatom type
                 "source" = "Description"
         [[record.field.transformer]]
-            type="regexp"
+            type="string:regexp:select"
             [record.field.transformer.params]
                 "expr" = "<img[^>]+src='(?P<data>[^']+)"
     

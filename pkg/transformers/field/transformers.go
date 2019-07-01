@@ -7,39 +7,39 @@ import (
 
 const (
 	// Regexp value transformer
-	Regexp databot.FieldTransformerType = "regexp"
+	Regexp databot.FieldTransformerType = "string:regexp:select"
 	// FormatDate transformer
-	FormatDate databot.FieldTransformerType = "formatDate"
+	FormatDate databot.FieldTransformerType = "date:format"
 	// ParseDate transformer
-	ParseDate databot.FieldTransformerType = "parseDate"
+	ParseDate databot.FieldTransformerType = "date:parse"
 	// Trim transformer
-	Trim databot.FieldTransformerType = "trim"
+	Trim databot.FieldTransformerType = "string:trim"
 	// TrimLeft transformer
-	TrimLeft databot.FieldTransformerType = "trimLeft"
+	TrimLeft databot.FieldTransformerType = "string:trimLeft"
 	// TrimRight transfromer
-	TrimRight databot.FieldTransformerType = "trimRight"
+	TrimRight databot.FieldTransformerType = "string:trimRight"
 	// Replace transformer
-	Replace databot.FieldTransformerType = "replace"
+	Replace databot.FieldTransformerType = "string:replace"
 	// ReplaceAll transformer
-	ReplaceAll databot.FieldTransformerType = "replaceAll"
+	ReplaceAll databot.FieldTransformerType = "string:replaceAll"
 	// HTTPGet transformer scrapes html
-	HTTPGet databot.FieldTransformerType = "httpGet"
+	HTTPGet databot.FieldTransformerType = "http:get"
 	// RemoveHTMLElements removes elements matching the selector
-	RemoveHTMLElements databot.FieldTransformerType = "removeHTMLElements"
+	RemoveHTMLElements databot.FieldTransformerType = "html:elements:remove"
 	// SelectHTMLElements only keep the elements matching the selector
-	SelectHTMLElements databot.FieldTransformerType = "selectHTMLElements"
+	SelectHTMLElements databot.FieldTransformerType = "html:elements:select"
 	// RemoveHTMLStyles remove all html styles
-	RemoveHTMLStyles databot.FieldTransformerType = "removeHTMLStyles"
+	RemoveHTMLStyles databot.FieldTransformerType = "html:styles:remove"
 	// RemoveHTMLScripts remove all html scripts
-	RemoveHTMLScripts databot.FieldTransformerType = "removeHTMLScripts"
+	RemoveHTMLScripts databot.FieldTransformerType = "html:scripts:remove"
 	// RemoveNonContentHTMLElements removes all empty elements including comments
-	RemoveNonContentHTMLElements databot.FieldTransformerType = "removeNonContentHTMLElements"
+	RemoveNonContentHTMLElements databot.FieldTransformerType = "html:elements:non-content:remove"
 	// RemoveHTMLElementsMatchingText removes all the elements matching given text matcher
-	RemoveHTMLElementsMatchingText databot.FieldTransformerType = "removeHTMLElementsMatchingText"
+	RemoveHTMLElementsMatchingText databot.FieldTransformerType = "html:elements:text:match:remove"
 	// HTMLMetadata gets the value from specified meta element
-	HTMLMetadata databot.FieldTransformerType = "htmlMetadata"
+	HTMLMetadata databot.FieldTransformerType = "html:metadata:select"
 	// EnclosureToURL transformer
-	EnclosureToURL databot.FieldTransformerType = "enclosureToURL"
+	EnclosureToURL databot.FieldTransformerType = "rssatom:enclosure:toURL"
 )
 
 type transformFuncType func(val interface{}, params map[string]interface{}) interface{}
