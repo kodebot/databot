@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/cache"
 
 	"github.com/kodebot/databot/pkg/logger"
 )
@@ -20,37 +20,39 @@ type documentReader struct {
 
 type cachedDocumentReader struct {
 	*documentReader
-	databot.CacheService
+	cache *cache.Manager
 }
 
 // NewDocumentReader returns a new document reader to read html document from the given Url
 func NewDocumentReader(url string) DocumentReader {
-	return documentReader{url}
+	return &documentReader{url}
 }
 
 // NewCachedDocumentReader returns a new document reader of html document that is backed by given cache
-func NewCachedDocumentReader(url string, cacheService databot.CacheService) DocumentReader {
+func NewCachedDocumentReader(url string, cacheManager *cache.Manager) DocumentReader {
 	docReader := documentReader{url}
-	return cachedDocumentReader{&docReader, cacheService}
+	return &cachedDocumentReader{&docReader, cacheManager}
 }
 
-func (d cachedDocumentReader) ReadAsString() (string, error) {
-	cached := d.Get(d.url)
+func (d *cachedDocumentReader) ReadAsString() (string, error) {
+	URL := d.url
+	cache := *(d.cache)
+	cached := cache.Get(URL)
 	if cached != nil {
 		return cached.(string), nil
 	}
 
-	hot, err := d.ReadAsString()
+	hot, err := d.documentReader.ReadAsString()
 	if err != nil {
 		return "", err
 	}
 
-	d.Add(d.url, hot)
+	cache.Add(URL, hot)
 	return hot, nil
 }
 
 // ReadAsString returns http response as a string for given url
-func (d documentReader) ReadAsString() (string, error) {
+func (d *documentReader) ReadAsString() (string, error) {
 	var client http.Client
 	resp, err := client.Get(d.url)
 	if err != nil || resp.StatusCode != http.StatusOK {

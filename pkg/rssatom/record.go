@@ -1,6 +1,7 @@
 package rssatom
 
 import (
+	"github.com/kodebot/databot/pkg/cache"
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
@@ -17,7 +18,8 @@ type RecordFactory struct {
 func NewRecordFactory(recordSpec *databot.RecordSpec) *RecordFactory {
 	sourceURI := recordSpec.CollectorSpec.SourceURI
 
-	xml, err := html.ReadAsString(sourceURI)
+	docReader := html.NewCachedDocumentReader(sourceURI, cache.Current())
+	xml, err := docReader.ReadAsString()
 	if err != nil {
 		logger.Errorf("unable to retrieve content from URI %s", sourceURI)
 	}

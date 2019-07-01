@@ -1,31 +1,27 @@
 package cache
 
-import (
-	"github.com/kodebot/databot/pkg/databot"
-)
-
 // todo: update this to use MongoDB for persistence
 // todo: think about concurrency
 
 type dbCache struct {
-	cache map[interface{}]interface{}
+	cache map[string]interface{}
 }
 
 // NewDbCache returns new in memory cache
-func NewDbCache() databot.CacheService {
-	return dbCache{cache: make(map[interface{}]interface{})}
+func NewDbCache() Manager {
+	return &dbCache{cache: make(map[string]interface{})}
 }
 
-func (c dbCache) Get(key interface{}) interface{} {
+func (c *dbCache) Get(key string) interface{} {
 	return c.cache[key]
 }
 
-func (c dbCache) Add(key interface{}, val interface{}) {
+func (c *dbCache) Add(key string, val interface{}) {
 	c.cache[key] = val
 }
-func (c dbCache) Reset() {
-	c.cache = make(map[interface{}]interface{})
+func (c *dbCache) Reset() {
+	c.cache = make(map[string]interface{})
 }
-func (c dbCache) Prune() {
+func (c *dbCache) Prune() {
 	// todo: for LRU cache this need implementing
 }

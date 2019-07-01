@@ -21,7 +21,57 @@ schedule = "every 5 minutes"
             
 
     [[record.field]]
-        name= "Description"
+        name= "Content"
         [record.field.collector]
-            [record.field.collector.params]
+            type= "pluck"
+            [record.field.collector.params] # default type is pluck for rssatom type
                 "source" = "Link"
+        [[record.field.transformer]]
+            type="httpGet"
+        [[record.field.transformer]]
+            type="removeHTMLElementsMatchingText"
+            [record.field.transformer.params]
+                "matchers"=[".*Advertisement.*"]
+        [[record.field.transformer]]
+            type="selectHTMLElements"
+            [record.field.transformer.params]
+                "selectors"=["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
+        [[record.field.transformer]]
+            type="removeHTMLStyles"
+        [[record.field.transformer]]
+            type="removeHTMLScripts"
+        [[record.field.transformer]]
+            type="removeNonContentHTMLElements"
+        [[record.field.transformer]]
+            type="selectHTMLElements"
+            [record.field.transformer.params]
+                "selectors"=["body"]
+            
+    [[record.field]]
+        name= "PublishedDate"
+        [record.field.collector]
+            type= "pluck"
+            [record.field.collector.params] # default type is pluck for rssatom type
+                "source" = "Published"
+        [[record.field.transformer]]
+            type="parseDate"
+            [record.field.transformer.params]
+                "layout" = "Mon, 02 Jan 2006 15:04:05 -0700"
+    
+    [[record.field]]
+        name= "ThumbImageUrl"
+        [record.field.collector]
+            type= "pluck"
+            [record.field.collector.params] # default type is pluck for rssatom type
+                "source" = "Description"
+        [[record.field.transformer]]
+            type="regexp"
+            [record.field.transformer.params]
+                "expr" = "<img[^>]+src='(?P<data>[^']+)"
+    
+    [[record.field]]
+        name= "Category"
+        [record.field.collector]
+            type= "value"
+            [record.field.collector.params] # default type is pluck for rssatom type
+                "value" = "india"
