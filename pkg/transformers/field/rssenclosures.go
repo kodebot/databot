@@ -1,9 +1,10 @@
-package field
+package fieldtransformer
 
 import (
 	"github.com/mmcdole/gofeed"
 )
 
+// todo: move this transformer to rssatom package
 func enclosureToURL(val interface{}, params map[string]interface{}) interface{} {
 
 	// todo: make sure value is slice to start with
@@ -17,7 +18,5 @@ func enclosureToURL(val interface{}, params map[string]interface{}) interface{} 
 		}
 
 	}
-
-	// todo: change this to support fallback values
-	return ""
+	return nil
 }

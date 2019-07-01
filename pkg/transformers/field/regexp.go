@@ -1,4 +1,4 @@
-package field
+package fieldtransformer
 
 import (
 	"regexp"
@@ -17,13 +17,13 @@ func regex(val interface{}, params map[string]interface{}) interface{} {
 			expr = ok.(string)
 		} else {
 			logger.Errorf("no regular expression parameter found")
-			return val
+			return nil
 		}
 
 		re, err := regexp.Compile(expr)
 		if err != nil {
 			logger.Errorf("invalid regexp: %s error: %s. \n", expr, err.Error())
-			return val
+			return nil
 		}
 
 		requiredMatchIndex := 0
@@ -35,12 +35,12 @@ func regex(val interface{}, params map[string]interface{}) interface{} {
 
 		if requiredMatchIndex == 0 {
 			logger.Errorf("invalid regular expression: %s no named group called 'data' is found. \n", expr)
-			return val
+			return nil
 		}
 		matches := re.FindStringSubmatch(valStr)
 		if len(matches) < requiredMatchIndex+1 {
 			logger.Warnf("no match found.")
-			return val
+			return nil
 		}
 
 		if found := matches[requiredMatchIndex]; found != "" {
@@ -50,5 +50,5 @@ func regex(val interface{}, params map[string]interface{}) interface{} {
 
 	}
 	logger.Errorf("input is not string type")
-	return val
+	return nil
 }

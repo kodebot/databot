@@ -1,4 +1,4 @@
-package field
+package fieldtransformer
 
 import (
 	"reflect"
@@ -14,7 +14,7 @@ func trim(val interface{}, params map[string]interface{}) interface{} {
 	}
 
 	logger.Errorf("trim is not allowed on non string type")
-	return val
+	return nil
 }
 
 func trimLeft(val interface{}, params map[string]interface{}) interface{} {
@@ -24,7 +24,7 @@ func trimLeft(val interface{}, params map[string]interface{}) interface{} {
 	}
 
 	logger.Errorf("trimLeft is not allowed on non string type")
-	return val
+	return nil
 }
 
 func trimRight(val interface{}, params map[string]interface{}) interface{} {
@@ -34,7 +34,7 @@ func trimRight(val interface{}, params map[string]interface{}) interface{} {
 	}
 
 	logger.Errorf("trimRight is not allowed on non string type")
-	return val
+	return nil
 }
 
 func replace(val interface{}, params map[string]interface{}) interface{} {
@@ -63,7 +63,7 @@ func replace(val interface{}, params map[string]interface{}) interface{} {
 	}
 
 	logger.Errorf("replace is not allowed on non string type")
-	return val
+	return nil
 }
 
 func replaceAll(val interface{}, params map[string]interface{}) interface{} {
@@ -76,5 +76,5 @@ func replaceAll(val interface{}, params map[string]interface{}) interface{} {
 	}
 
 	logger.Errorf("replace is not allowed on non string type")
-	return val
+	return nil
 }

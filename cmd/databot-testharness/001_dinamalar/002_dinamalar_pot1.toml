@@ -1,11 +1,11 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
+name = "dinamalar general"
+desc = "dinamalar general news"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
     [record.collector]
         type="rssatom"
-        sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+        sourceUri ="http://rss.dinamalar.com/?cat=pot1"
 
     [[record.field]]
         name= "SourceUrl"
@@ -82,4 +82,4 @@ schedule = "every 5 minutes"
         [record.field.collector]
             type= "value"
             [record.field.collector.params] # default type is pluck for rssatom type
-                "value" = "india"
+                "value" = "tamilnadu"

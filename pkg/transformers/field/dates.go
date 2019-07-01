@@ -1,4 +1,4 @@
-package field
+package fieldtransformer
 
 import (
 	"time"
@@ -8,7 +8,7 @@ import (
 
 func formatDate(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 	switch v := val.(type) {
 	case *time.Time:
@@ -19,13 +19,13 @@ func formatDate(val interface{}, params map[string]interface{}) interface{} {
 		return &result
 	default:
 		logger.Errorf("formatDate is not allowed on non time.Time type")
-		return val
+		return nil
 	}
 }
 
 func parseDate(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	layoutStr := time.RFC3339
@@ -44,19 +44,15 @@ func parseDate(val interface{}, params map[string]interface{}) interface{} {
 
 	if err != nil {
 		logger.Errorf("parsing location specified is not recognised %s", parseLocStr)
-		return val
+		return nil
 	}
 
 	result, err := time.ParseInLocation(layoutStr, valStr, loc)
 
 	if err != nil {
-		logger.Errorf("parsing date failed with layout %s", layoutStr)
-		return val
+		logger.Errorf("parsing date failed with layout %s. error: %s", layoutStr, err.Error())
+		return nil
 	}
 
 	return result
-}
-
-func utcNow(val interface{}, params map[string]interface{}) interface{} {
-	return time.Now().UTC()
 }

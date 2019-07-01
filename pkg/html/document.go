@@ -107,7 +107,18 @@ func (d *Document) RemoveNodeWhen(when func(node *html.Node) bool) {
 
 	s1 := d.document.Find("*").Contents().FilterNodes(nodesToRemove...)
 	removeNodes(s1)
+}
 
+// GetMetadata retrives the value of valAttr attribute from meta element that that has keyAttr attribute with valAttr value
+func (d *Document) GetMetadata(keyAttr string, keyVal string, valAttr string) string {
+	value := ""
+	d.document.Find("meta").Each(func(i int, s *goquery.Selection) {
+		actualKeyVal, exist := s.Attr(keyAttr)
+		if exist && actualKeyVal == keyVal {
+			value = s.AttrOr(valAttr, "")
+		}
+	})
+	return value
 }
 
 func removeNodes(s *goquery.Selection) {

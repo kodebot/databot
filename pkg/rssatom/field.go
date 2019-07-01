@@ -1,9 +1,10 @@
 package rssatom
 
 import (
+	fieldcollector "github.com/kodebot/databot/pkg/collectors/field"
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/logger"
-	"github.com/kodebot/databot/pkg/transformers/field"
+	fieldtransformer "github.com/kodebot/databot/pkg/transformers/field"
 	"github.com/mmcdole/gofeed"
 )
 
@@ -36,15 +37,20 @@ func (c *fieldFactory) collect() interface{} {
 		collectorType = databot.PluckFieldCollector
 	}
 
-	collector := collectorMap[collectorType]
-	if collector == nil {
-		logger.Errorf("specified collector %s is missing implementation", collectorType)
-		return nil
+	if collector := collectorMap[collectorType]; collector != nil {
+		return collector(c.RssAtomItem, c.CollectorSpec.Params)
 	}
 
-	return collector(c.RssAtomItem, c.CollectorSpec.Params)
+	if sharedCollector := fieldcollector.CollectorMap[collectorType]; sharedCollector != nil {
+		var source interface{} = *c.RssAtomItem
+		return sharedCollector(&source, c.CollectorSpec.Params)
+	}
+
+	logger.Errorf("specified collector %s is not found", collectorType)
+	return nil
+
 }
 
 func applyFieldTransformers(value interface{}, transformerSpecs []*databot.FieldTransformerSpec) interface{} {
-	return field.Transform(value, transformerSpecs)
+	return fieldtransformer.Transform(value, transformerSpecs)
 }

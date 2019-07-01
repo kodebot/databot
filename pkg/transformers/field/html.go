@@ -1,4 +1,4 @@
-package field
+package fieldtransformer
 
 import (
 	"regexp"
@@ -11,7 +11,7 @@ import (
 
 func removeHTMLElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	if htmlStr, ok := val.(string); ok {
@@ -24,16 +24,15 @@ func removeHTMLElements(val interface{}, params map[string]interface{}) interfac
 			}
 		}
 		logger.Errorf("no selectors found")
-		return val
+		return nil
 	}
-
 	logger.Errorf("input is not a string")
-	return val
+	return nil
 }
 
 func selectHTMLElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	if htmlStr, ok := val.(string); ok {
@@ -46,22 +45,22 @@ func selectHTMLElements(val interface{}, params map[string]interface{}) interfac
 			}
 		}
 		logger.Errorf("no selectors found")
-		return val
+		return nil
 	}
 
 	logger.Errorf("input is not a string")
-	return val
+	return nil
 }
 
 func removeHTMLStyles(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	htmlStr, ok := val.(string)
 	if !ok {
 		logger.Errorf("input is not a string")
-		return val
+		return nil
 	}
 
 	doc := html.NewDocument(htmlStr)
@@ -72,13 +71,13 @@ func removeHTMLStyles(val interface{}, params map[string]interface{}) interface{
 
 func removeHTMLScripts(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	htmlStr, ok := val.(string)
 	if !ok {
 		logger.Errorf("input is not a string")
-		return val
+		return nil
 	}
 
 	doc := html.NewDocument(htmlStr)
@@ -91,13 +90,13 @@ func removeHTMLScripts(val interface{}, params map[string]interface{}) interface
 
 func removeNonContentHTMLElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	htmlStr, ok := val.(string)
 	if !ok {
 		logger.Errorf("input is not a string")
-		return val
+		return nil
 	}
 
 	doc := html.NewDocument(htmlStr)
@@ -107,13 +106,13 @@ func removeNonContentHTMLElements(val interface{}, params map[string]interface{}
 
 func removeHTMLElementsMatchingText(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
-		return val
+		return nil
 	}
 
 	htmlStr, ok := val.(string)
 	if !ok {
 		logger.Errorf("input is not a string")
-		return val
+		return nil
 	}
 
 	doc := html.NewDocument(htmlStr)
@@ -126,12 +125,37 @@ func removeHTMLElementsMatchingText(val interface{}, params map[string]interface
 					return true
 				}
 			}
+			return false
 		}
 		logger.Errorf("no matchers/matched nodes found")
 		return false
 	})
 
 	return doc.HTML()
+}
+
+func htmlMetadata(val interface{}, params map[string]interface{}) interface{} {
+	if val == nil {
+		return nil
+	}
+
+	keyAttr := params["keyAttr"]
+	keyVal := params["keyVal"]
+	valAttr := params["valAttr"]
+
+	if keyAttr == nil || keyVal == nil || valAttr == nil {
+		logger.Errorf("keyAttr, keyVal and valAttr must be specified for htmlMetadata transformer")
+		return nil
+	}
+
+	htmlStr, ok := val.(string)
+	if !ok {
+		logger.Errorf("input is not a string")
+		return nil
+	}
+
+	doc := html.NewDocument(htmlStr)
+	return doc.GetMetadata(keyAttr.(string), keyVal.(string), valAttr.(string))
 }
 
 func toStringSlice(selectors interface{}) []string {

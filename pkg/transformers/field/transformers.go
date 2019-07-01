@@ -1,4 +1,4 @@
-package field
+package fieldtransformer
 
 import (
 	"github.com/kodebot/databot/pkg/databot"
@@ -8,16 +8,10 @@ import (
 const (
 	// Regexp value transformer
 	Regexp databot.FieldTransformerType = "regexp"
-	// Value transformer returns the original value without changing it
-	Value databot.FieldTransformerType = "value"
-	// Empty transformer returns empty value
-	Empty databot.FieldTransformerType = "empty"
 	// FormatDate transformer
 	FormatDate databot.FieldTransformerType = "formatDate"
 	// ParseDate transformer
 	ParseDate databot.FieldTransformerType = "parseDate"
-	// UTCNow returns current server time in UTC
-	UTCNow databot.FieldTransformerType = "utcNow"
 	// Trim transformer
 	Trim databot.FieldTransformerType = "trim"
 	// TrimLeft transformer
@@ -42,6 +36,8 @@ const (
 	RemoveNonContentHTMLElements databot.FieldTransformerType = "removeNonContentHTMLElements"
 	// RemoveHTMLElementsMatchingText removes all the elements matching given text matcher
 	RemoveHTMLElementsMatchingText databot.FieldTransformerType = "removeHTMLElementsMatchingText"
+	// HTMLMetadata gets the value from specified meta element
+	HTMLMetadata databot.FieldTransformerType = "htmlMetadata"
 	// EnclosureToURL transformer
 	EnclosureToURL databot.FieldTransformerType = "enclosureToURL"
 )
@@ -53,11 +49,8 @@ var transformersMap map[databot.FieldTransformerType]transformFuncType
 func init() {
 	transformersMap = map[databot.FieldTransformerType]transformFuncType{
 		Regexp:                         regex,
-		Value:                          value,
-		Empty:                          empty,
 		FormatDate:                     formatDate,
 		ParseDate:                      parseDate,
-		UTCNow:                         utcNow,
 		Trim:                           trim,
 		TrimLeft:                       trimLeft,
 		TrimRight:                      trimRight,
@@ -70,6 +63,7 @@ func init() {
 		RemoveHTMLScripts:              removeHTMLScripts,
 		RemoveNonContentHTMLElements:   removeNonContentHTMLElements,
 		RemoveHTMLElementsMatchingText: removeHTMLElementsMatchingText,
+		HTMLMetadata:                   htmlMetadata,
 		EnclosureToURL:                 enclosureToURL}
 }
 

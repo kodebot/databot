@@ -1,4 +1,4 @@
-package field
+package fieldtransformer
 
 import "testing"
 
