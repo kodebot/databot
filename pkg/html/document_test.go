@@ -35,7 +35,7 @@ func TestRemove(t *testing.T) {
 	for _, test := range tests {
 		doc := NewDocument(test.input)
 		doc.Remove(test.selectors...)
-		actual, _ := doc.document.Html()
+		actual := doc.HTML()
 		if actual != test.expected {
 			t.Fatalf("remove failed for selector %v. EXPECTED: <<%s>>, ACTUAL: <<%s>>", test.selectors, test.expected, actual)
 		}
@@ -64,11 +64,9 @@ func TestNarrow(t *testing.T) {
 
 	for _, test := range tests {
 		doc := NewDocument(test.input)
-		doc.Keep(test.selectors...)
-		actual, err := doc.document.Html()
-		if err != nil {
-			t.Fatal(err.Error())
-		}
+		doc.Select(test.selectors...)
+		actual := doc.HTML()
+
 		if actual != test.expected {
 			t.Fatalf("keep failed for selector %v. EXPECTED: <<%s>>, ACTUAL: <<%s>>", test.selectors, test.expected, actual)
 		}

@@ -10,7 +10,7 @@ import (
 )
 
 type htmlContext struct {
-	newDocFn func(string) *html.Document
+	newDocFn func(string) html.Document
 }
 
 func (ctx *htmlContext) removeHTMLElements(val interface{}, params map[string]interface{}) interface{} {
