@@ -1,7 +1,8 @@
-package fieldtransformer
+package fldxfmr
 
 import (
 	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/html"
 )
 
 // TransformFuncType is the signature of field transformer
@@ -11,8 +12,8 @@ type TransformFuncType func(val interface{}, params map[string]interface{}) inte
 var TransformersMap map[databot.FieldTransformerType]TransformFuncType
 
 const (
-	// Regexp value transformer
-	Regexp databot.FieldTransformerType = "string:regexp:select"
+	// RegexpSelect value transformer
+	RegexpSelect databot.FieldTransformerType = "string:regexp:select"
 	// FormatDate transformer
 	FormatDate databot.FieldTransformerType = "date:format"
 	// ParseDate transformer
@@ -48,8 +49,11 @@ const (
 )
 
 func init() {
+
+	httpCtx := httpContext{docReaderFn: html.NewCachedDocumentReader}
+
 	TransformersMap = map[databot.FieldTransformerType]TransformFuncType{
-		Regexp:                         regex,
+		RegexpSelect:                   regexpSelect,
 		FormatDate:                     formatDate,
 		ParseDate:                      parseDate,
 		Trim:                           trim,
@@ -57,7 +61,7 @@ func init() {
 		TrimRight:                      trimRight,
 		Replace:                        replace,
 		ReplaceAll:                     replaceAll,
-		HTTPGet:                        httpGet,
+		HTTPGet:                        httpCtx.httpGet,
 		RemoveHTMLElements:             removeHTMLElements,
 		SelectHTMLElements:             selectHTMLElements,
 		RemoveHTMLStyles:               removeHTMLStyles,

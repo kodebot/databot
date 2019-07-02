@@ -1,4 +1,4 @@
-package fieldtransformer
+package fldxfmr
 
 import (
 	"regexp"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
-	ghtml "golang.org/x/net/html"
+	gohtml "golang.org/x/net/html"
 )
 
 func removeHTMLElements(val interface{}, params map[string]interface{}) interface{} {
@@ -116,7 +116,7 @@ func removeHTMLElementsMatchingText(val interface{}, params map[string]interface
 	}
 
 	doc := html.NewDocument(htmlStr)
-	doc.RemoveNodeWhen(func(n *ghtml.Node) bool {
+	doc.RemoveNodeWhen(func(n *gohtml.Node) bool {
 		if found := params["matchers"]; found != nil {
 			matchers := toStringSlice(found)
 			for _, matcher := range matchers {

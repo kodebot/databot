@@ -1,10 +1,10 @@
 package rssatom
 
 import (
-	fieldcollector "github.com/kodebot/databot/pkg/collectors/field"
 	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/fldcollector"
+	"github.com/kodebot/databot/pkg/fldxfmr"
 	"github.com/kodebot/databot/pkg/logger"
-	fieldtransformer "github.com/kodebot/databot/pkg/transformers/field"
 	"github.com/mmcdole/gofeed"
 )
 
@@ -34,14 +34,14 @@ func (c *fieldFactory) collect() interface{} {
 
 	// for RSS/Atom feed set the collector type to Pluck if not specified
 	if collectorType == "" {
-		collectorType = fieldcollector.PluckField
+		collectorType = fldcollector.PluckField
 	}
 
 	if collector := collectorMap[collectorType]; collector != nil {
 		return collector(c.RssAtomItem, c.CollectorSpec.Params)
 	}
 
-	if sharedCollector := fieldcollector.CollectorMap[collectorType]; sharedCollector != nil {
+	if sharedCollector := fldcollector.CollectorMap[collectorType]; sharedCollector != nil {
 		var source interface{} = *c.RssAtomItem
 		return sharedCollector(&source, c.CollectorSpec.Params)
 	}
@@ -58,7 +58,7 @@ func transform(value interface{}, transformerSpecs []*databot.FieldTransformerSp
 			continue
 		}
 
-		if sharedTransformerFn := fieldtransformer.TransformersMap[spec.Type]; sharedTransformerFn != nil {
+		if sharedTransformerFn := fldxfmr.TransformersMap[spec.Type]; sharedTransformerFn != nil {
 			value = sharedTransformerFn(value, spec.Params)
 			continue
 		}

@@ -1,4 +1,4 @@
-package recordcollector
+package reccollector
 
 import "github.com/kodebot/databot/pkg/databot"
 

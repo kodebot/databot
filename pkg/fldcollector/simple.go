@@ -1,4 +1,4 @@
-package fieldcollector
+package fldcollector
 
 import (
 	"github.com/kodebot/databot/pkg/logger"

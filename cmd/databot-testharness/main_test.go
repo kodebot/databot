@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	recordcollector "github.com/kodebot/databot/pkg/collectors/record"
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/reccollector"
 	"github.com/kodebot/databot/pkg/rssatom"
 	"github.com/kodebot/databot/pkg/toml"
 )
@@ -21,7 +21,7 @@ func Test(t *testing.T) {
 	feed := feedSpecReader.Read("feedconfig.toml")
 
 	switch feed.RecordSpec.CollectorSpec.Type {
-	case recordcollector.RssAtom:
+	case reccollector.RssAtom:
 		factory := rssatom.NewRecordFactory(feed.RecordSpec)
 		recs := factory.Create()
 		outputPath := "./result.txt"
@@ -31,10 +31,10 @@ func Test(t *testing.T) {
 			logger.Fatalf("unable to write to file %s. error: %s", outputPath, err.Error())
 		}
 
-	case recordcollector.HTMLSingle:
+	case reccollector.HTMLSingle:
 		panic(errors.New("HTMLSingle record collector is not implemented"))
 
-	case recordcollector.HTML:
+	case reccollector.HTML:
 		panic(errors.New("HTMLMultiple record collector is not implemented"))
 	default:
 		panic(errors.New("Unsupported record collector"))

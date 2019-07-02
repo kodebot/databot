@@ -1,4 +1,4 @@
-package fieldtransformer
+package fldxfmr
 
 import (
 	"testing"
@@ -14,7 +14,7 @@ type TransformerTest struct {
 
 func fail(t *testing.T, msg string, expected interface{}, actual interface{}) {
 	t.Helper()
-	t.Fatalf("%s. EXPECTED: >>%s<<, ACTUAL: >>%s<<", msg, expected, actual)
+	t.Fatalf("%#v. EXPECTED: >>%s<<, ACTUAL: >>%#v<<", msg, expected, actual)
 }
 
 func compareDateStr(expected interface{}, actual interface{}) bool {

@@ -3,8 +3,8 @@ package rssatom
 import (
 	"reflect"
 
-	fieldcollector "github.com/kodebot/databot/pkg/collectors/field"
 	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/fldcollector"
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/mmcdole/gofeed"
 )
@@ -12,7 +12,7 @@ import (
 type collector func(source *gofeed.Item, params map[string]interface{}) interface{}
 
 var collectorMap = map[databot.FieldCollectorType]collector{
-	fieldcollector.PluckField: pluck}
+	fldcollector.PluckField: pluck}
 
 func pluck(source *gofeed.Item, params map[string]interface{}) interface{} {
 	if src, ok := params["source"]; ok {

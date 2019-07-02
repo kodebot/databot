@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"fmt"
+
 	"github.com/golang/glog"
 )
 
@@ -21,10 +23,10 @@ func Warnf(format string, args ...interface{}) {
 
 // Errorf records errors level log
 func Errorf(format string, args ...interface{}) {
-	glog.Errorf(format, args...)
+	glog.ErrorDepth(1, fmt.Sprintf(format, args...))
 }
 
 // Fatalf records fatal level log
 func Fatalf(format string, args ...interface{}) {
-	glog.Fatalf(format, args...)
+	glog.FatalDepth(1, fmt.Sprintf(format, args...))
 }

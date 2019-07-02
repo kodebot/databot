@@ -1,4 +1,4 @@
-package fieldtransformer
+package fldxfmr
 
 import (
 	"time"
@@ -16,7 +16,7 @@ func formatDate(val interface{}, params map[string]interface{}) interface{} {
 		return result
 	case time.Time:
 		var result interface{} = v.String()
-		return &result
+		return result
 	default:
 		logger.Errorf("formatDate is not allowed on non time.Time type")
 		return nil
@@ -28,29 +28,33 @@ func parseDate(val interface{}, params map[string]interface{}) interface{} {
 		return nil
 	}
 
-	layoutStr := time.RFC3339
+	layout := time.RFC3339
 	if params != nil && params["layout"] != nil {
-		layoutStr = params["layout"].(string)
+		if l, ok := params["layout"].(string); ok {
+			layout = l
+		}
 	}
 
-	valStr := val.(string)
-
-	parseLocStr := "UTC"
-	if parseLoc := params["location"]; parseLoc != nil {
-		parseLocStr = parseLoc.(string)
+	parseLoc := "UTC" // default parse location
+	if loc := params["location"]; loc != nil {
+		var ok bool
+		if parseLoc, ok = loc.(string); !ok {
+			logger.Errorf("parsing location should be of type string. %T is invalid type", loc)
+			return nil
+		}
 	}
 
-	loc, err := time.LoadLocation(parseLocStr)
+	loc, err := time.LoadLocation(parseLoc)
 
 	if err != nil {
-		logger.Errorf("parsing location specified is not recognised %s", parseLocStr)
+		logger.Errorf("parsing location specified is not recognised %s", parseLoc)
 		return nil
 	}
 
-	result, err := time.ParseInLocation(layoutStr, valStr, loc)
+	result, err := time.ParseInLocation(layout, val.(string), loc)
 
 	if err != nil {
-		logger.Errorf("parsing date failed with layout %s. error: %s", layoutStr, err.Error())
+		logger.Errorf("parsing date failed with layout %s. error: %s", layout, err.Error())
 		return nil
 	}
 

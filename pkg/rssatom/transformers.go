@@ -2,12 +2,12 @@ package rssatom
 
 import (
 	"github.com/kodebot/databot/pkg/databot"
-	fieldtransformer "github.com/kodebot/databot/pkg/transformers/field"
+	"github.com/kodebot/databot/pkg/fldxfmr"
 	"github.com/mmcdole/gofeed"
 )
 
-var transformersMap = map[databot.FieldTransformerType]fieldtransformer.TransformFuncType{
-	fieldtransformer.EnclosureToURL: enclosureToURL}
+var transformersMap = map[databot.FieldTransformerType]fldxfmr.TransformFuncType{
+	fldxfmr.EnclosureToURL: enclosureToURL}
 
 func enclosureToURL(val interface{}, params map[string]interface{}) interface{} {
 	if enclosures, ok := val.([]*gofeed.Enclosure); ok {
