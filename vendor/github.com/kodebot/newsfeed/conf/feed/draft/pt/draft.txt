@@ -1,0 +1,15 @@
+add these to general
+
+http://feeds.feedburner.com/Puthiyathalaimurai_Districts_News
+http://feeds.feedburner.com/Puthiyathalaimurai_India_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Finance_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Education_Employement_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Agriculture_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Crime_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Others_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Special_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Science_Technology_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Head_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Health_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Tamilnadu_News
+http://feeds.feedburner.com/Puthiyathalaimurai_Election_News

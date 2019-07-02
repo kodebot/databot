@@ -18,6 +18,14 @@
   version = "v1.5.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:d1379bbeca4e79ab1b165490d7a7c9a435bb37810e2ad3a0794c31bf9ac642fe"
+  name = "github.com/advancedlogic/GoOse"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "6cd46faf50eb2105cd5de7328ee8eb62557895c9"
+
+[[projects]]
   digest = "1:6ca8738308ecc939d2a438bf911d0460de614441f85e7ab42d9e348fdabd09af"
   name = "github.com/andybalholm/cascadia"
   packages = ["."]
@@ -26,12 +34,28 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:9f42202ac457c462ad8bb9642806d275af9ab4850cf0b1960b9c6f083d4a309a"
-  name = "github.com/davecgh/go-spew"
-  packages = ["spew"]
+  branch = "master"
+  digest = "1:cfcb379db685ecd805eac2ca361acea093d59efc7d6590aedd24cfd77a328064"
+  name = "github.com/araddon/dateparse"
+  packages = ["."]
   pruneopts = "T"
-  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
-  version = "v1.1.1"
+  revision = "d2ba70357e924a4dc132001c6faebb8a5ea9878a"
+
+[[projects]]
+  digest = "1:36082e0feb7257879dcc96137b12e3e185c77b46d6a9f7943bbf8178a4d4ac55"
+  name = "github.com/fatih/set"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "2c768e3c5489976167bfc42b5c7c92ca783f4389"
+  version = "v0.2.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:131e93e8b8f318c52b1666e5a8f3af7d236af62f5a477a11973e46af59bca7da"
+  name = "github.com/gigawattio/window"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "0f5467e35573c4ffebddd992935e1f7ceeac0696"
 
 [[projects]]
   digest = "1:586ea76dbd0374d6fb649a91d70d652b7fe0ccffb8910a77468e7702e7901f3d"
@@ -67,24 +91,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b17955219e57c782e856965df619a2d53147a8cb685092df2478cd57d71fbdb3"
-  name = "github.com/kodebot/newsfeed"
-  packages = [
-    "articles",
-    "conf",
-    "data",
-    "datafeed/record",
-    "datafeed/record/collectors",
-    "datafeed/record/collectors/field",
-    "datafeed/record/collectors/field/collectors",
-    "datafeed/record/collectors/field/transformers",
-    "datafeed/record/collectors/rssatom",
-    "datafeed/scraper",
-    "logger",
-    "models",
-  ]
+  digest = "1:c9da489a7c1e9bd35cf31b28c85d07b053b40d7db6bcb876cab1a21f3c4e41c7"
+  name = "github.com/jaytaylor/html2text"
+  packages = ["."]
   pruneopts = "T"
-  revision = "b7a4faae4e5d9e1455109ed053bad69aaa6cc3d1"
+  revision = "01ec452cbe43774f989516272881441cae40c16b"
 
 [[projects]]
   digest = "1:8b841c5eeb0db3748e16fef3e167073dd5433daac53d9da2201c997eea46e83e"
@@ -101,6 +112,14 @@
   pruneopts = "T"
   revision = "c2a7a6ca930a4cd0bc33a3f298eb71960732a3a7"
   version = "v0.0.7"
+
+[[projects]]
+  digest = "1:0356f3312c9bd1cbeda81505b7fd437501d8e778ab66998ef69f00d7f9b3a0d7"
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "3ee7d812e62a0804a7d0a324e0249ca2db3476d3"
+  version = "v0.0.4"
 
 [[projects]]
   digest = "1:3b44c2d1f22b13e7627ea2256077d9ee392c2fe713293d6eb9aefe3870d632a2"
@@ -125,12 +144,12 @@
   revision = "0068e33feabfc0086c7aeb58a9603f91c061c89f"
 
 [[projects]]
-  digest = "1:22aa691fe0213cb5c07d103f9effebcb7ad04bee45a0ce5fe5369d0ca2ec3a1f"
-  name = "github.com/pmezard/go-difflib"
-  packages = ["difflib"]
+  digest = "1:fdebb97e48632ac30219f21751077937ab345e33e7eddb11f8bb44c9e6080065"
+  name = "github.com/olekukonko/tablewriter"
+  packages = ["."]
   pruneopts = "T"
-  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
-  version = "v1.0.0"
+  revision = "e6d60cf7ba1f42d86d54cdf5508611c4aafb3970"
+  version = "v0.0.1"
 
 [[projects]]
   digest = "1:b966ac707f293c58ebff5689d7c240199044c5728d3df818ded0139b3256fbd5"
@@ -142,11 +161,35 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:faa5425474f06f95373a9ba87eda5d44127e447ca365b8f1238daedd402b2767"
+  name = "github.com/revel/cron"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "32f5d76f78c1f38d8c9a66369a0f810c9fdc702c"
+
+[[projects]]
+  branch = "master"
   digest = "1:5feca17db09c8862450c74a1fc0a3e5c56dcf7b5866eff623907f43554820b77"
   name = "github.com/revel/log15"
   packages = ["."]
   pruneopts = "T"
   revision = "793412a67da6f8d15fede4c38f5c66272478cb8a"
+
+[[projects]]
+  branch = "master"
+  digest = "1:1c8ca3777f6b8b9a8562d8b5a4240820ad104dbdf894543baaf8940b322a265d"
+  name = "github.com/revel/modules"
+  packages = [
+    ".",
+    "jobs/app/controllers",
+    "jobs/app/jobs",
+    "static/app/controllers",
+    "static/app/model",
+    "testrunner/app",
+    "testrunner/app/controllers",
+  ]
+  pruneopts = "T"
+  revision = "2737bfdaa8c41da68eae12bb18f7279b9f156048"
 
 [[projects]]
   branch = "master"
@@ -172,23 +215,12 @@
   revision = "a3d7a7c23ca885cc5036d3641ede49ce4a14ee2e"
 
 [[projects]]
-  digest = "1:8d58d88a7b2a7440509bee60f3e865773e8f79e622817ddb63ba3cda9efba25a"
-  name = "github.com/stretchr/objx"
+  branch = "master"
+  digest = "1:362b269942e8508aed33025593090ad4cdbd9077de4b1cd505e6124728e9e856"
+  name = "github.com/ssor/bom"
   packages = ["."]
   pruneopts = "T"
-  revision = "477a77ecc69700c7cdeb1fa9e129548e1c1c393c"
-  version = "v0.1.1"
-
-[[projects]]
-  digest = "1:17c4ccf5cdb1627aaaeb5c1725cb13aec97b63ea2033d4a6824dcaedf94223dc"
-  name = "github.com/stretchr/testify"
-  packages = [
-    "assert",
-    "mock",
-  ]
-  pruneopts = "T"
-  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
-  version = "v1.3.0"
+  revision = "6386211fdfcf24c0bfbdaceafd02849ed9a8a509"
 
 [[projects]]
   digest = "1:4107932fdca2811de89ba03c6d1e21e7563ca6825fab0b407302a8def138871d"
@@ -359,22 +391,17 @@
   input-imports = [
     "github.com/BurntSushi/toml",
     "github.com/PuerkitoBio/goquery",
+    "github.com/advancedlogic/GoOse",
     "github.com/golang/glog",
-    "github.com/kodebot/newsfeed/articles",
-    "github.com/kodebot/newsfeed/conf",
-    "github.com/kodebot/newsfeed/data",
-    "github.com/kodebot/newsfeed/datafeed/record",
-    "github.com/kodebot/newsfeed/datafeed/record/collectors",
-    "github.com/kodebot/newsfeed/datafeed/record/collectors/field",
-    "github.com/kodebot/newsfeed/datafeed/record/collectors/field/collectors",
-    "github.com/kodebot/newsfeed/datafeed/record/collectors/field/transformers",
-    "github.com/kodebot/newsfeed/datafeed/record/collectors/rssatom",
-    "github.com/kodebot/newsfeed/datafeed/scraper",
-    "github.com/kodebot/newsfeed/logger",
-    "github.com/kodebot/newsfeed/models",
     "github.com/mmcdole/gofeed",
+    "github.com/revel/modules",
+    "github.com/revel/modules/jobs/app/controllers",
+    "github.com/revel/modules/jobs/app/jobs",
+    "github.com/revel/modules/static/app/controllers",
+    "github.com/revel/modules/testrunner/app",
+    "github.com/revel/modules/testrunner/app/controllers",
+    "github.com/revel/revel",
     "github.com/revel/revel/testing",
-    "github.com/stretchr/testify/mock",
     "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/bson/primitive",
     "go.mongodb.org/mongo-driver/mongo",

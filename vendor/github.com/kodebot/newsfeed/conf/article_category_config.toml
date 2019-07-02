@@ -1,0 +1,29 @@
+[[articleCategory]]
+    id = 1
+    category = "tamilnadu"
+    categoryDisplayName = "Tamilnadu"
+
+[[articleCategory]]
+    id = 2
+    category = "india"
+    categoryDisplayName = "India"
+
+[[articleCategory]]
+    id = 3
+    category = "world"
+    categoryDisplayName = "World"
+
+[[articleCategory]]
+    id = 4
+    category = "sports"
+    categoryDisplayName = "Sports"
+
+[[articleCategory]]
+    id = 5
+    category = "entertainment"
+    categoryDisplayName = "Entertainment"
+
+[[articleCategory]]
+    id = 99
+    category = "others"
+    categoryDisplayName = "Others"

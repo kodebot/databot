@@ -1,0 +1,107 @@
+sourceName = "oneindia"
+source ="https://tamil.oneindia.com/rss/tamil-fb.xml"
+sourceType= "rss/atom"
+category = "others"
+schedule = "every 5 minutes"
+[record]
+    [[record.field]]
+        name= "Title"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+
+    [[record.field]]
+            name= "Description"
+            [record.field.collectorInfo]
+                type= "rssAtomField"
+                [record.field.collectorInfo.parameters]
+                    "source" = "Link"
+            [[record.field.transformersInfo]]
+                transformer="scrape"
+                [record.field.transformersInfo.parameters]
+                        "selectorType" = "custom"
+                        "custom:selector" = "guided"
+                        "custom:focusSelectors" = ["#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt"]
+                        "custom:blacklistedSelectors" = ["#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > nav", "#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > h1", "#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > div.io-category", "#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > div.author-detail.clearfix", "#d_social_media", "#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > p.mat_promo", "#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > div.city-article-list-wrap","#container > section > div > div.leftpanel > article > div > div.oiMiddleMain > div.oi-article-lt > div.io-author","#notification-articleblock",".deepLinkPromo"]
+            [[record.field.transformersInfo]]
+                transformer="replaceAll"
+                [record.field.transformersInfo.parameters]
+                    "old" = "<img src=\"/img/"
+                    "new" = "<img src=\"https://tamil.oneindia.com/img/"
+            [[record.field.transformersInfo]]
+                transformer="replaceAll"
+                [record.field.transformersInfo.parameters]
+                    "old" = "<img src=\"/image/"
+                    "new" = "<img src=\"https://tamil.oneindia.com/image/"
+
+        [[record.field]]
+        name= "Content"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+         [[record.field.transformersInfo]]
+            transformer="empty"
+
+    [[record.field]]
+        name= "PublishedDate"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Published"
+        [[record.field.transformersInfo]]
+            transformer="parseDate"
+            [record.field.transformersInfo.parameters]
+                "layout" = "Mon, 02 Jan 2006 15:04:05 -0700"
+                "fallbackValue"="transformer:utcNow"
+
+    [[record.field]]
+        name= "SourceUrl"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Link"
+        [[record.field.transformersInfo]]
+                transformer="regexp"
+                [record.field.transformersInfo.parameters]
+                    "expr" = "(?P<data>[^?]+)"
+
+    [[record.field]]
+        name= "ThumbImageUrl"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Enclosures"
+        [[record.field.transformersInfo]]
+                transformer="enclosureToURL"
+                [record.field.transformersInfo.parameters]
+                    "enclosureType" = "image/jpeg"
+
+    [[record.field]]
+        name= "Category"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Link"
+        [[record.field.transformersInfo]]
+            transformer="regexp"
+            [record.field.transformersInfo.parameters]
+                "expr" = "/news/(?P<data>[^/]+)"
+                "fallbackValue"=""
+            [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = ["chennai", "nagercoil", "karur", "virudhunagar", "coimbatore", "kanyakumari", "vellore", "sivagangai", "trichirappalli", "puducherry", "thanjavur", "tuticorin", "tiruppur", "villupuram"]
+                "new" = "tamilnadu"
+            [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = ["delhi", "bangalore", "mumbai", "india", "lucknow", "patna", "thiruvananthapuram"]
+                "new" = "india"
+            [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = ["washington", "london", "international"]
+                "new" = "world"
+                    [[record.field.transformersInfo]]
+            transformer="regexp"
+            [record.field.transformersInfo.parameters]
+                "expr" = "(?P<data>india|world|tamilnadu)"
+                "fallbackValue"=""

@@ -1,0 +1,131 @@
+sourceName = "dinamalar"
+source ="https://sports.dinamalar.com/rss/Football"
+sourceType= "rss/atom"
+category = "sports"
+schedule = "every 5 minutes"
+[record]
+    [[record.field]]
+        name= "Title"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+
+    [[record.field]]
+        name= "Description"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Link"
+        [[record.field.transformersInfo]]
+            transformer="scrape"
+            [record.field.transformersInfo.parameters]
+                    "selectorType" = "custom"
+                    "custom:selector" = "content"
+                    "custom:focusSelectors" = ["body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp"]
+                    "custom:fallbackImageSelector" = "body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp > div > div:nth-child(4) > div.article-left-sub-cat1 > div > span > img"
+
+    [[record.field]]
+        name= "Content"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+        [[record.field.transformersInfo]]
+            transformer="empty"
+
+   [[record.field]]
+        name= "PublishedDate"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Link"
+        [[record.field.transformersInfo]]
+            transformer="scrape"
+            [record.field.transformersInfo.parameters]
+                "selectorType" = "custom"
+                "custom:selector" = "guided"
+                "custom:focusSelectors" = ["body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp > div > div:nth-child(4) > div:nth-child(1) > div:nth-child(1)"]
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "ஜனவரி"
+                "new" = "January"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "பெப்ரவரி"
+                "new" = "February"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "மார்ச்"
+                "new" = "March"
+       [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "ஏப்ரல்"
+                "new" = "April"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "மே"
+                "new" = "May"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "ஜூன்"
+                "new" = "June"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "ஜூலை"
+                "new" = "July"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "ஆகஸ்ட்"
+                "new" = "August"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "செப்டம்பர்"
+                "new" = "September"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "அக்டோபர்"
+                "new" = "October"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "நவம்பர்"
+                "new" = "November"
+        [[record.field.transformersInfo]]
+            transformer="replace"
+            [record.field.transformersInfo.parameters]
+                "old" = "டிசம்பர்"
+                "new" = "December"
+        [[record.field.transformersInfo]]
+            transformer="trim"
+        [[record.field.transformersInfo]]
+            transformer="parseDate"
+            [record.field.transformersInfo.parameters]
+                "layout" = "January 02, 2006 15:04"
+                "location" = "Asia/Kolkata"
+                    
+    [[record.field]]
+        name= "SourceUrl"
+        [record.field.collectorInfo]
+            type= "rssAtomField"
+            [record.field.collectorInfo.parameters]
+                "source" = "Link"
+
+    [[record.field]]
+    name= "ThumbImageUrl"
+    [record.field.collectorInfo]
+        type= "rssAtomField"
+        [record.field.collectorInfo.parameters]
+            "source" = "Description"
+        [[record.field.transformersInfo]]
+            transformer="regexp"
+            [record.field.transformersInfo.parameters]
+                "expr" = "<img[^>]+src='(?P<data>[^']+)"
+                "fallbackValue"=""
+   
