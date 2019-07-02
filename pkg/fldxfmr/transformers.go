@@ -51,6 +51,7 @@ const (
 func init() {
 
 	httpCtx := httpContext{docReaderFn: html.NewCachedDocumentReader}
+	htmlCtx := htmlContext{newDocFn: html.NewDocument}
 
 	TransformersMap = map[databot.FieldTransformerType]TransformFuncType{
 		RegexpSelect:                   regexpSelect,
@@ -62,11 +63,11 @@ func init() {
 		Replace:                        replace,
 		ReplaceAll:                     replaceAll,
 		HTTPGet:                        httpCtx.httpGet,
-		RemoveHTMLElements:             removeHTMLElements,
-		SelectHTMLElements:             selectHTMLElements,
-		RemoveHTMLStyles:               removeHTMLStyles,
-		RemoveHTMLScripts:              removeHTMLScripts,
-		RemoveNonContentHTMLElements:   removeNonContentHTMLElements,
-		RemoveHTMLElementsMatchingText: removeHTMLElementsMatchingText,
-		HTMLMetadata:                   htmlMetadata}
+		RemoveHTMLElements:             htmlCtx.removeHTMLElements,
+		SelectHTMLElements:             htmlCtx.selectHTMLElements,
+		RemoveHTMLStyles:               htmlCtx.removeHTMLStyles,
+		RemoveHTMLScripts:              htmlCtx.removeHTMLScripts,
+		RemoveNonContentHTMLElements:   htmlCtx.removeNonContentHTMLElements,
+		RemoveHTMLElementsMatchingText: htmlCtx.removeHTMLElementsMatchingText,
+		HTMLMetadata:                   htmlCtx.htmlMetadata}
 }

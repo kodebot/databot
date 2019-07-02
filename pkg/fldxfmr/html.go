@@ -9,7 +9,11 @@ import (
 	gohtml "golang.org/x/net/html"
 )
 
-func removeHTMLElements(val interface{}, params map[string]interface{}) interface{} {
+type htmlContext struct {
+	newDocFn func(string) *html.Document
+}
+
+func (ctx *htmlContext) removeHTMLElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -18,7 +22,7 @@ func removeHTMLElements(val interface{}, params map[string]interface{}) interfac
 		if found := params["selectors"]; found != nil {
 			selectors := toStringSlice(found)
 			if len(selectors) > 0 {
-				doc := html.NewDocument(htmlStr)
+				doc := ctx.newDocFn(htmlStr)
 				doc.Remove(selectors...)
 				return doc.HTML()
 			}
@@ -30,7 +34,7 @@ func removeHTMLElements(val interface{}, params map[string]interface{}) interfac
 	return nil
 }
 
-func selectHTMLElements(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) selectHTMLElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -39,7 +43,7 @@ func selectHTMLElements(val interface{}, params map[string]interface{}) interfac
 		if found := params["selectors"]; found != nil {
 			selectors := toStringSlice(found)
 			if len(selectors) > 0 {
-				doc := html.NewDocument(htmlStr)
+				doc := ctx.newDocFn(htmlStr)
 				doc.Select(selectors...)
 				return doc.HTML()
 			}
@@ -52,7 +56,7 @@ func selectHTMLElements(val interface{}, params map[string]interface{}) interfac
 	return nil
 }
 
-func removeHTMLStyles(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeHTMLStyles(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -63,13 +67,13 @@ func removeHTMLStyles(val interface{}, params map[string]interface{}) interface{
 		return nil
 	}
 
-	doc := html.NewDocument(htmlStr)
+	doc := ctx.newDocFn(htmlStr)
 	doc.Remove("style")
 	doc.RemoveAttrs("style", "class")
 	return doc.HTML()
 }
 
-func removeHTMLScripts(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeHTMLScripts(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -80,7 +84,7 @@ func removeHTMLScripts(val interface{}, params map[string]interface{}) interface
 		return nil
 	}
 
-	doc := html.NewDocument(htmlStr)
+	doc := ctx.newDocFn(htmlStr)
 	doc.Remove("script")
 	doc.RemoveAttrsWhen(func(attr string, val string) bool {
 		return strings.Contains(attr, "data-") || strings.Contains(val, "javascript:")
@@ -88,7 +92,7 @@ func removeHTMLScripts(val interface{}, params map[string]interface{}) interface
 	return doc.HTML()
 }
 
-func removeNonContentHTMLElements(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeNonContentHTMLElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -99,12 +103,12 @@ func removeNonContentHTMLElements(val interface{}, params map[string]interface{}
 		return nil
 	}
 
-	doc := html.NewDocument(htmlStr)
+	doc := ctx.newDocFn(htmlStr)
 	doc.RemoveNonContent()
 	return doc.HTML()
 }
 
-func removeHTMLElementsMatchingText(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeHTMLElementsMatchingText(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -115,7 +119,7 @@ func removeHTMLElementsMatchingText(val interface{}, params map[string]interface
 		return nil
 	}
 
-	doc := html.NewDocument(htmlStr)
+	doc := ctx.newDocFn(htmlStr)
 	doc.RemoveNodeWhen(func(n *gohtml.Node) bool {
 		if found := params["matchers"]; found != nil {
 			matchers := toStringSlice(found)
@@ -134,7 +138,7 @@ func removeHTMLElementsMatchingText(val interface{}, params map[string]interface
 	return doc.HTML()
 }
 
-func htmlMetadata(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) htmlMetadata(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -154,7 +158,7 @@ func htmlMetadata(val interface{}, params map[string]interface{}) interface{} {
 		return nil
 	}
 
-	doc := html.NewDocument(htmlStr)
+	doc := ctx.newDocFn(htmlStr)
 	return doc.GetMetadata(keyAttr.(string), keyVal.(string), valAttr.(string))
 }
 
