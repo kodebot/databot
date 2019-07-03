@@ -55,10 +55,16 @@ func (d *cachedDocumentReader) ReadAsString() (string, error) {
 func (d *documentReader) ReadAsString() (string, error) {
 	var client http.Client
 	resp, err := client.Get(d.url)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		logger.Errorf("error when retrieving raw feed from url %s status code: %d. error: %s\n", d.url, resp.StatusCode, err.Error())
+	if err != nil {
+		logger.Errorf("error when retrieving raw feed from url %s. error: %s", d.url, err.Error())
 		return "", err
 	}
+
+	if resp.StatusCode != http.StatusOK {
+		logger.Errorf("error when retrieving raw feed from url %s status code: %d.", d.url, resp.StatusCode)
+		return "", err
+	}
+
 	defer resp.Body.Close()
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
