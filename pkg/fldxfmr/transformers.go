@@ -63,11 +63,11 @@ func init() {
 		Replace:                        replace,
 		ReplaceAll:                     replaceAll,
 		HTTPGet:                        httpCtx.httpGet,
-		RemoveHTMLElements:             htmlCtx.removeHTMLElements,
-		SelectHTMLElements:             htmlCtx.selectHTMLElements,
-		RemoveHTMLStyles:               htmlCtx.removeHTMLStyles,
-		RemoveHTMLScripts:              htmlCtx.removeHTMLScripts,
-		RemoveNonContentHTMLElements:   htmlCtx.removeNonContentHTMLElements,
-		RemoveHTMLElementsMatchingText: htmlCtx.removeHTMLElementsMatchingText,
-		HTMLMetadata:                   htmlCtx.htmlMetadata}
+		RemoveHTMLElements:             htmlCtx.removeElements,
+		SelectHTMLElements:             htmlCtx.selectElements,
+		RemoveHTMLStyles:               htmlCtx.removeStyles,
+		RemoveHTMLScripts:              htmlCtx.removeScripts,
+		RemoveNonContentHTMLElements:   htmlCtx.removeNonContentElements,
+		RemoveHTMLElementsMatchingText: htmlCtx.removeElementsMatchingText,
+		HTMLMetadata:                   htmlCtx.getMetadata}
 }

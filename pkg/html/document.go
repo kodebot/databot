@@ -16,9 +16,9 @@ type Document interface {
 	Body() string
 	HTML() string
 	RemoveAttrs(attrs ...string)
-	RemoveAttrsWhen(when func(attr string, val string) bool)
+	RemoveAttrsWhen(when func(*html.Attribute) bool)
 	RemoveNonContent()
-	RemoveNodeWhen(when func(node *html.Node) bool)
+	RemoveNodesWhen(when func(*html.Node) bool)
 	GetMetadata(keyAttr string, keyVal string, valAttr string) string
 }
 
@@ -85,10 +85,10 @@ func (d *document) RemoveAttrs(attrs ...string) {
 }
 
 // RemoveAttrsWhen removes the specified attribute when the given condition is met
-func (d *document) RemoveAttrsWhen(when func(attr string, val string) bool) {
+func (d *document) RemoveAttrsWhen(when func(attr *html.Attribute) bool) {
 	d.document.Find("*").Each(func(i int, s *goquery.Selection) {
 		for _, attr := range s.Get(0).Attr {
-			if when(attr.Key, attr.Val) {
+			if when(&attr) {
 				s.RemoveAttr(attr.Key)
 			}
 		}
@@ -107,8 +107,8 @@ func (d *document) RemoveNonContent() {
 	})
 }
 
-// RemoveNodeWhen removes all the nodes matching the given condition
-func (d *document) RemoveNodeWhen(when func(node *html.Node) bool) {
+// RemoveNodesWhen removes all the nodes matching the given condition
+func (d *document) RemoveNodesWhen(when func(node *html.Node) bool) {
 	nodesToRemove := []*html.Node{}
 	d.document.Find("*").Contents().Each(func(i int, s *goquery.Selection) {
 		for _, node := range s.Contents().Nodes {

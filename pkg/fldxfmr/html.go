@@ -13,7 +13,7 @@ type htmlContext struct {
 	newDocFn func(string) html.Document
 }
 
-func (ctx *htmlContext) removeHTMLElements(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -34,7 +34,7 @@ func (ctx *htmlContext) removeHTMLElements(val interface{}, params map[string]in
 	return nil
 }
 
-func (ctx *htmlContext) selectHTMLElements(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) selectElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -56,7 +56,7 @@ func (ctx *htmlContext) selectHTMLElements(val interface{}, params map[string]in
 	return nil
 }
 
-func (ctx *htmlContext) removeHTMLStyles(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeStyles(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -73,7 +73,7 @@ func (ctx *htmlContext) removeHTMLStyles(val interface{}, params map[string]inte
 	return doc.HTML()
 }
 
-func (ctx *htmlContext) removeHTMLScripts(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeScripts(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -86,13 +86,13 @@ func (ctx *htmlContext) removeHTMLScripts(val interface{}, params map[string]int
 
 	doc := ctx.newDocFn(htmlStr)
 	doc.Remove("script")
-	doc.RemoveAttrsWhen(func(attr string, val string) bool {
-		return strings.Contains(attr, "data-") || strings.Contains(val, "javascript:")
+	doc.RemoveAttrsWhen(func(attr *gohtml.Attribute) bool {
+		return strings.Contains(attr.Key, "data-") || strings.Contains(attr.Val, "javascript:")
 	})
 	return doc.HTML()
 }
 
-func (ctx *htmlContext) removeNonContentHTMLElements(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeNonContentElements(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -108,7 +108,7 @@ func (ctx *htmlContext) removeNonContentHTMLElements(val interface{}, params map
 	return doc.HTML()
 }
 
-func (ctx *htmlContext) removeHTMLElementsMatchingText(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) removeElementsMatchingText(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
 		return nil
 	}
@@ -119,27 +119,45 @@ func (ctx *htmlContext) removeHTMLElementsMatchingText(val interface{}, params m
 		return nil
 	}
 
+	if params == nil || params["matchers"] == nil {
+		logger.Errorf("missing params or no matchers in the params ")
+		return nil
+	}
+
+	matchers := toStringSlice(params["matchers"])
+
+	if len(matchers) == 0 {
+		logger.Errorf("empty matchers found in the params")
+		return nil
+	}
+
 	doc := ctx.newDocFn(htmlStr)
-	doc.RemoveNodeWhen(func(n *gohtml.Node) bool {
-		if found := params["matchers"]; found != nil {
-			matchers := toStringSlice(found)
-			for _, matcher := range matchers {
-				match, err := regexp.MatchString(matcher, n.Data)
-				if err == nil && match {
-					return true
-				}
+	doc.RemoveNodesWhen(func(n *gohtml.Node) bool {
+		for _, matcher := range matchers {
+			match, err := regexp.MatchString(matcher, n.Data)
+			if err == nil && match {
+				return true
 			}
-			return false
 		}
-		logger.Errorf("no matchers/matched nodes found")
 		return false
 	})
 
 	return doc.HTML()
 }
 
-func (ctx *htmlContext) htmlMetadata(val interface{}, params map[string]interface{}) interface{} {
+func (ctx *htmlContext) getMetadata(val interface{}, params map[string]interface{}) interface{} {
 	if val == nil {
+		return nil
+	}
+
+	htmlStr, ok := val.(string)
+	if !ok {
+		logger.Errorf("input is not a string")
+		return nil
+	}
+
+	if params == nil {
+		logger.Errorf("params must be present with keyAttr, keyVal and valAttr")
 		return nil
 	}
 
@@ -152,23 +170,17 @@ func (ctx *htmlContext) htmlMetadata(val interface{}, params map[string]interfac
 		return nil
 	}
 
-	htmlStr, ok := val.(string)
-	if !ok {
-		logger.Errorf("input is not a string")
-		return nil
-	}
-
 	doc := ctx.newDocFn(htmlStr)
 	return doc.GetMetadata(keyAttr.(string), keyVal.(string), valAttr.(string))
 }
 
-func toStringSlice(selectors interface{}) []string {
-	if s, ok := selectors.([]interface{}); ok {
-		var selectorStrs []string
-		for _, selector := range s {
-			selectorStrs = append(selectorStrs, selector.(string))
+func toStringSlice(slice interface{}) []string {
+	if s, ok := slice.([]interface{}); ok {
+		var strs []string
+		for _, i := range s {
+			strs = append(strs, i.(string))
 		}
-		return selectorStrs
+		return strs
 	}
 	return []string{}
 }

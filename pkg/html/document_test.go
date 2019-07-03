@@ -42,7 +42,7 @@ func TestRemove(t *testing.T) {
 	}
 }
 
-func TestNarrow(t *testing.T) {
+func TestSelect(t *testing.T) {
 	tests := []struct {
 		input     string
 		selectors []string

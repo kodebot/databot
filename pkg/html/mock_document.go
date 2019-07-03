@@ -36,7 +36,7 @@ func (d *MockDocument) RemoveAttrs(attrs ...string) {
 	d.Called(attrs)
 }
 
-func (d *MockDocument) RemoveAttrsWhen(when func(attr string, val string) bool) {
+func (d *MockDocument) RemoveAttrsWhen(when func(attr *html.Attribute) bool) {
 	d.Called(when)
 }
 
@@ -44,7 +44,7 @@ func (d *MockDocument) RemoveNonContent() {
 	d.Called()
 }
 
-func (d *MockDocument) RemoveNodeWhen(when func(node *html.Node) bool) {
+func (d *MockDocument) RemoveNodesWhen(when func(node *html.Node) bool) {
 	d.Called(when)
 }
 
