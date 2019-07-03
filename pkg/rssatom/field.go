@@ -3,7 +3,7 @@ package rssatom
 import (
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/fldcollector"
-	"github.com/kodebot/databot/pkg/fldxfmr"
+	"github.com/kodebot/databot/pkg/fldtransformer"
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/mmcdole/gofeed"
 )
@@ -58,7 +58,7 @@ func transform(value interface{}, transformerSpecs []*databot.FieldTransformerSp
 			continue
 		}
 
-		if sharedTransformerFn := fldxfmr.TransformersMap[spec.Type]; sharedTransformerFn != nil {
+		if sharedTransformerFn := fldtransformer.TransformersMap[spec.Type]; sharedTransformerFn != nil {
 			value = sharedTransformerFn(value, spec.Params)
 			continue
 		}

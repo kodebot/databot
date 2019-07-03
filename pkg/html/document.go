@@ -87,10 +87,15 @@ func (d *document) RemoveAttrs(attrs ...string) {
 // RemoveAttrsWhen removes the specified attribute when the given condition is met
 func (d *document) RemoveAttrsWhen(when func(attr *html.Attribute) bool) {
 	d.document.Find("*").Each(func(i int, s *goquery.Selection) {
-		for _, attr := range s.Get(0).Attr {
+		remove := make([]string, 0)
+		attrs := s.Get(0).Attr
+		for _, attr := range attrs {
 			if when(&attr) {
-				s.RemoveAttr(attr.Key)
+				remove = append(remove, attr.Key)
 			}
+		}
+		for _, rm := range remove {
+			s.RemoveAttr(rm)
 		}
 	})
 }
@@ -98,7 +103,7 @@ func (d *document) RemoveAttrsWhen(when func(attr *html.Attribute) bool) {
 // RemoveNonContent removes all empty elements including comment elements
 func (d *document) RemoveNonContent() {
 	d.document.Find("*").Contents().Not("img,br").Each(func(i int, s *goquery.Selection) {
-		if len(s.Find("*").Contents().Find("img,br").Nodes) != 0 {
+		if s.Find("img,br").Length() > 0 {
 			return
 		}
 		if len(strings.TrimSpace(s.Text())) == 0 || goquery.NodeName(s) == "#comment" {

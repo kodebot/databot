@@ -1,4 +1,4 @@
-package fldxfmr
+package fldtransformer
 
 import (
 	"errors"

@@ -1,10 +1,11 @@
-package fldxfmr
+package fldtransformer
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/kodebot/databot/pkg/html"
+	htmlmock "github.com/kodebot/databot/pkg/html/mock"
 	"github.com/stretchr/testify/mock"
 	gohtml "golang.org/x/net/html"
 )
@@ -25,7 +26,7 @@ func TestRemoveElements(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.removeElements(test.input, test.params)
 		if test.expected != actual {
@@ -43,7 +44,7 @@ func TestRemoveElements(t *testing.T) {
 	for _, test := range functionalTests {
 		params := make(map[string]interface{})
 		addSelectorsToParam(params, test.selectors)
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Remove", test.selectors).Return()
 		mockDocument.On("HTML").Return(test.expected)
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
@@ -73,7 +74,7 @@ func TestSelectElements(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.selectElements(test.input, test.params)
 		if test.expected != actual {
@@ -91,7 +92,7 @@ func TestSelectElements(t *testing.T) {
 	for _, test := range functionalTests {
 		params := make(map[string]interface{})
 		addSelectorsToParam(params, test.selectors)
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Select", test.selectors).Return()
 		mockDocument.On("HTML").Return(test.expected)
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
@@ -117,7 +118,7 @@ func TestRemoveStyles(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.removeStyles(test.input, test.params)
 		if test.expected != actual {
@@ -132,7 +133,7 @@ func TestRemoveStyles(t *testing.T) {
 	}{{"remove html styles and return doc html", "foo", "qux"}}
 
 	for _, test := range functionalTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Remove", []string{"style"}).Return()
 		mockDocument.On("RemoveAttrs", []string{"style", "class"}).Return()
 		mockDocument.On("HTML").Return(test.expected)
@@ -159,7 +160,7 @@ func TestRemoveScripts(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.removeScripts(test.input, test.params)
 		if test.expected != actual {
@@ -174,7 +175,7 @@ func TestRemoveScripts(t *testing.T) {
 	}{{"remove html scripts and return doc html", "foo", "qux"}}
 
 	for _, test := range functionalTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Remove", []string{"script"}).Return()
 		mockDocument.On("RemoveAttrsWhen", mock.Anything).Return()
 		mockDocument.On("HTML").Return(test.expected)
@@ -200,7 +201,7 @@ func TestRemoveScripts(t *testing.T) {
 		{"do not remove - neither data- nor value contains 'javascript:'", "foo", "foo-bar", false}}
 
 	for _, test := range attrMatcherTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Remove", []string{"script"}).Return()
 		var actual bool
 		mockDocument.On("RemoveAttrsWhen", mock.AnythingOfTypeArgument("func(*html.Attribute) bool")).Return().Run(func(args mock.Arguments) {
@@ -234,7 +235,7 @@ func TestRemoveNonContentElements(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.removeNonContentElements(test.input, test.params)
 		if test.expected != actual {
@@ -249,7 +250,7 @@ func TestRemoveNonContentElements(t *testing.T) {
 	}{{"remove non content and return doc html", "foo", "qux"}}
 
 	for _, test := range functionalTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("RemoveNonContent").Return()
 		mockDocument.On("HTML").Return(test.expected)
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
@@ -278,7 +279,7 @@ func TestRemoveElementsMatchingText(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.removeElementsMatchingText(test.input, test.params)
 		if test.expected != actual {
@@ -293,7 +294,7 @@ func TestRemoveElementsMatchingText(t *testing.T) {
 	}{{"remove html elements with matching text element and return doc html", "foo", "qux"}}
 
 	for _, test := range functionalTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Remove", []string{"script"}).Return()
 		mockDocument.On("RemoveNodesWhen", mock.Anything).Return()
 		mockDocument.On("HTML").Return(test.expected)
@@ -321,7 +322,7 @@ func TestRemoveElementsMatchingText(t *testing.T) {
 	}
 
 	for _, test := range nodeMatcherTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("Remove", []string{"script"}).Return()
 		var actual bool
 		mockDocument.On("RemoveNodesWhen", mock.AnythingOfTypeArgument("func(*html.Node) bool")).Return().Run(func(args mock.Arguments) {
@@ -361,7 +362,7 @@ func TestGetMetadata(t *testing.T) {
 
 	for _, test := range negativeTests {
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {
-			return html.NewMockDocument()
+			return htmlmock.NewMockDocument()
 		}}
 		actual := htmlCtx.getMetadata(test.input, test.params)
 		if test.expected != actual {
@@ -377,7 +378,7 @@ func TestGetMetadata(t *testing.T) {
 	}{{"get metdata from html", "foo", map[string]interface{}{"keyAttr": "bar", "keyVal": "baz", "valAttr": "qux"}, "quxx"}}
 
 	for _, test := range functionalTests {
-		mockDocument := html.NewMockDocument()
+		mockDocument := htmlmock.NewMockDocument()
 		mockDocument.On("GetMetadata", test.params["keyAttr"].(string), test.params["keyVal"].(string), test.params["valAttr"].(string)).Return(test.expected)
 		mockDocument.On("HTML").Return(test.expected)
 		htmlCtx := htmlContext{newDocFn: func(s string) html.Document {

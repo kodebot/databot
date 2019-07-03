@@ -1,4 +1,4 @@
-package fldxfmr
+package fldtransformer
 
 import (
 	"github.com/kodebot/databot/pkg/cache"
