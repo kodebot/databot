@@ -17,6 +17,7 @@
         "goquery",
         "initialise",
         "kodebot",
+        "mongodb",
         "normalise",
         "rcollect",
         "rcollectors"

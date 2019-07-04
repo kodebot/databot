@@ -1,5 +1,9 @@
 package cache
 
+import (
+	"github.com/kodebot/databot/pkg/logger"
+)
+
 // todo: update this to use MongoDB for persistence
 // todo: think about concurrency
 
@@ -7,9 +11,16 @@ type dbCache struct {
 	cache map[string]interface{}
 }
 
+var current *dbCache
+
 // NewDbCache returns new in memory cache
 func NewDbCache() Manager {
-	return &dbCache{cache: make(map[string]interface{})}
+	if current != nil {
+		logger.Fatalf("multiple cache are not supported")
+	}
+
+	current = &dbCache{cache: make(map[string]interface{})}
+	return current
 }
 
 func (c *dbCache) Get(key string) interface{} {
