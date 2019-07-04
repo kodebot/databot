@@ -9,13 +9,26 @@ import (
 	"github.com/kodebot/databot/pkg/logger"
 )
 
+type httpClient interface {
+	Get(url string) (*http.Response, error)
+}
+
+type defaultHTTPClient struct {
+	client http.Client
+}
+
+func (c *defaultHTTPClient) Get(url string) (*http.Response, error) {
+	return c.client.Get(url)
+}
+
 // DocumentReader is the abstract html document reader
 type DocumentReader interface {
 	ReadAsString() (string, error)
 }
 
 type documentReader struct {
-	url string
+	client httpClient
+	url    string
 }
 
 type cachedDocumentReader struct {
@@ -25,12 +38,12 @@ type cachedDocumentReader struct {
 
 // NewDocumentReader returns a new document reader to read html document from the given Url
 func NewDocumentReader(url string) DocumentReader {
-	return &documentReader{url}
+	return &documentReader{&defaultHTTPClient{}, url}
 }
 
 // NewCachedDocumentReader returns a new document reader of html document that is backed by given cache
 func NewCachedDocumentReader(url string, cacheManager *cache.Manager) DocumentReader {
-	docReader := documentReader{url}
+	docReader := documentReader{&defaultHTTPClient{}, url}
 	return &cachedDocumentReader{&docReader, cacheManager}
 }
 
@@ -53,8 +66,7 @@ func (d *cachedDocumentReader) ReadAsString() (string, error) {
 
 // ReadAsString returns http response as a string for given url
 func (d *documentReader) ReadAsString() (string, error) {
-	var client http.Client
-	resp, err := client.Get(d.url)
+	resp, err := d.client.Get(d.url)
 	if err != nil {
 		logger.Errorf("error when retrieving raw feed from url %s. error: %s", d.url, err.Error())
 		return "", err
