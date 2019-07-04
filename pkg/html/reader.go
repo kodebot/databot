@@ -33,7 +33,7 @@ type documentReader struct {
 
 type cachedDocumentReader struct {
 	*documentReader
-	cache *cache.Manager
+	cache cache.Manager
 }
 
 // NewDocumentReader returns a new document reader to read html document from the given Url
@@ -42,14 +42,14 @@ func NewDocumentReader(url string) DocumentReader {
 }
 
 // NewCachedDocumentReader returns a new document reader of html document that is backed by given cache
-func NewCachedDocumentReader(url string, cacheManager *cache.Manager) DocumentReader {
+func NewCachedDocumentReader(url string, cacheManager cache.Manager) DocumentReader {
 	docReader := documentReader{&defaultHTTPClient{}, url}
 	return &cachedDocumentReader{&docReader, cacheManager}
 }
 
 func (d *cachedDocumentReader) ReadAsString() (string, error) {
 	URL := d.url
-	cache := *(d.cache)
+	cache := d.cache
 	cached := cache.Get(URL)
 	if cached != nil {
 		return cached.(string), nil

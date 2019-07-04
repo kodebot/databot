@@ -7,7 +7,7 @@ import (
 )
 
 type httpContext struct {
-	docReaderFn func(string, *cache.Manager) html.DocumentReader
+	docReaderFn func(string, cache.Manager) html.DocumentReader
 }
 
 func (ctx *httpContext) httpGet(val interface{}, params map[string]interface{}) interface{} {

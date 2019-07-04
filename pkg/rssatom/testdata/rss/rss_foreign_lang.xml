@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss2full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://feeds.feedburner.com/~d/styles/itemcontent.css"?>
+<rss xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" version="2.0">
+    <channel>
+        <title>Dinamalar.com</title>
+        <link>http://www.dinamalar.com</link>
+        <managingEditor>coordinator@dinamalar.com(Editor)</managingEditor>
+        <image>
+            <title>dinamalar.com</title>
+            <url>http://img.dinamalar.com/images/top.png</url>
+            <link>http://www.dinamalar.com</link>
+            <width>150</width>
+            <height>40</height>
+            <description>Visit dinamalar.com</description>
+        </image>
+        <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rss+xml" href="http://feeds.feedburner.com/dinamalar/Front_page_news" />
+        <feedburner:info uri="dinamalar/front_page_news" />
+        <atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" />
+        <item>
+            <title>மத்திய பட்ஜெட்டில் சாமானியருக்கான சலுகைகள் ?</title>
+            <link>http://feedproxy.google.com/~r/dinamalar/Front_page_news/~3/obeKOY9LkI0/news_detail.asp</link>
+            <category />
+            <language>ta</language>
+            <pubDate>Wed, 03 Jul 2019 22:04:00 +0530</pubDate>
+            <description>&lt;a href='http://www.dinamalar.com/news_detail.asp?id=2311867'&gt;&lt;img height='65' width='65' src='http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2311867_150_100.jpg' border='0' style='margin: 10px 0 0 10px; padding: 4px; ' align='left'  /&gt;&lt;/a&gt;&lt;p&gt;...&lt;/p&gt;&lt;img src="http://feeds.feedburner.com/~r/dinamalar/Front_page_news/~4/obeKOY9LkI0" height="1" width="1" alt=""/&gt;</description>
+            <feedburner:origLink>http://www.dinamalar.com/news_detail.asp?id=2311867</feedburner:origLink>
+        </item>
+        <item>
+            <title>'மேற்கு வங்கத்தின் பெயரை 'பங்க்ளா' என மாற்ற முடியாது'</title>
+            <link>http://feedproxy.google.com/~r/dinamalar/Front_page_news/~3/GlErQCpsctM/news_detail.asp</link>
+            <category />
+            <language>ta</language>
+            <pubDate>Wed, 03 Jul 2019 22:10:00 +0530</pubDate>
+            <description>&lt;a href='http://www.dinamalar.com/news_detail.asp?id=2311868'&gt;&lt;img height='65' width='65' src='http://img.dinamalar.com/data/thumbnew/Tamil_News_thumb_2311868_150_100.jpg' border='0' style='margin: 10px 0 0 10px; padding: 4px; ' align='left'  /&gt;&lt;/a&gt;&lt;p&gt;...&lt;/p&gt;&lt;img src="http://feeds.feedburner.com/~r/dinamalar/Front_page_news/~4/GlErQCpsctM" height="1" width="1" alt=""/&gt;</description>
+            <feedburner:origLink>http://www.dinamalar.com/news_detail.asp?id=2311868</feedburner:origLink>
+        </item>
+    </channel>
+</rss>

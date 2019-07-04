@@ -8,15 +8,14 @@ type Manager interface {
 	Prune()
 }
 
-var currentCache *Manager
+var currentCache Manager
 
 func init() {
 	// todo: change the current cache type via config
-	newCache := NewMemCache()
-	currentCache = &newCache
+	currentCache = NewMemCache()
 }
 
 // Current returns the currently configured cache
-func Current() *Manager {
+func Current() Manager {
 	return currentCache
 }

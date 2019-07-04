@@ -11,8 +11,8 @@ import (
 )
 
 type recordCreator struct {
-	cacheManagerFn func() *cache.Manager
-	docReaderFn    func(string, *cache.Manager) html.DocumentReader
+	cacheManagerFn func() cache.Manager
+	docReaderFn    func(string, cache.Manager) html.DocumentReader
 }
 
 // NewRecordCreator returns a new record creator that enables creating one or more records using RSS/Atom feed
