@@ -44,7 +44,7 @@ const (
 	RemoveHTMLElementsMatchingText databot.FieldTransformerType = "html:elements:text:match:remove"
 	// HTMLMetadata gets the value from specified meta element
 	HTMLMetadata databot.FieldTransformerType = "html:metadata:select"
-	// EnclosureToURL transformer
+	// EnclosureToURL transformer - only support RSS/ATOM source
 	EnclosureToURL databot.FieldTransformerType = "rssatom:enclosure:toURL"
 )
 
