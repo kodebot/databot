@@ -1,6 +1,10 @@
 package cache
 
 import (
+	"errors"
+
+	"github.com/kodebot/databot/pkg/cache/dbcache"
+	"github.com/kodebot/databot/pkg/cache/mongodb"
 	"github.com/kodebot/databot/pkg/logger"
 )
 
@@ -8,31 +12,46 @@ import (
 // todo: think about concurrency
 
 type dbCache struct {
-	cache map[string]interface{}
+	adapter dbcache.Adapter
 }
 
 var current *dbCache
 
-// NewDbCache returns new in memory cache
-func NewDbCache() Manager {
+// NewDBCache returns new in memory cache
+func NewDBCache() Manager {
 	if current != nil {
 		logger.Fatalf("multiple cache are not supported")
 	}
 
-	current = &dbCache{cache: make(map[string]interface{})}
+	adapter := newDBAdapter(dbcache.Mongo)
+	adapter.Connect("mongodb://localhost:27017")
+
+	current = &dbCache{adapter: adapter}
 	return current
 }
 
 func (c *dbCache) Get(key string) interface{} {
-	return c.cache[key]
+	return c.adapter.Get(key)
 }
 
 func (c *dbCache) Add(key string, val interface{}) {
-	c.cache[key] = val
+	c.adapter.Add(key, val)
 }
+
 func (c *dbCache) Reset() {
-	c.cache = make(map[string]interface{})
+	c.adapter.Reset()
 }
+
 func (c *dbCache) Prune() {
 	// todo: for LRU cache this need implementing
+	c.adapter.Prune()
+}
+
+func newDBAdapter(dbType dbcache.DBType) dbcache.Adapter {
+	switch dbType {
+	case dbcache.Mongo:
+		return mongodb.NewAdapter()
+	default:
+		panic(errors.New("not supported database type"))
+	}
 }

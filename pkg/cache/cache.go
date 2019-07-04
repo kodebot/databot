@@ -12,7 +12,7 @@ var currentCache Manager
 
 func init() {
 	// todo: change the current cache type via config
-	currentCache = NewMemCache()
+	currentCache = NewDBCache()
 }
 
 // Current returns the currently configured cache
