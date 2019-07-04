@@ -17,6 +17,11 @@ type RecordCollectorSpec struct {
 // RecordCollectorType provides available collectors
 type RecordCollectorType string
 
+// RecordCreator is the abstract record creator
+type RecordCreator interface {
+	Create(*RecordSpec) []map[string]interface{}
+}
+
 // todo: introduce record collector and field collector when needed
 // idea for record collector: on htmlmultiple source type - collecting the link to collect individual record fields can be record collector
 // for example on news website home page, we will harvest the news item links where each news item link is a record (more like a skeleton record).

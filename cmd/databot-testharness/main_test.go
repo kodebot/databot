@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kodebot/databot/pkg/databot"
+
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/reccollector"
 	"github.com/kodebot/databot/pkg/rssatom"
@@ -20,24 +22,24 @@ func Test(t *testing.T) {
 	feedSpecReader := toml.FeedSpecReader{}
 	feed := feedSpecReader.Read("feedconfig.toml")
 
+	var recCreator databot.RecordCreator
 	switch feed.RecordSpec.CollectorSpec.Type {
 	case reccollector.RssAtom:
-		factory := rssatom.NewRecordFactory(feed.RecordSpec)
-		recs := factory.Create()
-		outputPath := "./result.txt"
-		resultStr := toString(recs)
-		err := ioutil.WriteFile(outputPath, []byte(resultStr), os.ModePerm)
-		if err != nil {
-			logger.Fatalf("unable to write to file %s. error: %s", outputPath, err.Error())
-		}
-
+		recCreator = rssatom.NewRecordCreator()
 	case reccollector.HTMLSingle:
 		panic(errors.New("HTMLSingle record collector is not implemented"))
-
 	case reccollector.HTML:
 		panic(errors.New("HTMLMultiple record collector is not implemented"))
 	default:
 		panic(errors.New("Unsupported record collector"))
+	}
+
+	recs := recCreator.Create(feed.RecordSpec)
+	outputPath := "./result.txt"
+	resultStr := toString(recs)
+	err := ioutil.WriteFile(outputPath, []byte(resultStr), os.ModePerm)
+	if err != nil {
+		logger.Fatalf("unable to write to file %s. error: %s", outputPath, err.Error())
 	}
 }
 
