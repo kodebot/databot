@@ -90,3 +90,8 @@ schedule = "every 5 minutes"
             type= "value"
             [record.field.collector.params] # default type is pluck for rssatom type
                 "value" = "dinamalar"
+    
+    [[record.field]]
+        name= "Dump"
+        [record.field.collector]
+            type= "source"
