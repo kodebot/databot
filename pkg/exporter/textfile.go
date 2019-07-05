@@ -1,6 +1,7 @@
 package exporter
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"sort"
@@ -17,15 +18,19 @@ func ExportToTextFile(records []map[string]interface{}, filePath string) {
 		fields := []string{}
 		for key, value := range record {
 			valueString := "NIL"
-			if value != nil {
-				if valueDate, ok := value.(*time.Time); ok {
-					valueString = valueDate.String()
-				} else if valueDate, ok := value.(time.Time); ok {
-					valueString = valueDate.String()
-				} else {
-					valueString = value.(string)
-				}
+			switch v := value.(type) {
+			case *time.Time:
+				valueString = v.String()
+			case time.Time:
+				valueString = v.String()
+			case string:
+				valueString = v
+			case *interface{}:
+				valueString = fmt.Sprintf("%+v", *v)
+			default:
+				valueString = fmt.Sprintf("%+v", v)
 			}
+
 			fields = append(fields, key+": "+valueString)
 		}
 		sort.Strings(fields)

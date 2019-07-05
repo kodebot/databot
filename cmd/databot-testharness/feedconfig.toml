@@ -69,7 +69,7 @@ schedule = "every 5 minutes"
         name= "ThumbImageUrl"
         [record.field.collector]
             type= "pluck"
-            [record.field.collector.params] # default type is pluck for rssatom type
+            [record.field.collector.params]
                 "source" = "Description"
         [[record.field.transformer]]
             type="string:regexp:select"
@@ -80,5 +80,10 @@ schedule = "every 5 minutes"
         name= "Category"
         [record.field.collector]
             type= "value"
-            [record.field.collector.params] # default type is pluck for rssatom type
+            [record.field.collector.params]
                 "value" = "india"
+
+    [[record.field]]
+        name= "Source"
+        [record.field.collector]
+            type= "source"
