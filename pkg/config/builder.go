@@ -38,9 +38,10 @@ func (b *Builder) Build() {
 
 func buildWithDefaults() {
 	options = &Options{
-		useDBCache:    defaultUseDBCache,
-		cacheDBType:   defaultCacheDBType,
-		cacheDBConStr: defaultCacheConStr,
+		useDBCache:       defaultUseDBCache,
+		cacheDBType:      defaultCacheDBType,
+		cacheDBConStr:    defaultCacheConStr,
+		exportToDBConStr: defaultExportToDBConStr,
 	}
 }
 
@@ -58,6 +59,8 @@ func updateFromEnv() {
 			options.cacheDBType = val
 		case "DATABOT_CACHE_DB_CON_STR":
 			options.cacheDBConStr = val
+		case "DATABOT_EXPORT_TO_DB_CON_STR":
+			options.exportToDBConStr = val
 		}
 	}
 }

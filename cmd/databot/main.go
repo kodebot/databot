@@ -1,5 +1,5 @@
 package main
 
 func main() {
-	print("this feature is not implemented yet")
+	// todo: change this to be scheduled job
 }

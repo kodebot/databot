@@ -18,7 +18,6 @@ schedule = "every 5 minutes"
         name= "Title"
         [record.field.collector]
             type= "pluck"
-            
 
     [[record.field]]
         name= "Content"
