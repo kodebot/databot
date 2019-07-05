@@ -1,4 +1,4 @@
-package testharness
+package main
 
 import (
 	"errors"
