@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kodebot/databot/pkg/config"
+
 	"github.com/kodebot/databot/pkg/databot"
 
 	"github.com/kodebot/databot/pkg/logger"
@@ -18,6 +20,10 @@ import (
 )
 
 func Test(t *testing.T) {
+
+	confBuilder := config.NewBuilder()
+	confBuilder.UseEnv()
+	confBuilder.Build()
 
 	feedSpecReader := toml.FeedSpecReader{}
 	feed := feedSpecReader.Read("feedconfig.toml")

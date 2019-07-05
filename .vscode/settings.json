@@ -6,6 +6,7 @@
         "Tracef",
         "Warnf",
         "Warningf",
+        "dbcache",
         "fcollect",
         "fcollector",
         "fcollectors",

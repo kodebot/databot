@@ -70,6 +70,7 @@ func (a *mongoDBAdapter) Get(key string) interface{} {
 		logger.Errorf("error when reading from mongodb backed cache. error: %s", err.Error())
 		return nil
 	}
+	// todo: this hits the database twice, find a way to improve this situation
 	now := time.Now().UTC()
 	doc.LastRead = &now
 	doc.ReadCount++

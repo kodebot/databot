@@ -1,5 +1,9 @@
 package cache
 
+import (
+	"github.com/kodebot/databot/pkg/config"
+)
+
 // Manager is abstract cache lookup service
 type Manager interface {
 	Get(key string) interface{}
@@ -10,12 +14,15 @@ type Manager interface {
 
 var currentCache Manager
 
-func init() {
-	// todo: change the current cache type via config
-	currentCache = NewDBCache()
-}
-
 // Current returns the currently configured cache
 func Current() Manager {
+	if currentCache == nil {
+		if config.Current().UseDBCache() {
+			currentCache = NewDBCache()
+		} else {
+			currentCache = NewMemCache()
+		}
+	}
+
 	return currentCache
 }

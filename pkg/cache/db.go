@@ -2,6 +2,9 @@ package cache
 
 import (
 	"errors"
+	"fmt"
+
+	"github.com/kodebot/databot/pkg/config"
 
 	"github.com/kodebot/databot/pkg/cache/dbcache"
 	"github.com/kodebot/databot/pkg/cache/mongodb"
@@ -23,8 +26,17 @@ func NewDBCache() Manager {
 		logger.Fatalf("multiple cache are not supported")
 	}
 
-	adapter := newDBAdapter(dbcache.Mongo)
-	adapter.Connect("mongodb://localhost:27017")
+	var adapter dbcache.Adapter
+
+	cacheDBType := config.Current().CacheDBType()
+	switch cacheDBType {
+	case string(dbcache.Mongo):
+		adapter = newDBAdapter(dbcache.Mongo)
+	default:
+		panic(fmt.Errorf("cache database type %s is not supported", cacheDBType))
+	}
+
+	adapter.Connect(config.Current().CacheDBConStr())
 
 	current = &dbCache{adapter: adapter}
 	return current
