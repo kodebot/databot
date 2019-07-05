@@ -13,12 +13,12 @@ func Tracef(format string, args ...interface{}) {
 
 // Infof records info level log
 func Infof(format string, args ...interface{}) {
-	//	glog.Infof(format, args...)
+	glog.InfoDepth(1, fmt.Sprintf(format, args...))
 }
 
 // Warnf records warning level log
 func Warnf(format string, args ...interface{}) {
-	//	glog.Warningf(format, args...)
+	glog.WarningDepth(1, fmt.Sprintf(format, args...))
 }
 
 // Errorf records errors level log
