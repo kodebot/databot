@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -11,16 +11,26 @@
 </head>
 
 <body>
-    <div class="flex-container">
+    <div class="container-fluid">
         <div class="row">
             buttons here
         </div>
         <div class="row">
-            <div class="col-sm" style="border:1px solid red">
-                <textarea rows="30" style="width:90%; margin:0 auto; display:block"> config here </textarea>
+            <div class="col-sm">
+                <textarea rows="30" style="width:100%"> config here </textarea>
             </div>
-            <div class="col-sm" style="border:1px solid red">
-                preview here
+            <div class="col-sm-6">
+                {{range $index, $rec := .}}
+                    <div class="card">
+                        <div class="card-body">
+                            {{range $key, $val := $rec}}
+                                <div class="text-truncate">
+                                    {{$key}} - {{$val}}<br />
+                                </div>
+                            {{end}}
+                        </div>
+                    </div>
+                {{end}}
             </div>
         </div>
     </div>
