@@ -28,8 +28,8 @@
                             <div class="col-11 text-truncate">
                                 {{$key}} - {{$val}}
                             </div>
-                            <button class="col-1 btn btn-primary btn-sm" data-toggle="modal"
-                                data-target="#previewModal" data-content="{{$val}}">...</button>
+                            <button class="col-1 btn btn-primary btn-sm" data-toggle="modal" data-target="#previewModal"
+                                data-content="{{$val}}">...</button>
                         </div>
                         <br />
                         {{end}}
@@ -50,7 +50,7 @@
                     <h5 class="modal-title" id="previewModalTitle"> Preview</h5> <button type="button" class="close"
                         data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                        </button>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="content"></div>
@@ -79,8 +79,44 @@
             // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
-            modal.find('.content').html(content)
+            modal.find('.content').html(getContentToRender(content))
         })
+
+        function getContentToRender(content) {
+
+            if (isHTML(content)) {
+                return content;
+            }
+
+            if (isJSON(content)) {
+                return $('<pre>').html(content).clone().wrap('<p>').parent().html()
+            }
+
+            if (isImageURL(content)) {
+                return $('<img>').attr('src', content).clone().wrap('<p>').parent().html()
+            }
+
+            return content;
+        }
+
+        function isHTML(content) {
+            var $div = $('<div>').html(content);
+            return !!($div.children().length);
+        }
+
+        function isJSON(content) {
+            try {
+                JSON.parse(content)
+                return true;
+            } catch{
+                return false;
+            }
+        }
+
+        function isImageURL(content) {
+            return /\.(jpg|png)$/.test(content);
+        }
+
     </script>
 
 </body>
