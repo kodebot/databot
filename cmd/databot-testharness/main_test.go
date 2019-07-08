@@ -21,7 +21,7 @@ func Test(t *testing.T) {
 	confBuilder.Build()
 
 	feedSpecReader := toml.FeedSpecReader{}
-	feed := feedSpecReader.Read("feedconfig.toml")
+	feed := feedSpecReader.ReadFile("feedconfig.toml")
 
 	var recCreator databot.RecordCreator
 	switch feed.RecordSpec.CollectorSpec.Type {

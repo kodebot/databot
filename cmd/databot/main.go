@@ -69,7 +69,7 @@ func processFeeds() {
 		logger.Infof("processing feed spec %s", path)
 
 		feedSpecReader := toml.FeedSpecReader{}
-		feed := feedSpecReader.Read(path)
+		feed := feedSpecReader.ReadFile(path)
 
 		var recCreator databot.RecordCreator
 		switch feed.RecordSpec.CollectorSpec.Type {

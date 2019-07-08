@@ -30,7 +30,7 @@ func previewHandler(w http.ResponseWriter, r *http.Request) {
 
 	config := r.FormValue("config")
 	feedSpecReader := toml.FeedSpecReader{}
-	feed := feedSpecReader.FromString(config)
+	feed := feedSpecReader.Read(config)
 
 	var recCreator databot.RecordCreator
 	switch feed.RecordSpec.CollectorSpec.Type {

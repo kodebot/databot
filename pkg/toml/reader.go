@@ -10,8 +10,8 @@ import (
 type FeedSpecReader struct {
 }
 
-// Get creates Feed from the given toml file
-func (reader *FeedSpecReader) Read(filePath string) databot.FeedSpec {
+// ReadFile creates Feed from the given toml file
+func (reader *FeedSpecReader) ReadFile(filePath string) databot.FeedSpec {
 
 	var feed databot.FeedSpec
 	_, err := toml.DecodeFile(filePath, &feed)
@@ -21,8 +21,8 @@ func (reader *FeedSpecReader) Read(filePath string) databot.FeedSpec {
 	return feed
 }
 
-// FromString creates Feed from the given toml string
-func (reader *FeedSpecReader) FromString(specContent string) databot.FeedSpec {
+// Read creates Feed from the given toml string
+func (reader *FeedSpecReader) Read(specContent string) databot.FeedSpec {
 
 	var feed databot.FeedSpec
 	_, err := toml.Decode(specContent, &feed)
