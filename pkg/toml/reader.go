@@ -20,3 +20,14 @@ func (reader *FeedSpecReader) Read(filePath string) databot.FeedSpec {
 	}
 	return feed
 }
+
+// FromString creates Feed from the given toml string
+func (reader *FeedSpecReader) FromString(specContent string) databot.FeedSpec {
+
+	var feed databot.FeedSpec
+	_, err := toml.Decode(specContent, &feed)
+	if err != nil {
+		logger.Errorf("error when loading feed info: %s\n", err.Error())
+	}
+	return feed
+}

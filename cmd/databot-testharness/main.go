@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -13,9 +14,23 @@ import (
 	"github.com/kodebot/databot/pkg/toml"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
+type previewResp struct {
+	Config string
+	Recs   []map[string]interface{}
+}
+
+func previewHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("home.html")
+	if r.Method == "GET" {
+		config, _ := ioutil.ReadFile("feedconfig.toml")
+		resp := previewResp{Config: string(config), Recs: []map[string]interface{}{}}
+		t.Execute(w, resp)
+		return
+	}
+
+	config := r.FormValue("config")
 	feedSpecReader := toml.FeedSpecReader{}
-	feed := feedSpecReader.Read("feedconfig.toml")
+	feed := feedSpecReader.FromString(config)
 
 	var recCreator databot.RecordCreator
 	switch feed.RecordSpec.CollectorSpec.Type {
@@ -30,9 +45,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	recs := recCreator.Create(feed.RecordSpec)
-	t, _ := template.ParseFiles("home.html")
-
-	t.Execute(w, recs)
+	resp := previewResp{config, recs}
+	t.Execute(w, resp)
 }
 
 func main() {
@@ -40,6 +54,6 @@ func main() {
 	confBuilder.UseEnv()
 	confBuilder.Build()
 
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", previewHandler)
 	log.Fatal(http.ListenAndServe(":9022", nil))
 }
