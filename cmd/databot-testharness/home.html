@@ -21,19 +21,47 @@
             </div>
             <div class="col-sm-6">
                 {{range $index, $rec := .}}
-                    <div class="card">
-                        <div class="card-body">
-                            {{range $key, $val := $rec}}
-                                <div class="text-truncate">
-                                    {{$key}} - {{$val}}<br />
-                                </div>
-                            {{end}}
+                <div class="card">
+                    <div class="card-body">
+                        {{range $key, $val := $rec}}
+                        <div class="row">
+                            <div class="col-11 text-truncate">
+                                {{$key}} - {{$val}}
+                            </div>
+                            <button class="col-1 btn btn-primary btn-sm" data-toggle="modal"
+                                data-target="#previewModal" data-content="{{$val}}">...</button>
                         </div>
+                        <br />
+                        {{end}}
                     </div>
+                </div>
                 {{end}}
             </div>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalTitle"> Preview</h5> <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <div class="content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -43,6 +71,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
+    <script>
+        $('#previewModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var content = button.data('content') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('.content').html(content)
+        })
+    </script>
+
 </body>
 
 </html>
