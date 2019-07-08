@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Home</title>
+
+    <style>
+        #editor {
+            position: absolute !important;
+            border: 1px solid lightgray;
+            margin: auto;
+            height: 80vh;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,9 +31,11 @@
             <div class="col-sm">
                 <form action="/preview" method="POST">
                     <div class="text-right">
-                        <input type="submit" value="Preview" class="btn btn-success mb-2" data-toggle="modal" data-target="#loadingModal">
+                        <input type="submit" value="Preview" class="btn btn-success mb-2" data-toggle="modal"
+                            data-target="#loadingModal">
                     </div>
-                    <textarea rows="30" style="width:100%" name="config">{{.Config}} </textarea>
+                    <pre id="editor">{{.Config}}</pre>
+                    <input type="hidden" name="config" value="{{.Config}}" >
                 </form>
             </div>
             <div class="col-sm-6">
@@ -89,6 +101,7 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
     <script>
         $('#previewModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
@@ -133,6 +146,20 @@
         function isImageURL(content) {
             return /\.(jpg|png)$/.test(content);
         }
+
+        var editor = ace.edit("editor");
+        var configInput = $('input[name="config"]').val();
+        editor.getSession().setValue(configInput);
+        editor.getSession().on('change', function () {
+            configInput.val(editor.getSession().getValue());
+        });
+        editor.getSession().setUseWorker(false);
+        editor.setTheme("ace/theme/chrome");
+        editor.getSession().setMode("ace/mode/toml");
+        setTimeout(() => {
+            editor.resize();    
+        }, 0);
+        
 
     </script>
 
