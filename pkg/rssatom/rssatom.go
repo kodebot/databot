@@ -1,7 +1,6 @@
 package rssatom
 
 import (
-	"github.com/kodebot/databot/pkg/cache"
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/fldcollector"
 	"github.com/kodebot/databot/pkg/fldtransformer"
@@ -11,13 +10,12 @@ import (
 )
 
 type recordCreator struct {
-	cacheManagerFn func() cache.Manager
-	docReaderFn    func(string, cache.Manager) html.DocumentReader
+	docReaderFn func(string) html.DocumentReader
 }
 
 // NewRecordCreator returns a new record creator that enables creating one or more records using RSS/Atom feed
 func NewRecordCreator() databot.RecordCreator {
-	return &recordCreator{docReaderFn: html.NewCachedDocumentReader, cacheManagerFn: cache.Current}
+	return &recordCreator{docReaderFn: html.NewDocumentReader}
 }
 
 // Create returns one or more records from given rss/atom record spec
@@ -25,7 +23,7 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 
 	sourceURI := spec.CollectorSpec.SourceURI
 
-	docReader := r.docReaderFn(sourceURI, r.cacheManagerFn())
+	docReader := r.docReaderFn(sourceURI)
 	xml, err := docReader.ReadAsString()
 	if err != nil {
 		logger.Errorf("unable to retrieve content from URI %s", sourceURI)

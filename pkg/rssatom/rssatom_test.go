@@ -9,7 +9,6 @@ import (
 	"github.com/kodebot/databot/pkg/reccollector"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/kodebot/databot/pkg/cache"
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/html"
 )
@@ -33,10 +32,9 @@ func newTestRecordCreator(t *testing.T, filePath string, returnError bool) datab
 	}
 
 	return &recordCreator{
-		docReaderFn: func(url string, cacheManger cache.Manager) html.DocumentReader {
+		docReaderFn: func(url string) html.DocumentReader {
 			return &testDocumentReader{string(resp), returnError}
-		},
-		cacheManagerFn: cache.NewMemCache}
+		}}
 }
 
 func TestCreate(t *testing.T) {
