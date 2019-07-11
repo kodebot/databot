@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/kodebot/databot/pkg/cache"
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/logger"
 )
@@ -20,14 +21,7 @@ func NewRecordCreator() databot.RecordCreator {
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
 
-	sourceURI := spec.CollectorSpec.SourceURI
-
-	docReader := r.docReaderFn(sourceURI)
-	source, err := docReader.ReadAsString()
-	if err != nil {
-		logger.Errorf("unable to retrieve content from URI %s", sourceURI)
-	}
-	recs := collect(source, spec)
+	recs := r.collectRecord(spec.CollectorSpec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
 	// transformed := applyRecTransformers(collected, nil)
@@ -48,21 +42,32 @@ func collect(source string, spec *databot.RecordSpec) []map[string]interface{} {
 	return recs
 }
 
-func collectRecord(source string, collectorSpec *databot.RecordCollectorSpec) []string {
-	// removers := []string{}
-	// if rm := collectorSpec.Params["html:delete"]; rm != nil {
-	// 	removers = rm.([]string)
-	// }
-
-	// narrower := []string{}
-	// if nr := collectorSpec.Params["html:narrow"]; nr != nil {
-	// 	narrower = nr.([]string)
-	// }
+func (r *recordCreator) collectRecord(collectorSpec *databot.RecordCollectorSpec) []string {
+	docReader := r.docReaderFn(collectorSpec.SourceURI)
+	source, err := docReader.ReadAsString()
+	if err != nil {
+		logger.Errorf("unable to retrieve content from URI %s", collectorSpec.SourceURI)
+	}
 
 	result := []string{}
 	result = append(result, source)
 
 	for key, val := range collectorSpec.Params {
+		if key == "fetch" && val != nil && val.(bool) {
+			for i, url := range result {
+				url = resolveRelativePath(collectorSpec.SourceURI, url)
+				docReader := NewCachedDocumentReader(url, cache.Current())
+				htmlStr, err := docReader.ReadAsString()
+				if err != nil {
+					logger.Errorf("unable to get html from url: %s", url)
+					result[i] = ""
+					continue
+				}
+				result[i] = htmlStr
+			}
+			continue
+		}
+
 		keyParts := strings.Split(key, ":")
 
 		if len(keyParts) != 2 {
@@ -156,35 +161,66 @@ func regexpMatchAll(val string, expr string) []string {
 			return result
 		}
 
-		requiredMatchIndex := 0
+		requiredMatchIndex := -1
 		for i, val := range re.SubexpNames() {
 			if val == "data" {
 				requiredMatchIndex = i
 			}
 		}
 
-		if requiredMatchIndex == 0 {
-			logger.Errorf("invalid regular expression: %s no named group called 'data' is found. \n", expr)
-			return result
-		}
-		matches := re.FindAllStringSubmatch(val, -1)
+		if requiredMatchIndex > -1 {
+			matches := re.FindAllStringSubmatch(val, -1)
 
-		if matches == nil || len(matches) < 1 {
-			logger.Warnf("no match found.")
-		}
-
-		for _, m := range matches {
-			if len(m) < requiredMatchIndex+1 {
+			if matches == nil || len(matches) < 1 {
 				logger.Warnf("no match found.")
-				return result
 			}
 
-			result = append(result, m[requiredMatchIndex])
-		}
+			for _, m := range matches {
+				if len(m) < requiredMatchIndex+1 {
+					logger.Warnf("no match found.")
+					return result
+				}
 
+				result = append(result, m[requiredMatchIndex])
+			}
+		} else { // when there is no captured group 'data' - just return the whole match
+			result = re.FindAllString(val, -1)
+		}
 	}
 
 	return result
+}
+
+func resolveRelativePath(sourceURL string, relativePath string) string {
+	if strings.HasPrefix(relativePath, "http") {
+		return relativePath
+	} else if strings.HasPrefix(relativePath, "/") {
+		baseURL := regexp.MustCompile("^.+?[^/:](?=[?/]|$)").FindString(sourceURL)
+		return baseURL + relativePath
+	} else if strings.HasSuffix(sourceURL, "/") {
+		return sourceURL + relativePath
+	} else {
+		return sourceURL + "/" + relativePath
+	}
+}
+
+func (r *recordCreator) fetchProcessor(input []string, param interface{}) []string {
+	if param != nil && param.(bool) {
+		for i, url := range input {
+			url = resolveRelativePath(r.docReaderFn.SourceURI, url)
+			docReader := NewCachedDocumentReader(url, cache.Current())
+			htmlStr, err := docReader.ReadAsString()
+			if err != nil {
+				logger.Errorf("unable to get html from url: %s", url)
+				result[i] = ""
+				continue
+			}
+			result[i] = htmlStr
+		}
+		continue
+	}
+	return input
+
 }
 
 // func normaliseFieldSpec(field *databot.FieldSpec) {
