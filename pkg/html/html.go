@@ -6,6 +6,7 @@ import (
 
 	"github.com/kodebot/databot/pkg/cache"
 	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/fldcollector"
 	"github.com/kodebot/databot/pkg/logger"
 )
 
@@ -21,28 +22,27 @@ func NewRecordCreator() databot.RecordCreator {
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
 
-	recs := r.collectRecord(spec.CollectorSpec)
+	recSources := r.getRecordSources(spec.CollectorSpec)
+	collected := collect(recSources, spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
-	// transformed := applyRecTransformers(collected, nil)
-	return recs
+	transformed := applyRecTransformers(collected, nil)
+	return transformed
 }
 
-func collect(source string, spec *databot.RecordSpec) []map[string]interface{} {
+func collect(sources []string, spec *databot.RecordSpec) []map[string]interface{} {
 	recs := []map[string]interface{}{}
-	//recUrls := collectRecord(source, spec.CollectorSpec)
-	// for _, item := range recUrls { // nothing to collect at record level - the feed item is already available
-	// rec := make(map[string]interface{})
-	// for _, fldSpec := range spec.FieldSpecs {
-	// 	normaliseFieldSpec(fldSpec)
-	// 	rec[fldSpec.Name] = createField(item, fldSpec)
-	// }
-	// recs = append(recs, "")
-	// }
+	for _, item := range sources {
+		rec := make(map[string]interface{})
+		for _, fldSpec := range spec.FieldSpecs {
+			rec[fldSpec.Name] = createField(item, fldSpec)
+		}
+		recs = append(recs, "")
+	}
 	return recs
 }
 
-func (r *recordCreator) collectRecord(collectorSpec *databot.RecordCollectorSpec) []string {
+func (r *recordCreator) getRecordSources(collectorSpec *databot.RecordCollectorSpec) []string {
 	docReader := r.docReaderFn(collectorSpec.SourceURI)
 	source, err := docReader.ReadAsString()
 	if err != nil {
@@ -53,95 +53,21 @@ func (r *recordCreator) collectRecord(collectorSpec *databot.RecordCollectorSpec
 	result = append(result, source)
 
 	for key, val := range collectorSpec.Params {
-		if key == "fetch" && val != nil && val.(bool) {
-			for i, url := range result {
-				url = resolveRelativePath(collectorSpec.SourceURI, url)
-				docReader := NewCachedDocumentReader(url, cache.Current())
-				htmlStr, err := docReader.ReadAsString()
-				if err != nil {
-					logger.Errorf("unable to get html from url: %s", url)
-					result[i] = ""
-					continue
-				}
-				result[i] = htmlStr
-			}
-			continue
-		}
-
-		keyParts := strings.Split(key, ":")
-
-		if len(keyParts) != 2 {
-			panic("invalid key name") // todo: should panic or be more gentle?
-		}
-
-		selectorType := keyParts[0]
-		action := keyParts[1]
-
-		if selectorType != "css" && selectorType != "regexp" {
-			panic("unsupported selector type") // todo: should panic or be more gentle?
-		}
-
-		if action != "remove" && action != "select" && action != "selectEach" {
-			panic("unsupported action type")
-		}
-
-		selectors, ok := val.([]string)
-		if !ok {
-			panic("selector must be specified using slice of string")
-		}
-
 		switch key {
+		case "fetch":
+			result = fetch(result, val, collectorSpec)
 		case "css:remove":
-			for i, block := range result {
-				doc := NewDocument(block)
-				doc.Remove(selectors...)
-				result[i] = doc.HTML()
-			}
-
+			result = cssRemove(result, val)
 		case "css:select":
-			for i, block := range result {
-				doc := NewDocument(block)
-				doc.Select(selectors...)
-				result[i] = doc.HTML()
-			}
-
+			result = cssSelect(result, val)
 		case "css:selectEach":
-			newResult := []string{}
-			for _, block := range result {
-				doc := NewDocument(block)
-				newResult = append(newResult, doc.HTMLEach(selectors...)...)
-			}
-			result = newResult
-
+			result = cssSelectEach(result, val)
 		case "regexp:remove":
-			for i, block := range result {
-				for _, selector := range selectors {
-					matches := regexpMatchAll(block, selector)
-					for _, match := range matches {
-						block = strings.Replace(block, match, "", -1)
-					}
-				}
-				result[i] = block
-			}
+			result = regexpRemove(result, val)
 		case "regexp:select":
-			for i, block := range result {
-				for _, selector := range selectors {
-					matches := regexpMatchAll(block, selector)
-					block = strings.Join(matches, "")
-				}
-				result[i] = block
-			}
-
+			result = regexpSelect(result, val)
 		case "regexp:selectEach":
-			newResult := []string{}
-			for _, block := range result {
-				for _, selector := range selectors {
-					matches := regexpMatchAll(block, selector)
-					newResult = append(newResult, matches...)
-				}
-
-			}
-			result = newResult
+			result = regexpSelectEach(result, val)
 		}
 	}
 	return result
@@ -170,7 +96,6 @@ func regexpMatchAll(val string, expr string) []string {
 
 		if requiredMatchIndex > -1 {
 			matches := re.FindAllStringSubmatch(val, -1)
-
 			if matches == nil || len(matches) < 1 {
 				logger.Warnf("no match found.")
 			}
@@ -180,14 +105,12 @@ func regexpMatchAll(val string, expr string) []string {
 					logger.Warnf("no match found.")
 					return result
 				}
-
 				result = append(result, m[requiredMatchIndex])
 			}
 		} else { // when there is no captured group 'data' - just return the whole match
 			result = re.FindAllString(val, -1)
 		}
 	}
-
 	return result
 }
 
@@ -204,67 +127,131 @@ func resolveRelativePath(sourceURL string, relativePath string) string {
 	}
 }
 
-func (r *recordCreator) fetchProcessor(input []string, param interface{}) []string {
+func cssRemove(input []string, param interface{}) []string {
+	selectors, ok := param.([]string)
+	if !ok {
+		panic("selector must be specified using slice of string")
+	}
+	for i, block := range input {
+		doc := NewDocument(block)
+		doc.Remove(selectors...)
+		input[i] = doc.HTML()
+	}
+	return input
+}
+
+func cssSelect(input []string, param interface{}) []string {
+	selectors, ok := param.([]string)
+	if !ok {
+		panic("selector must be specified using slice of string")
+	}
+	for i, block := range input {
+		doc := NewDocument(block)
+		doc.Select(selectors...)
+		input[i] = doc.HTML()
+	}
+	return input
+}
+
+func cssSelectEach(input []string, param interface{}) []string {
+	selectors, ok := param.([]string)
+	if !ok {
+		panic("selector must be specified using slice of string")
+	}
+	newResult := []string{}
+	for _, block := range input {
+		doc := NewDocument(block)
+		newResult = append(newResult, doc.HTMLEach(selectors...)...)
+	}
+	return newResult
+}
+
+func regexpRemove(input []string, param interface{}) []string {
+	selectors, ok := param.([]string)
+	if !ok {
+		panic("selector must be specified using slice of string")
+	}
+	for i, block := range input {
+		for _, selector := range selectors {
+			matches := regexpMatchAll(block, selector)
+			for _, match := range matches {
+				block = strings.Replace(block, match, "", -1)
+			}
+		}
+		input[i] = block
+	}
+	return input
+}
+
+func regexpSelect(input []string, param interface{}) []string {
+	selectors, ok := param.([]string)
+	if !ok {
+		panic("selector must be specified using slice of string")
+	}
+	for i, block := range input {
+		for _, selector := range selectors {
+			matches := regexpMatchAll(block, selector)
+			block = strings.Join(matches, "")
+		}
+		input[i] = block
+	}
+	return input
+}
+
+func regexpSelectEach(input []string, param interface{}) []string {
+	selectors, ok := param.([]string)
+	if !ok {
+		panic("selector must be specified using slice of string")
+	}
+	newResult := []string{}
+	for _, block := range input {
+		for _, selector := range selectors {
+			matches := regexpMatchAll(block, selector)
+			newResult = append(newResult, matches...)
+		}
+	}
+	return newResult
+}
+
+func fetch(input []string, param interface{}, spec *databot.RecordCollectorSpec) []string {
 	if param != nil && param.(bool) {
+		result := []string{}
 		for i, url := range input {
-			url = resolveRelativePath(r.docReaderFn.SourceURI, url)
+			url = resolveRelativePath(spec.SourceURI, url)
 			docReader := NewCachedDocumentReader(url, cache.Current())
 			htmlStr, err := docReader.ReadAsString()
 			if err != nil {
 				logger.Errorf("unable to get html from url: %s", url)
-				result[i] = ""
-				continue
+				result = append(result, "")
+			} else {
+				result = append(result, htmlStr)
 			}
-			result[i] = htmlStr
 		}
-		continue
+		return result
 	}
 	return input
-
 }
 
-// func normaliseFieldSpec(field *databot.FieldSpec) {
-// 	// initialise params if nil
-// 	if params := field.CollectorSpec.Params; params == nil {
-// 		field.CollectorSpec.Params = make(map[string]interface{})
-// 	}
+func createField(source string, spec *databot.FieldSpec) interface{} {
+	collected := collectField(source, spec.CollectorSpec)
+	return transformField(collected, spec.TransformerSpecs)
+}
 
-// 	// set source same as name if missing
-// 	if src := field.CollectorSpec.Params["source"]; src == nil {
-// 		field.CollectorSpec.Params["source"] = field.Name
-// 	}
-// }
+func collectField(source string, spec *databot.FieldCollectorSpec) interface{} {
+	collectorType := spec.Type
 
-// func createField(source *gofeed.Item, spec *databot.FieldSpec) interface{} {
-// 	if source == nil {
-// 		logger.Errorf("Cannot collect field value when RssAtomItem is nil")
-// 		return nil
-// 	}
+	// if collector := collectorMap[collectorType]; collector != nil {
+	// 	return collector(source, spec.Params)
+	// }
 
-// 	collected := collectField(source, spec.CollectorSpec)
-// 	return transformField(collected, spec.TransformerSpecs)
-// }
+	if sharedCollector := fldcollector.CollectorMap[collectorType]; sharedCollector != nil {
+		var source interface{} = source
+		return sharedCollector(&source, spec.Params)
+	}
 
-// func collectField(source *gofeed.Item, spec *databot.FieldCollectorSpec) interface{} {
-// 	collectorType := spec.Type
-
-// 	// for RSS/Atom feed set the collector type to Pluck if not specified
-// 	if collectorType == "" {
-// 		collectorType = fldcollector.PluckField
-// 	}
-
-// 	if collector := collectorMap[collectorType]; collector != nil {
-// 		return collector(source, spec.Params)
-// 	}
-
-// 	if sharedCollector := fldcollector.CollectorMap[collectorType]; sharedCollector != nil {
-// 		var source interface{} = *source
-// 		return sharedCollector(&source, spec.Params)
-// 	}
-
-// 	logger.Errorf("specified collector %s is not found", collectorType)
-// 	return nil
-// }
+	logger.Errorf("specified collector %s is not found", collectorType)
+	return nil
+}
 
 // func transformField(value interface{}, specs []*databot.FieldTransformerSpec) interface{} {
 // 	for _, spec := range specs {
