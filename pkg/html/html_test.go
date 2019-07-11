@@ -13,10 +13,14 @@ func TestCollectRecord(t *testing.T) {
 
 	spec := databot.RecordCollectorSpec{
 		Params: map[string]interface{}{
-			"html:remover":  []string{""},
-			"html:narrower": []string{""},
-			"html:selector": []string{".ListingNewsWithMEDImage a:first-child"},
+			"css:remove":        []string{"head"},
+			"css:select":        []string{"body"},
+			"css:selectEach":    []string{".ListingNewsWithMEDImage a:first-child"},
+			"regexp:remove":     []string{"(?P<data>^<a)"},
+			"regexp:select":     []string{"href=\"(?P<data>[^\"]*)"},
+			"regexp:selectEach": []string{"(?P<data>[^/]*)"},
 		},
 	}
-	collectRecord(src, &spec)
+	result := collectRecord(src, &spec)
+	t.Fatalf("%#v", result)
 }

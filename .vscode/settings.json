@@ -16,6 +16,7 @@
         "glog",
         "gofeed",
         "goquery",
+        "htmls",
         "initialise",
         "kodebot",
         "mongodb",

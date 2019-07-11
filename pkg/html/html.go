@@ -2,6 +2,7 @@ package html
 
 import (
 	"regexp"
+	"strings"
 
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/logger"
@@ -58,20 +59,132 @@ func collectRecord(source string, collectorSpec *databot.RecordCollectorSpec) []
 	// 	narrower = nr.([]string)
 	// }
 
-	selector := []string{}
-	if sl := collectorSpec.Params["html:selector"]; sl != nil {
-		selector = sl.([]string)
+	result := []string{}
+	result = append(result, source)
+
+	for key, val := range collectorSpec.Params {
+		keyParts := strings.Split(key, ":")
+
+		if len(keyParts) != 2 {
+			panic("invalid key name") // todo: should panic or be more gentle?
+		}
+
+		selectorType := keyParts[0]
+		action := keyParts[1]
+
+		if selectorType != "css" && selectorType != "regexp" {
+			panic("unsupported selector type") // todo: should panic or be more gentle?
+		}
+
+		if action != "remove" && action != "select" && action != "selectEach" {
+			panic("unsupported action type")
+		}
+
+		selectors, ok := val.([]string)
+		if !ok {
+			panic("selector must be specified using slice of string")
+		}
+
+		switch key {
+		case "css:remove":
+			for i, block := range result {
+				doc := NewDocument(block)
+				doc.Remove(selectors...)
+				result[i] = doc.HTML()
+			}
+
+		case "css:select":
+			for i, block := range result {
+				doc := NewDocument(block)
+				doc.Select(selectors...)
+				result[i] = doc.HTML()
+			}
+
+		case "css:selectEach":
+			newResult := []string{}
+			for _, block := range result {
+				doc := NewDocument(block)
+				newResult = append(newResult, doc.HTMLEach(selectors...)...)
+			}
+			result = newResult
+
+		case "regexp:remove":
+			for i, block := range result {
+				for _, selector := range selectors {
+					matches := regexpMatchAll(block, selector)
+					for _, match := range matches {
+						block = strings.Replace(block, match, "", -1)
+					}
+				}
+				result[i] = block
+			}
+		case "regexp:select":
+			for i, block := range result {
+				for _, selector := range selectors {
+					matches := regexpMatchAll(block, selector)
+					block = strings.Join(matches, "")
+				}
+				result[i] = block
+			}
+
+		case "regexp:selectEach":
+			newResult := []string{}
+			for _, block := range result {
+				for _, selector := range selectors {
+					matches := regexpMatchAll(block, selector)
+					newResult = append(newResult, matches...)
+				}
+
+			}
+			result = newResult
+		}
+	}
+	return result
+}
+
+func regexpMatchAll(val string, expr string) []string {
+	result := []string{}
+	if val != "" {
+		if expr == "" {
+			logger.Errorf("no regular expression found")
+			return result
+		}
+
+		re, err := regexp.Compile(expr)
+		if err != nil {
+			logger.Errorf("invalid regexp: %s error: %s. \n", expr, err.Error())
+			return result
+		}
+
+		requiredMatchIndex := 0
+		for i, val := range re.SubexpNames() {
+			if val == "data" {
+				requiredMatchIndex = i
+			}
+		}
+
+		if requiredMatchIndex == 0 {
+			logger.Errorf("invalid regular expression: %s no named group called 'data' is found. \n", expr)
+			return result
+		}
+		matches := re.FindAllStringSubmatch(val, -1)
+
+		if matches == nil || len(matches) < 1 {
+			logger.Warnf("no match found.")
+		}
+
+		for _, m := range matches {
+			if len(m) < requiredMatchIndex+1 {
+				logger.Warnf("no match found.")
+				return result
+			}
+
+			result = append(result, m[requiredMatchIndex])
+		}
+
 	}
 
-	doc := NewDocument(source)
-	//doc.Remove(removers...)
-	//doc.Select(narrower...)
-	doc.Select(selector...)
-	x := doc.HTML()
-	exp := regexp.MustCompile("href=\"(.*)\"")
-	y := exp.FindAllString(x, -1)
-	return y
-
+	return result
 }
 
 // func normaliseFieldSpec(field *databot.FieldSpec) {

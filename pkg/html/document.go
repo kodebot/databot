@@ -15,6 +15,7 @@ type Document interface {
 	Select(selectors ...string)
 	Body() string
 	HTML() string
+	HTMLEach(selectors ...string) []string
 	RemoveAttrs(attrs ...string)
 	RemoveAttrsWhen(when func(*html.Attribute) bool)
 	RemoveNonContent()
@@ -73,6 +74,18 @@ func (d *document) HTML() string {
 		return ""
 	}
 	return htmlStr
+}
+
+// Select only keeps the matching elements in the document
+func (d *document) HTMLEach(selectors ...string) []string {
+	selectorsStr := strings.Join(selectors, ",")
+	htmls := []string{}
+	d.document.Find(selectorsStr).Each(func(i int, s *goquery.Selection) {
+		htmlStr, _ := goquery.OuterHtml(s)
+		htmls = append(htmls, htmlStr)
+	})
+
+	return htmls
 }
 
 // RemoveAttrs removes the specified attribute
