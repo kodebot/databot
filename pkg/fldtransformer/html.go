@@ -175,9 +175,12 @@ func (ctx *htmlContext) getMetadata(val interface{}, params map[string]interface
 }
 
 func toStringSlice(slice interface{}) []string {
-	if s, ok := slice.([]interface{}); ok {
+	switch v := slice.(type) {
+	case []string:
+		return v
+	case []interface{}:
 		var strs []string
-		for _, i := range s {
+		for _, i := range v {
 			strs = append(strs, i.(string))
 		}
 		return strs
