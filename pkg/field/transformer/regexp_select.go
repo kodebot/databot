@@ -1,15 +1,17 @@
-package operator
+package transformer
 
 import (
+	"strings"
+
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("regexp:selectEach", regexpRemove)
+	register("regexp:select", regexpSelect)
 }
 
-func regexpSelectEach(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -29,14 +31,11 @@ func regexpSelectEach(input <-chan interface{}, params map[string]interface{}) <
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
-			result := []interface{}{}
 			for _, selector := range selectors {
 				matches := stringutil.RegexpMatchAll(block, selector)
-				for _, match := range matches {
-					result = append(result, match)
-				}
+				block = strings.Join(matches, "")
 			}
-			output <- result
+			output <- block
 		}
 		close(output)
 	}()

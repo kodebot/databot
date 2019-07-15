@@ -1,4 +1,4 @@
-package operator
+package transformer
 
 import (
 	"strings"
@@ -8,10 +8,10 @@ import (
 )
 
 func init() {
-	register("regexp:select", regexpSelect)
+	register("regexp:remove", regexpRemove)
 }
 
-func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func regexpRemove(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -31,9 +31,12 @@ func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-cha
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
+
 			for _, selector := range selectors {
 				matches := stringutil.RegexpMatchAll(block, selector)
-				block = strings.Join(matches, "")
+				for _, match := range matches {
+					block = strings.Replace(block, match, "", -1)
+				}
 			}
 			output <- block
 		}
