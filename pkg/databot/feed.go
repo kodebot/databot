@@ -13,3 +13,9 @@ type FeedSpec struct {
 type FeedSpecReader interface {
 	Read(source string) *FeedSpec
 }
+
+// ProcessorSpec represents a data processor
+type ProcessorSpec struct {
+	Name   string
+	Params map[string]interface{}
+}
