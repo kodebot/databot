@@ -1,0 +1,102 @@
+name = "dinamalar-politics"
+desc = "dinamalar politics feed"
+group = "dinamalar"
+schedule = "every 5 minutes"
+[record]
+     sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+     [[record.preprocessor]]
+        name="http:get"
+            [record.preprocessor.params]
+                "useCache" = false
+
+    [[record.preprocessor]]
+        name="css:select"
+            [record.preprocessor.params]
+                "useCache" = false
+
+
+"css:select":     []string{"#nw-c-topstories-domestic"},
+				"css:selectEach": []string{".gs-c-promo-body a.gs-c-promo-heading"},
+				"regexp:select":  []string{"href=\"(?P<data>[^\"]*)"},
+				"fetch":          true,
+
+    [[record.field]]
+        name= "SourceUrl"
+        [record.field.collector]
+            type= "pluck"
+            [record.field.collector.params]
+                "source" = "Link"
+    
+    [[record.field]]
+        name= "Title"
+        [record.field.collector]
+            type= "pluck"
+
+    [[record.field]]
+        name= "Content"
+        [record.field.collector]
+            type= "pluck"
+            [record.field.collector.params] # default type is pluck for rssatom type
+                "source" = "Link"
+        [[record.field.transformer]]
+            type="http:get"
+        [[record.field.transformer]]
+            type="html:elements:text:match:remove"
+            [record.field.transformer.params]
+                "matchers"=[".*Advertisement.*"]
+        [[record.field.transformer]]
+            type="html:elements:select"
+            [record.field.transformer.params]
+                "selectors"=["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
+        [[record.field.transformer]]
+            type="html:styles:remove"
+        [[record.field.transformer]]
+            type="html:scripts:remove"
+        [[record.field.transformer]]
+            type="html:elements:non-content:remove"
+        [[record.field.transformer]]
+            type="html:elements:select"
+            [record.field.transformer.params]
+                "selectors"=["body"]
+            
+    [[record.field]]
+        name= "PublishedDate"
+        [record.field.collector]
+            type= "pluck"
+            [record.field.collector.params] # default type is pluck for rssatom type
+                "source" = "Link"
+        [[record.field.transformer]]
+            type="http:get"
+        [[record.field.transformer]]
+            type="html:metadata:select"
+            [record.field.transformer.params]
+                "keyAttr"="property"
+                "keyVal"="article:published_time"
+                "valAttr"="content"
+        [[record.field.transformer]]
+            type="date:parse"
+            [record.field.transformer.params]
+                "layout" = "2006-01-02T15:04:05-07:00"
+    
+    [[record.field]]
+        name= "ThumbImageUrl"
+        [record.field.collector]
+            type= "pluck"
+            [record.field.collector.params]
+                "source" = "Description"
+        [[record.field.transformer]]
+            type="string:regexp:select"
+            [record.field.transformer.params]
+                "expr" = "<img[^>]+src='(?P<data>[^']+)"
+    
+    [[record.field]]
+        name= "Category"
+        [record.field.collector]
+            type= "value"
+            [record.field.collector.params]
+                "value" = "india"
+
+    [[record.field]]
+        name= "Source"
+        [record.field.collector]
+            type= "source"

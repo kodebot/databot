@@ -1,4 +1,4 @@
-package transformer
+package processor
 
 import (
 	"strings"
@@ -8,10 +8,10 @@ import (
 )
 
 func init() {
-	register("html:remove", regexpRemove)
+	register("regexp:remove", regexpRemove)
 }
 
-func htmlRemove(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func regexpRemove(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

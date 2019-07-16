@@ -7,7 +7,8 @@ import (
 )
 
 // RegexpMatchAll returns all the matches from val using expr
-// when captured group name called 'data' is present, the only the 'data' sub-group is returned
+// when captured group name called 'data' is present, then only the 'data' sub-group is returned
+// returns empty []string when no match found
 func RegexpMatchAll(val string, expr string) []string {
 	result := []string{}
 	if val != "" {
@@ -47,4 +48,43 @@ func RegexpMatchAll(val string, expr string) []string {
 		}
 	}
 	return result
+}
+
+// RegexpMatch returns the first match from val using expr
+// when captured group name called 'data' is present, then only the 'data' sub-group is returned
+// returns empty string when no match found
+func RegexpMatch(val string, expr string) string {
+	if val != "" {
+		if expr == "" {
+			logger.Errorf("no regular expression found")
+			return ""
+		}
+
+		re, err := regexp.Compile(expr)
+		if err != nil {
+			logger.Errorf("invalid regexp: %s error: %s. \n", expr, err.Error())
+			return ""
+		}
+
+		requiredMatchIndex := -1
+		for i, val := range re.SubexpNames() {
+			if val == "data" {
+				requiredMatchIndex = i
+			}
+		}
+
+		if requiredMatchIndex > -1 {
+			matches := re.FindStringSubmatch(val)
+
+			if len(matches) < requiredMatchIndex+1 {
+				logger.Warnf("no match found.")
+				return ""
+			}
+			return matches[requiredMatchIndex]
+
+		}
+		// when there is no captured group 'data' - just return the whole match
+		return re.FindString(val)
+	}
+	return ""
 }

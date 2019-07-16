@@ -1,17 +1,15 @@
-package transformer
+package processor
 
 import (
-	"strings"
-
+	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
-	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("regexp:select", regexpSelect)
+	register("css:remove", cssRemove)
 }
 
-func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func cssRemove(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -31,11 +29,10 @@ func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-cha
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
-			for _, selector := range selectors {
-				matches := stringutil.RegexpMatchAll(block, selector)
-				block = strings.Join(matches, "")
-			}
-			output <- block
+
+			doc := html.NewDocument(block)
+			doc.Remove(selectors...)
+			output <- doc.HTML()
 		}
 		close(output)
 	}()

@@ -10,6 +10,7 @@ import (
 	"github.com/kodebot/databot/pkg/fldtransformer"
 	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/processor"
 )
 
 type recordCreator struct {
@@ -45,6 +46,37 @@ func collect(sources []string, spec *databot.RecordSpec) []map[string]interface{
 }
 
 func (r *recordCreator) getRecordSources(collectorSpec *databot.RecordCollectorSpec) []string {
+	docReader := r.docReaderFn(collectorSpec.SourceURI)
+	source, err := docReader.ReadAsString()
+	if err != nil {
+		logger.Errorf("unable to retrieve content from URI %s", collectorSpec.SourceURI)
+	}
+
+	result := []string{}
+	result = append(result, source)
+
+	type recProcessor struct {
+		Name   string
+		Params map[string]interface{}
+	}
+
+	processors := []recProcessor{
+		{
+			"fetch", map[string]interface{}{"selectors": []string{}},
+		},
+	}
+
+	var input <-chan interface{}
+
+	ip := input
+	for _, p := range processors {
+		pfn := processor.Get(p.Name)
+		ip = pfn(ip, p.Params)
+	}
+	return result
+}
+
+func (r *recordCreator) getRecordSourcesOld(collectorSpec *databot.RecordCollectorSpec) []string {
 	docReader := r.docReaderFn(collectorSpec.SourceURI)
 	source, err := docReader.ReadAsString()
 	if err != nil {
