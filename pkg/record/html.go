@@ -1,6 +1,8 @@
 package record
 
 import (
+	"time"
+
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/processor"
@@ -18,7 +20,7 @@ func NewRecordCreator() databot.RecordCreator {
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
 
-	recSources := r.getRecordSources(spec.SourceURI, spec.PreprocessorSpecs)
+	recSources := getRecordSources(spec.SourceURI, spec.PreprocessorSpecs)
 	collected := collect(recSources, spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
@@ -38,7 +40,7 @@ func collect(sources []string, spec *databot.RecordSpec) []map[string]interface{
 	return recs
 }
 
-func (r *recordCreator) getRecordSources(sourceURI string, processorSpecs []*databot.ProcessorSpec) []string {
+func getRecordSources(sourceURI string, processorSpecs []*databot.ProcessorSpec) []string {
 	input := make(chan interface{})
 	output := make(chan []string)
 
@@ -55,6 +57,8 @@ func (r *recordCreator) getRecordSources(sourceURI string, processorSpecs []*dat
 		}
 		output <- []string{}
 	}()
+
+	time.Sleep(5 * time.Second)
 
 	input <- sourceURI
 
