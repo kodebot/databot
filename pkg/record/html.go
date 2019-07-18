@@ -20,8 +20,19 @@ func NewRecordCreator() databot.RecordCreator {
 
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
-	recSources := buildAndRunProcessorPipeline(spec.SourceURI, spec.PreprocessorSpecs)
-	collected := collect(recSources.([]interface{}), spec)
+	input, output := buildProcessorPipeline(spec.PreprocessorSpecs)
+
+	go func() {
+		input <- spec.SourceURI
+		close(input)
+	}()
+
+	var result interface{}
+	for item := range output {
+		result = item
+	}
+
+	collected := collect(result.([]interface{}), spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
 	// transformed := applyRecTransformers(collected, nil)
@@ -31,11 +42,11 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]interface{} {
 	recs := []map[string]interface{}{}
 
-	fieldProcessorPipelineMap := map[string]processor.Processor
+	// fieldProcessorPipelineMap := map[string]processor.Processor
 
-	for _, fieldSpec := range spec.FieldSpecs {
-//fieldSpec.
-	}
+	// for _, fieldSpec := range spec.FieldSpecs {
+	//fieldSpec.
+	//}
 
 	// for _, item := range sources {
 	// 	rec := make(map[string]interface{})
@@ -44,12 +55,13 @@ func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]inter
 	// 	}
 	// 	recs = append(recs, rec)
 	// }
+	fmt.Printf("%+v", sources)
 	return recs
 }
 
-func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) chan<- interface{} {
+func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) (chan<- interface{}, <-chan interface{}) {
 	input := make(chan interface{})
-	output := []interface{}{}
+	output := make(<-chan interface{})
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -62,14 +74,13 @@ func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) chan<- inte
 			nextProcessor := processor.Get(spec.Name)
 			pipeline = nextProcessor(pipeline, spec.Params)
 		}
+		output = pipeline
 		wg.Done()
-		for result := range pipeline {
-			output = append(output, result)
-		}
+
 	}()
 
 	wg.Wait()
-	return input
+	return input, output
 }
 
 // func buildAndRunProcessorPipeline(initialValue string, processorSpecs []*databot.ProcessorSpec) interface{} {
