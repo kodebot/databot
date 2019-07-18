@@ -18,7 +18,12 @@ func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-cha
 		logger.Fatalf("no selectors parameter found.")
 	}
 
-	selectors, ok := selectorsParam.([]string)
+	selectorVals, ok := selectorsParam.([]interface{})
+	if !ok {
+		logger.Fatalf("selector must be specified using slice")
+	}
+
+	selectors, ok := stringutil.ToStringSlice(selectorVals)
 	if !ok {
 		logger.Fatalf("selector must be specified using slice of string")
 	}

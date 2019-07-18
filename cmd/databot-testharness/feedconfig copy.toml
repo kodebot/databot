@@ -3,7 +3,7 @@ desc = "dinamalar politics feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-     sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+     sourceUri ="https://www.bbc.co.uk/news"
      [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -29,3 +29,15 @@ schedule = "every 5 minutes"
 	
      [[record.preprocessor]]
         name="combine"
+
+    [[record.field]]
+        name= "Content"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["#nw-c-topstories-domestic"]

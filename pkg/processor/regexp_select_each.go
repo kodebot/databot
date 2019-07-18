@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	register("regexp:selectEach", regexpRemove)
+	register("regexp:selectEach", regexpSelectEach)
 }
 
 func regexpSelectEach(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
@@ -16,7 +16,12 @@ func regexpSelectEach(input <-chan interface{}, params map[string]interface{}) <
 		logger.Fatalf("no selectors parameter found.")
 	}
 
-	selectors, ok := selectorsParam.([]string)
+	selectorVals, ok := selectorsParam.([]interface{})
+	if !ok {
+		logger.Fatalf("selector must be specified using slice")
+	}
+
+	selectors, ok := stringutil.ToStringSlice(selectorVals)
 	if !ok {
 		logger.Fatalf("selector must be specified using slice of string")
 	}

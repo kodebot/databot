@@ -3,7 +3,7 @@ package processor
 var processorMap = make(map[string]Processor)
 
 // Processor defines the signature of data processor
-type Processor func(<-chan interface{}, map[string]interface{}) <-chan interface{}
+type Processor func(input <-chan interface{}, params map[string]interface{}) <-chan interface{}
 
 func register(identifier string, processor Processor) {
 	processorMap[identifier] = processor

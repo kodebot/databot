@@ -1,7 +1,8 @@
 package record
 
 import (
-	"time"
+	"fmt"
+	"sync"
 
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/html"
@@ -19,17 +20,23 @@ func NewRecordCreator() databot.RecordCreator {
 
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
-
-	recSources := getRecordSources(spec.SourceURI, spec.PreprocessorSpecs)
-	collected := collect(recSources, spec)
+	recSources := buildAndRunProcessorPipeline(spec.SourceURI, spec.PreprocessorSpecs)
+	collected := collect(recSources.([]interface{}), spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
 	// transformed := applyRecTransformers(collected, nil)
 	return collected
 }
 
-func collect(sources []string, spec *databot.RecordSpec) []map[string]interface{} {
+func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]interface{} {
 	recs := []map[string]interface{}{}
+
+	fieldProcessorPipelineMap := map[string]processor.Processor
+
+	for _, fieldSpec := range spec.FieldSpecs {
+//fieldSpec.
+	}
+
 	// for _, item := range sources {
 	// 	rec := make(map[string]interface{})
 	// 	for _, fldSpec := range spec.FieldSpecs {
@@ -40,33 +47,60 @@ func collect(sources []string, spec *databot.RecordSpec) []map[string]interface{
 	return recs
 }
 
-func getRecordSources(sourceURI string, processorSpecs []*databot.ProcessorSpec) []string {
+func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) chan<- interface{} {
 	input := make(chan interface{})
-	output := make(chan []string)
+	output := []interface{}{}
 
-	pipeline := make(<-chan interface{})
+	var wg sync.WaitGroup
+	wg.Add(1)
 	go func() {
+		pipeline := make(<-chan interface{})
 		pipeline = input
 		for _, spec := range processorSpecs {
+			print(spec.Name)
+			fmt.Printf("%+v", spec.Params)
 			nextProcessor := processor.Get(spec.Name)
 			pipeline = nextProcessor(pipeline, spec.Params)
 		}
-
+		wg.Done()
 		for result := range pipeline {
-			output <- result.([]string)
+			output = append(output, result)
 		}
-		output <- []string{}
 	}()
 
-	time.Sleep(5 * time.Second)
-
-	input <- sourceURI
-
-	for out := range output {
-		return out
-	}
-	return []string{}
+	wg.Wait()
+	return input
 }
+
+// func buildAndRunProcessorPipeline(initialValue string, processorSpecs []*databot.ProcessorSpec) interface{} {
+// 	input := make(chan interface{})
+// 	output := []interface{}{}
+
+// 	var wg sync.WaitGroup
+// 	wg.Add(1)
+// 	go func() {
+// 		pipeline := make(<-chan interface{})
+// 		pipeline = input
+// 		for _, spec := range processorSpecs {
+// 			print(spec.Name)
+// 			fmt.Printf("%+v", spec.Params)
+// 			nextProcessor := processor.Get(spec.Name)
+// 			pipeline = nextProcessor(pipeline, spec.Params)
+// 		}
+// 		wg.Done()
+// 		for result := range pipeline {
+// 			output = append(output, result)
+// 		}
+// 		wg.Done()
+// 	}()
+
+// 	wg.Wait()
+// 	wg.Add(1)
+// 	input <- initialValue
+// 	close(input)
+// 	wg.Wait()
+// 	return output
+// }
 
 // func (r *recordCreator) getRecordSourcesOld(collectorSpec *databot.RecordCollectorSpec) []string {
 // 	docReader := r.docReaderFn(collectorSpec.SourceURI)

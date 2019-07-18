@@ -13,13 +13,14 @@ import (
 )
 
 func init() {
-	register("http:get", cssSelect)
+	register("http:get", httpGet)
 }
 
 func httpGet(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+	fmt.Printf("%+v", params)
 	useCacheParam := params["useCache"]
 	useCache := false
-
+	fmt.Printf("%+v", useCacheParam)
 	if useCacheParam != nil {
 		if _, ok := useCacheParam.(bool); ok {
 			useCache = true

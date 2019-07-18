@@ -1,6 +1,8 @@
 package processor
 
 import (
+	"reflect"
+
 	"github.com/kodebot/databot/pkg/logger"
 )
 
@@ -13,12 +15,16 @@ func split(input <-chan interface{}, params map[string]interface{}) <-chan inter
 
 	go func() {
 		for newInput := range input {
-			slice, ok := newInput.([]interface{})
-			if !ok {
-				logger.Fatalf("unexpected input %#v. Input must be of type []interface{}", slice)
+			object := reflect.ValueOf(newInput)
+
+			if object.Kind() != reflect.Slice && object.Kind() != reflect.Array {
+				logger.Fatalf("input must be slice is array %+v is neither", newInput)
 			}
-			for _, item := range slice {
-				output <- item
+
+			if object.Len() > 0 {
+				for i := 0; i < object.Len(); i++ {
+					output <- object.Index(i).Interface()
+				}
 			}
 		}
 		close(output)

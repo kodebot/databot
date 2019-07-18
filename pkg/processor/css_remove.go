@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
@@ -16,7 +17,12 @@ func cssRemove(input <-chan interface{}, params map[string]interface{}) <-chan i
 		logger.Fatalf("no selectors parameter found.")
 	}
 
-	selectors, ok := selectorsParam.([]string)
+	selectorVals, ok := selectorsParam.([]interface{})
+	if !ok {
+		logger.Fatalf("selector must be specified using slice")
+	}
+
+	selectors, ok := stringutil.ToStringSlice(selectorVals)
 	if !ok {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
