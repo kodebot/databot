@@ -8,19 +8,25 @@ func init() {
 	register("combine", combine)
 }
 
-func combine(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func combine(input Flow, params map[string]interface{}) Flow {
 	output := make(chan interface{})
-
 	go func() {
 		outputSlice := []interface{}{}
-		for newInput := range input {
+		select {
+		case newInput := <-input:
 			item, ok := newInput.(interface{})
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type interface{}", item)
 			}
 			outputSlice = append(outputSlice, item)
+
+		case controlData := <-control:
+			if controlData == endSplit {
+				output <- outputSlice
+				outputSlice = []interface{}{}
+			}
 		}
-		output <- outputSlice
+
 		close(output)
 	}()
 

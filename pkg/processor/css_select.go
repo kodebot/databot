@@ -13,7 +13,7 @@ func init() {
 	register("css:select", cssSelect)
 }
 
-func cssSelect(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func cssSelect(input Input, control Control, params map[string]interface{}) Output {
 	fmt.Printf("%+v", params)
 	selectorsParam := params["selectors"]
 

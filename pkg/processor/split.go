@@ -10,9 +10,8 @@ func init() {
 	register("split", split)
 }
 
-func split(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func split(input Input, control Control, params map[string]interface{}) Output {
 	output := make(chan interface{})
-
 	go func() {
 		for newInput := range input {
 			object := reflect.ValueOf(newInput)
@@ -25,6 +24,7 @@ func split(input <-chan interface{}, params map[string]interface{}) <-chan inter
 				for i := 0; i < object.Len(); i++ {
 					output <- object.Index(i).Interface()
 				}
+				control <- endSplit
 			}
 		}
 		close(output)

@@ -11,7 +11,7 @@ func init() {
 	register("regexp:remove", regexpRemove)
 }
 
-func regexpRemove(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func regexpRemove(input Input, control Control, params map[string]interface{}) Output {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

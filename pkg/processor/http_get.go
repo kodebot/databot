@@ -16,7 +16,7 @@ func init() {
 	register("http:get", httpGet)
 }
 
-func httpGet(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func httpGet(input Input, control Control, params map[string]interface{}) Output {
 	fmt.Printf("%+v", params)
 	useCacheParam := params["useCache"]
 	useCache := false

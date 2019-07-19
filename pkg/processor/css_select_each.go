@@ -10,7 +10,7 @@ func init() {
 	register("css:selectEach", cssSelectEach)
 }
 
-func cssSelectEach(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func cssSelectEach(input Input, control Control, params map[string]interface{}) Output {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

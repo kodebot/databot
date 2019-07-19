@@ -9,7 +9,7 @@ func init() {
 	register("regexp:selectEach", regexpSelectEach)
 }
 
-func regexpSelectEach(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func regexpSelectEach(input Input, control Control, params map[string]interface{}) Output {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

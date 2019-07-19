@@ -59,9 +59,11 @@ func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]inter
 	return recs
 }
 
+// https://whiskybadger.io/post/introducing-go-pipeline/
 func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) (chan<- interface{}, <-chan interface{}) {
 	input := make(chan interface{})
 	output := make(<-chan interface{})
+	control := make(chan interface{})
 
 	var wg sync.WaitGroup
 	wg.Add(1)

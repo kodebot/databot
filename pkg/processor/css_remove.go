@@ -10,7 +10,7 @@ func init() {
 	register("css:remove", cssRemove)
 }
 
-func cssRemove(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func cssRemove(input Input, control Control, params map[string]interface{}) Output {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

@@ -11,7 +11,7 @@ func init() {
 	register("regexp:select", regexpSelect)
 }
 
-func regexpSelect(input <-chan interface{}, params map[string]interface{}) <-chan interface{} {
+func regexpSelect(input Input, control Control, params map[string]interface{}) Output {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
