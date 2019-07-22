@@ -1,10 +1,7 @@
 package main
 
 import (
-	"sync"
 	"testing"
-
-	"github.com/kodebot/databot/pkg/processor"
 
 	"github.com/kodebot/databot/pkg/config"
 	"github.com/kodebot/databot/pkg/exporter"
@@ -33,39 +30,39 @@ func Test(t *testing.T) {
 	exporter.ExportToMongoDB(recs, config.Current().ExportToDBConStr())
 }
 
-func TestGoroutine(t *testing.T) {
-	preprocessors := []*databot.ProcessorSpec{
-		{
-			Name:   "http:get",
-			Params: map[string]interface{}{},
-		},
-		{
-			Name:   "css:select",
-			Params: map[string]interface{}{"selectors": []string{"html"}},
-		},
-	}
+// func TestGoroutine(t *testing.T) {
+// 	preprocessors := []*databot.ProcessorSpec{
+// 		{
+// 			Name:   "http:get",
+// 			Params: map[string]interface{}{},
+// 		},
+// 		{
+// 			Name:   "css:select",
+// 			Params: map[string]interface{}{"selectors": []string{"html"}},
+// 		},
+// 	}
 
-	input := make(chan interface{})
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		var pipeline <-chan interface{}
-		pipeline = input
-		for _, spec := range preprocessors {
-			nextProcessor := processor.Get(spec.Name)
-			pipeline = nextProcessor(pipeline, spec.Params)
-		}
-		wg.Done()
-		for out := range pipeline {
-			t.Errorf("output: %+v", out)
-		}
-		wg.Done()
-	}()
+// 	input := make(chan interface{})
+// 	var wg sync.WaitGroup
+// 	wg.Add(1)
+// 	go func() {
+// 		var pipeline <-chan interface{}
+// 		pipeline = input
+// 		for _, spec := range preprocessors {
+// 			nextProcessor := processor.Get(spec.Name)
+// 			pipeline = nextProcessor(pipeline, spec.Params)
+// 		}
+// 		wg.Done()
+// 		for out := range pipeline {
+// 			t.Errorf("output: %+v", out)
+// 		}
+// 		wg.Done()
+// 	}()
 
-	wg.Wait()
-	wg.Add(1)
-	input <- "https://www.digitalocean.com/pricing/"
-	close(input)
-	wg.Wait()
-	t.FailNow()
-}
+// 	wg.Wait()
+// 	wg.Add(1)
+// 	input <- "https://www.digitalocean.com/pricing/"
+// 	close(input)
+// 	wg.Wait()
+// 	t.FailNow()
+// }

@@ -10,7 +10,7 @@ func init() {
 	register("css:remove", cssRemove)
 }
 
-func cssRemove(input Input, control Control, params map[string]interface{}) Output {
+func cssRemove(input Flow, params map[string]interface{}) Flow {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -27,10 +27,11 @@ func cssRemove(input Input, control Control, params map[string]interface{}) Outp
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	output := make(chan interface{})
+	outputData := make(chan interface{})
+	outputControl := make(chan ControlMessage)
 
 	go func() {
-		for newInput := range input {
+		for newInput := range input.Data {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
@@ -38,10 +39,16 @@ func cssRemove(input Input, control Control, params map[string]interface{}) Outp
 
 			doc := html.NewDocument(block)
 			doc.Remove(selectors...)
-			output <- doc.HTML()
+			outputData <- doc.HTML()
 		}
-		close(output)
+		close(outputData)
 	}()
 
-	return output
+	go func() { // relay control messages
+		for control := range input.Control {
+			outputControl <- control
+		}
+	}()
+
+	return Flow{outputData, outputControl}
 }

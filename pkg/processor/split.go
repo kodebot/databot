@@ -10,10 +10,11 @@ func init() {
 	register("split", split)
 }
 
-func split(input Input, control Control, params map[string]interface{}) Output {
-	output := make(chan interface{})
+func split(input Flow, params map[string]interface{}) Flow {
+	outputData := make(chan interface{})
+	outputControl := make(chan ControlMessage)
 	go func() {
-		for newInput := range input {
+		for newInput := range input.Data {
 			object := reflect.ValueOf(newInput)
 
 			if object.Kind() != reflect.Slice && object.Kind() != reflect.Array {
@@ -22,13 +23,19 @@ func split(input Input, control Control, params map[string]interface{}) Output {
 
 			if object.Len() > 0 {
 				for i := 0; i < object.Len(); i++ {
-					output <- object.Index(i).Interface()
+					outputData <- object.Index(i).Interface()
 				}
-				control <- endSplit
+				outputControl <- endSplit
 			}
 		}
-		close(output)
+		close(outputData)
 	}()
 
-	return output
+	go func() { // relay control messages
+		for control := range input.Control {
+			outputControl <- control
+		}
+	}()
+
+	return Flow{outputData, outputControl}
 }

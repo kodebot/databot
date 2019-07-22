@@ -9,26 +9,46 @@ func init() {
 }
 
 func combine(input Flow, params map[string]interface{}) Flow {
-	output := make(chan interface{})
+
+	outputData := make(chan interface{})
+	outputControl := make(chan ControlMessage)
+
 	go func() {
 		outputSlice := []interface{}{}
-		select {
-		case newInput := <-input:
-			item, ok := newInput.(interface{})
-			if !ok {
-				logger.Fatalf("unexpected input %#v. Input must be of type interface{}", item)
-			}
-			outputSlice = append(outputSlice, item)
+		for {
+			select {
+			case newInput, open := <-input.Data:
+				if !open {
+					close(outputData)
+					break
+				}
 
-		case controlData := <-control:
-			if controlData == endSplit {
-				output <- outputSlice
-				outputSlice = []interface{}{}
+				item, ok := newInput.(interface{})
+				if !ok {
+					logger.Fatalf("unexpected input %#v. Input must be of type interface{}", item)
+				}
+				outputSlice = append(outputSlice, item)
+
+			case controlData := <-input.Control:
+				if controlData == endSplit {
+					outputData <- outputSlice
+					outputSlice = []interface{}{}
+				} else {
+					outputControl <- controlData // just pass it through
+				}
 			}
+
 		}
 
-		close(output)
 	}()
 
-	return output
+	go func() { // relay control messages
+		for control := range input.Control {
+			outputControl <- control
+		}
+	}()
+
+	return Flow{
+		outputData, outputControl,
+	}
 }

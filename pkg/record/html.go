@@ -23,20 +23,26 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 	input, output := buildProcessorPipeline(spec.PreprocessorSpecs)
 
 	go func() {
-		input <- spec.SourceURI
-		close(input)
+		input.Data <- spec.SourceURI
 	}()
 
-	var result interface{}
-	for item := range output {
-		result = item
+	go func() {
+		for control := range output.Control {
+			// drain
+			fmt.Printf("%+v", control)
+		}
+	}()
+
+	for item := range output.Data {
+		fmt.Printf("%+v", item)
 	}
 
-	collected := collect(result.([]interface{}), spec)
+	//collected := collect(result.([]interface{}), spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
 	// transformed := applyRecTransformers(collected, nil)
-	return collected
+	//return collected
+	return nil
 }
 
 func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]interface{} {
@@ -60,15 +66,21 @@ func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]inter
 }
 
 // https://whiskybadger.io/post/introducing-go-pipeline/
-func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) (chan<- interface{}, <-chan interface{}) {
-	input := make(chan interface{})
-	output := make(<-chan interface{})
-	control := make(chan interface{})
+func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) (processor.Flow, processor.Flow) {
+	data := make(chan interface{})
+	control := make(chan processor.ControlMessage)
+
+	input := processor.Flow{
+		data,
+		control,
+	}
+
+	output := processor.Flow{}
 
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
-		pipeline := make(<-chan interface{})
+		pipeline := processor.Flow{}
 		pipeline = input
 		for _, spec := range processorSpecs {
 			print(spec.Name)

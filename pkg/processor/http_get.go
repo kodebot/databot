@@ -16,7 +16,7 @@ func init() {
 	register("http:get", httpGet)
 }
 
-func httpGet(input Input, control Control, params map[string]interface{}) Output {
+func httpGet(input Flow, params map[string]interface{}) Flow {
 	fmt.Printf("%+v", params)
 	useCacheParam := params["useCache"]
 	useCache := false
@@ -27,9 +27,10 @@ func httpGet(input Input, control Control, params map[string]interface{}) Output
 		}
 	}
 
-	output := make(chan interface{})
+	outputData := make(chan interface{})
+	outputControl := make(chan ControlMessage)
 	go func() {
-		for newInput := range input {
+		for newInput := range input.Data {
 			url, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", url)
@@ -47,13 +48,19 @@ func httpGet(input Input, control Control, params map[string]interface{}) Output
 				logger.Errorf("unable to get html from url: %s, skipping it", url)
 			} else {
 				htmlStr = fixRelativePaths(url, htmlStr)
-				output <- htmlStr
+				outputData <- htmlStr
 			}
 		}
-		close(output)
+		close(outputData)
 	}()
 
-	return output
+	go func() { // relay control messages
+		for control := range input.Control {
+			outputControl <- control
+		}
+	}()
+
+	return Flow{outputData, outputControl}
 }
 
 func fixRelativePaths(sourceURL string, htmlStr string) string {

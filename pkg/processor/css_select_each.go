@@ -10,7 +10,7 @@ func init() {
 	register("css:selectEach", cssSelectEach)
 }
 
-func cssSelectEach(input Input, control Control, params map[string]interface{}) Output {
+func cssSelectEach(input Flow, params map[string]interface{}) Flow {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -27,19 +27,26 @@ func cssSelectEach(input Input, control Control, params map[string]interface{}) 
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	output := make(chan interface{})
+	outputData := make(chan interface{})
+	outputControl := make(chan ControlMessage)
 
 	go func() {
-		for newInput := range input {
+		for newInput := range input.Data {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
 			doc := html.NewDocument(block)
-			output <- doc.HTMLEach(selectors...)
+			outputData <- doc.HTMLEach(selectors...)
 		}
-		close(output)
+		close(outputData)
 	}()
 
-	return output
+	go func() { // relay control messages
+		for control := range input.Control {
+			outputControl <- control
+		}
+	}()
+
+	return Flow{outputData, outputControl}
 }

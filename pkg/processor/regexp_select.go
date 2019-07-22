@@ -11,7 +11,7 @@ func init() {
 	register("regexp:select", regexpSelect)
 }
 
-func regexpSelect(input Input, control Control, params map[string]interface{}) Output {
+func regexpSelect(input Flow, params map[string]interface{}) Flow {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -28,10 +28,11 @@ func regexpSelect(input Input, control Control, params map[string]interface{}) O
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	output := make(chan interface{})
+	outputData := make(chan interface{})
+	outputControl := make(chan ControlMessage)
 
 	go func() {
-		for newInput := range input {
+		for newInput := range input.Data {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
@@ -40,10 +41,16 @@ func regexpSelect(input Input, control Control, params map[string]interface{}) O
 				matches := stringutil.RegexpMatchAll(block, selector)
 				block = strings.Join(matches, "")
 			}
-			output <- block
+			outputData <- block
 		}
-		close(output)
+		close(outputData)
 	}()
 
-	return output
+	go func() { // relay control messages
+		for control := range input.Control {
+			outputControl <- control
+		}
+	}()
+
+	return Flow{outputData, outputControl}
 }
