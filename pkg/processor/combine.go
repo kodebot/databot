@@ -42,11 +42,11 @@ func combine(input Flow, params map[string]interface{}) Flow {
 
 	}()
 
-	go func() { // relay control messages
-		for control := range input.Control {
-			outputControl <- control
-		}
-	}()
+	// go func() { // relay control messages
+	// 	for control := range input.Control {
+	// 		outputControl <- control
+	// 	}
+	// }()
 
 	return Flow{
 		outputData, outputControl,
