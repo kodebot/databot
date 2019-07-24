@@ -33,9 +33,8 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 		}
 	}()
 
-	for item := range output.Data {
-		fmt.Printf("%+v", item)
-	}
+	records := <-output.Data
+	fmt.Printf("%+v", records)
 
 	//collected := collect(result.([]interface{}), spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
