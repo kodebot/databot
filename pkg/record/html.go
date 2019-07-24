@@ -34,32 +34,47 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 	}()
 
 	records := <-output.Data
-	fmt.Printf("%+v", records)
+	fmt.Printf("%+v", records.([]interface{}))
 
-	//collected := collect(result.([]interface{}), spec)
+	collected := collect(records.([]interface{}), spec)
 	// todo: review whether it is ok to collect all records and transform or we need to collect and transform one record at a time
 	// todo: no record transformers are supported now
 	// transformed := applyRecTransformers(collected, nil)
 	//return collected
-	return nil
+	return collected
 }
 
 func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]interface{} {
 	recs := []map[string]interface{}{}
 
-	// fieldProcessorPipelineMap := map[string]processor.Processor
+	fieldProcessorPipelineMap := make(map[string][]processor.Flow)
 
-	// for _, fieldSpec := range spec.FieldSpecs {
-	//fieldSpec.
-	//}
+	for _, fieldSpec := range spec.FieldSpecs {
+		input, output := buildProcessorPipeline(fieldSpec.ProcessorSpecs)
+		fieldProcessorPipelineMap[fieldSpec.Name] = []processor.Flow{input, output}
+	}
 
-	// for _, item := range sources {
-	// 	rec := make(map[string]interface{})
-	// 	for _, fldSpec := range spec.FieldSpecs {
-	// 		rec[fldSpec.Name] = createField(item, fldSpec)
-	// 	}
-	// 	recs = append(recs, rec)
-	// }
+	for _, item := range sources {
+		rec := make(map[string]interface{})
+		for key, val := range fieldProcessorPipelineMap {
+			in := val[0]
+			out := val[1]
+
+			go func() {
+				in.Data <- item
+			}()
+
+			go func() {
+				for control := range out.Control {
+					// drain
+					fmt.Printf("%+v", control)
+				}
+			}()
+
+			rec[key] = <-out.Data
+		}
+		recs = append(recs, rec)
+	}
 	fmt.Printf("%+v", sources)
 	return recs
 }
