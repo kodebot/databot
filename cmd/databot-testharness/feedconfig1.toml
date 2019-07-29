@@ -1,0 +1,41 @@
+name = "dinamalar-politics"
+desc = "dinamalar politics feed"
+group = "dinamalar"
+schedule = "every 5 minutes"
+[record]
+     sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+     [[record.preprocessor]]
+        name="http:get"
+            [record.preprocessor.params]
+                "useCache" = false
+
+     [[record.preprocessor]]
+        name="toRssFeed"
+   
+    [[record.preprocessor]]
+        name="pluck"
+            [record.preprocessor.params]
+                "field" = "Items"
+
+     [[record.preprocessor]]
+        name="split"
+    
+     [[record.preprocessor]]
+        name="pluck"
+            [record.preprocessor.params]
+                "field" = "Link"
+	
+     [[record.preprocessor]]
+        name="combine"
+
+    [[record.field]]
+        name= "Content"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["body"]

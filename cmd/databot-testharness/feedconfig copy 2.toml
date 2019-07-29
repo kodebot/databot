@@ -40,4 +40,4 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
-                    "selectors" = ["#nw-c-topstories-domestic"]
+                    "selectors" = [".story-body"]
