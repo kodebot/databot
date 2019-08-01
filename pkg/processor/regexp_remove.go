@@ -29,7 +29,7 @@ func regexpRemove(input Flow, params map[string]interface{}) Flow {
 	}
 
 	outputData := make(chan interface{})
-	outputControl := make(chan ControlMessage)
+	// outputControl := make(chan ControlMessage)
 
 	go func() {
 		for newInput := range input.Data {
@@ -49,11 +49,5 @@ func regexpRemove(input Flow, params map[string]interface{}) Flow {
 		close(outputData)
 	}()
 
-	go func() { // relay control messages
-		for control := range input.Control {
-			outputControl <- control
-		}
-	}()
-
-	return Flow{outputData, outputControl}
+	return Flow{outputData, input.Control}
 }

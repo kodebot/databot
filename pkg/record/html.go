@@ -26,12 +26,12 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 		input.Data <- spec.SourceURI
 	}()
 
-	go func() {
-		for control := range output.Control {
-			// drain
-			fmt.Printf("%+v", control)
-		}
-	}()
+	// go func() {
+	// 	for control := range output.Control {
+	// 		// drain
+	// 		fmt.Printf("%+v", control)
+	// 	}
+	// }()
 
 	records := <-output.Data
 	fmt.Printf("%+v", records.([]interface{}))
