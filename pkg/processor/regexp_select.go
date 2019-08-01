@@ -28,8 +28,7 @@ func regexpSelect(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -41,10 +40,10 @@ func regexpSelect(input Flow, params map[string]interface{}) Flow {
 				matches := stringutil.RegexpMatchAll(block, selector)
 				block = strings.Join(matches, "")
 			}
-			outputData <- block
+			outData <- block
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

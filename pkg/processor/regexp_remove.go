@@ -28,8 +28,7 @@ func regexpRemove(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -44,10 +43,10 @@ func regexpRemove(input Flow, params map[string]interface{}) Flow {
 					block = strings.Replace(block, match, "", -1)
 				}
 			}
-			outputData <- block
+			outData <- block
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

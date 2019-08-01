@@ -27,7 +27,7 @@ func cssRemove(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outputData := make(chan interface{})
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -38,10 +38,10 @@ func cssRemove(input Flow, params map[string]interface{}) Flow {
 
 			doc := html.NewDocument(block)
 			doc.Remove(selectors...)
-			outputData <- doc.HTML()
+			outData <- doc.HTML()
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

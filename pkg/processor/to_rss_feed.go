@@ -11,7 +11,7 @@ func init() {
 }
 
 func toRssFeed(input Flow, params map[string]interface{}) Flow {
-	outputData := make(chan interface{})
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -22,10 +22,10 @@ func toRssFeed(input Flow, params map[string]interface{}) Flow {
 
 			rssFeed := rssatom.Parse(block)
 
-			outputData <- rssFeed
+			outData <- rssFeed
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

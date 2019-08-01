@@ -2,6 +2,7 @@ package processor
 
 var processorMap = make(map[string]Processor)
 
+// ControlMessage that are supported by Flow
 type ControlMessage string
 
 const (

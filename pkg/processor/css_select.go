@@ -31,8 +31,7 @@ func cssSelect(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -43,10 +42,10 @@ func cssSelect(input Flow, params map[string]interface{}) Flow {
 
 			doc := html.NewDocument(block)
 			doc.Select(selectors...)
-			outputData <- doc.HTML()
+			outData <- doc.HTML()
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

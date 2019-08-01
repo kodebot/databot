@@ -11,8 +11,8 @@ func init() {
 }
 
 func split(input Flow, params map[string]interface{}) Flow {
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
+
 	go func() {
 		for newInput := range input.Data {
 			object := reflect.ValueOf(newInput)
@@ -23,13 +23,13 @@ func split(input Flow, params map[string]interface{}) Flow {
 
 			if object.Len() > 0 {
 				for i := 0; i < object.Len(); i++ {
-					outputData <- object.Index(i).Interface()
+					outData <- object.Index(i).Interface()
 				}
 				input.Control <- endSplit
 			}
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

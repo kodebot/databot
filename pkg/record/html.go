@@ -21,7 +21,6 @@ func NewRecordCreator() databot.RecordCreator {
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
 	input, output := buildProcessorPipeline(spec.PreprocessorSpecs)
-
 	go func() {
 		input.Data <- spec.SourceURI
 	}()

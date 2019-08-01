@@ -23,8 +23,7 @@ func pluck(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("field must be string type")
 	}
 
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -33,10 +32,10 @@ func pluck(input Flow, params map[string]interface{}) Flow {
 			if !fieldData.IsValid() {
 				logger.Fatalf("the field %s doesn't exist in the input", field)
 			}
-			outputData <- fieldData.Interface()
+			outData <- fieldData.Interface()
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

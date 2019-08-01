@@ -26,8 +26,7 @@ func regexpSelectEach(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
 
 	go func() {
 		for newInput := range input.Data {
@@ -42,10 +41,10 @@ func regexpSelectEach(input Flow, params map[string]interface{}) Flow {
 					result = append(result, match)
 				}
 			}
-			outputData <- result
+			outData <- result
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }

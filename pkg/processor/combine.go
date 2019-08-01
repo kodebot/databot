@@ -10,17 +10,17 @@ func init() {
 
 func combine(input Flow, params map[string]interface{}) Flow {
 
-	//outputData := make(chan interface{})
+	outData := make(chan interface{})
 
 	go func() {
 		outputSlice := []interface{}{}
 		for {
 			select {
-			case newInput := <-input.Data:
-				// if !open {
-				// 	close(outputData)
-				// 	break
-				// }
+			case newInput, open := <-input.Data:
+				if !open {
+					close(outData)
+					break
+				}
 
 				item, ok := newInput.(interface{})
 				if !ok {
@@ -30,7 +30,7 @@ func combine(input Flow, params map[string]interface{}) Flow {
 
 			case controlData := <-input.Control:
 				if controlData == endSplit {
-					input.Data <- outputSlice
+					outData <- outputSlice
 					outputSlice = []interface{}{}
 				} else {
 					go func() {
@@ -40,12 +40,9 @@ func combine(input Flow, params map[string]interface{}) Flow {
 			}
 
 		}
-
 	}()
 
-	// return Flow{
-	// 	outputData, input.Control,
-	// }
-
-	return input
+	return Flow{
+		outData, input.Control,
+	}
 }

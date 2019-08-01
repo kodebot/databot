@@ -27,8 +27,8 @@ func httpGet(input Flow, params map[string]interface{}) Flow {
 		}
 	}
 
-	outputData := make(chan interface{})
-	// outputControl := make(chan ControlMessage)
+	outData := make(chan interface{})
+
 	go func() {
 		for newInput := range input.Data {
 			url, ok := newInput.(string)
@@ -48,13 +48,13 @@ func httpGet(input Flow, params map[string]interface{}) Flow {
 				logger.Errorf("unable to get html from url: %s, skipping it", url)
 			} else {
 				htmlStr = fixRelativePaths(url, htmlStr)
-				outputData <- htmlStr
+				outData <- htmlStr
 			}
 		}
-		close(outputData)
+		close(outData)
 	}()
 
-	return Flow{outputData, input.Control}
+	return Flow{outData, input.Control}
 }
 
 func fixRelativePaths(sourceURL string, htmlStr string) string {
