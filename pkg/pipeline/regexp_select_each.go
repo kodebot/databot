@@ -1,16 +1,15 @@
-package processor
+package pipeline
 
 import (
-	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("css:remove", cssRemove)
+	register("regexp:selectEach", regexpSelectEach)
 }
 
-func cssRemove(input Flow, params map[string]interface{}) Flow {
+func regexpSelectEach(params map[string]interface{}) Operator {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -27,21 +26,20 @@ func cssRemove(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
-
-			doc := html.NewDocument(block)
-			doc.Remove(selectors...)
-			outData <- doc.HTML()
+			result := []interface{}{}
+			for _, selector := range selectors {
+				matches := stringutil.RegexpMatchAll(block, selector)
+				for _, match := range matches {
+					result = append(result, match)
+				}
+			}
+			out <- result
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }

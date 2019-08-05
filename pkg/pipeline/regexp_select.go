@@ -1,15 +1,17 @@
-package processor
+package pipeline
 
 import (
+	"strings"
+
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("regexp:selectEach", regexpSelectEach)
+	register("regexp:select", regexpSelect)
 }
 
-func regexpSelectEach(input Flow, params map[string]interface{}) Flow {
+func regexpSelect(params map[string]interface{}) Operator {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -26,25 +28,17 @@ func regexpSelectEach(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
-			result := []interface{}{}
 			for _, selector := range selectors {
 				matches := stringutil.RegexpMatchAll(block, selector)
-				for _, match := range matches {
-					result = append(result, match)
-				}
+				block = strings.Join(matches, "")
 			}
-			outData <- result
+			out <- block
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }

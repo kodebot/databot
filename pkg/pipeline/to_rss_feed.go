@@ -1,4 +1,4 @@
-package processor
+package pipeline
 
 import (
 	"github.com/kodebot/databot/pkg/rssatom"
@@ -10,11 +10,9 @@ func init() {
 	register("toRssFeed", toRssFeed)
 }
 
-func toRssFeed(input Flow, params map[string]interface{}) Flow {
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+func toRssFeed(params map[string]interface{}) Operator {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
@@ -22,10 +20,7 @@ func toRssFeed(input Flow, params map[string]interface{}) Flow {
 
 			rssFeed := rssatom.Parse(block)
 
-			outData <- rssFeed
+			out <- rssFeed
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }

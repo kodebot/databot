@@ -1,4 +1,4 @@
-package processor
+package pipeline
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func init() {
 	register("http:get", httpGet)
 }
 
-func httpGet(input Flow, params map[string]interface{}) Flow {
+func httpGet(params map[string]interface{}) Operator {
 	fmt.Printf("%+v", params)
 	useCacheParam := params["useCache"]
 	useCache := false
@@ -27,10 +27,8 @@ func httpGet(input Flow, params map[string]interface{}) Flow {
 		}
 	}
 
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			url, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", url)
@@ -48,13 +46,10 @@ func httpGet(input Flow, params map[string]interface{}) Flow {
 				logger.Errorf("unable to get html from url: %s, skipping it", url)
 			} else {
 				htmlStr = fixRelativePaths(url, htmlStr)
-				outData <- htmlStr
+				out <- htmlStr
 			}
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }
 
 func fixRelativePaths(sourceURL string, htmlStr string) string {

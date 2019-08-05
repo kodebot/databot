@@ -1,4 +1,4 @@
-package processor
+package pipeline
 
 import (
 	"reflect"
@@ -10,11 +10,9 @@ func init() {
 	register("split", split)
 }
 
-func split(input Flow, params map[string]interface{}) Flow {
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+func split(params map[string]interface{}) Operator {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			object := reflect.ValueOf(newInput)
 
 			if object.Kind() != reflect.Slice && object.Kind() != reflect.Array {
@@ -23,13 +21,9 @@ func split(input Flow, params map[string]interface{}) Flow {
 
 			if object.Len() > 0 {
 				for i := 0; i < object.Len(); i++ {
-					outData <- object.Index(i).Interface()
+					out <- object.Index(i).Interface()
 				}
-				input.Control <- endSplit
 			}
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }

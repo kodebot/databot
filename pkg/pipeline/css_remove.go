@@ -1,20 +1,16 @@
-package processor
+package pipeline
 
 import (
-	"fmt"
-
-	"github.com/kodebot/databot/pkg/stringutil"
-
 	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("css:select", cssSelect)
+	register("css:remove", cssRemove)
 }
 
-func cssSelect(input Flow, params map[string]interface{}) Flow {
-	fmt.Printf("%+v", params)
+func cssRemove(params map[string]interface{}) Operator {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -31,21 +27,16 @@ func cssSelect(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
 
 			doc := html.NewDocument(block)
-			doc.Select(selectors...)
-			outData <- doc.HTML()
+			doc.Remove(selectors...)
+			out <- doc.HTML()
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }

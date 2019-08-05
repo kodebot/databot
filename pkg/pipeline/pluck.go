@@ -1,4 +1,4 @@
-package processor
+package pipeline
 
 import (
 	"reflect"
@@ -10,7 +10,7 @@ func init() {
 	register("pluck", pluck)
 }
 
-func pluck(input Flow, params map[string]interface{}) Flow {
+func pluck(params map[string]interface{}) Operator {
 
 	fieldParam := params["field"]
 
@@ -23,19 +23,14 @@ func pluck(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("field must be string type")
 	}
 
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 
 			fieldData := reflect.Indirect(reflect.ValueOf(newInput)).FieldByName(field)
 			if !fieldData.IsValid() {
 				logger.Fatalf("the field %s doesn't exist in the input", field)
 			}
-			outData <- fieldData.Interface()
+			out <- fieldData.Interface()
 		}
-		close(outData)
-	}()
-
-	return Flow{outData, input.Control}
+	}
 }

@@ -2,11 +2,11 @@ package record
 
 import (
 	"fmt"
-	"sync"
+
+	"github.com/kodebot/databot/pkg/pipeline"
 
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/html"
-	"github.com/kodebot/databot/pkg/processor"
 )
 
 type recordCreator struct {
@@ -20,19 +20,27 @@ func NewRecordCreator() databot.RecordCreator {
 
 // Create returns one or more records from given rss/atom record spec
 func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
-	input, output := buildProcessorPipeline(spec.PreprocessorSpecs)
+	operators := buildProcessorPipeline(spec.PreprocessorSpecs)
+
+	in := make(chan interface{})
+
+	out := make(chan interface{})
+	tempIn := in
+	for _, operator := range operators {
+		go func(op pipeline.Operator, in chan interface{}, o chan interface{}) {
+			op(in, o)
+			close(o)
+		}(operator, tempIn, out)
+		tempIn = out
+		out = make(chan interface{})
+	}
 	go func() {
-		input.Data <- spec.SourceURI
+		in <- spec.SourceURI
+		close(in)
 	}()
 
-	// go func() {
-	// 	for control := range output.Control {
-	// 		// drain
-	// 		fmt.Printf("%+v", control)
-	// 	}
-	// }()
+	records := <-tempIn
 
-	records := <-output.Data
 	fmt.Printf("%+v", records.([]interface{}))
 
 	collected := collect(records.([]interface{}), spec)
@@ -42,31 +50,38 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]interface{} {
 	recs := []map[string]interface{}{}
 
-	fieldProcessorPipelineMap := make(map[string][]processor.Flow)
+	fieldProcessorPipelineMap := make(map[string][]pipeline.Operator)
 
 	for _, fieldSpec := range spec.FieldSpecs {
-		input, output := buildProcessorPipeline(fieldSpec.ProcessorSpecs)
-		fieldProcessorPipelineMap[fieldSpec.Name] = []processor.Flow{input, output}
+		operators := buildProcessorPipeline(fieldSpec.ProcessorSpecs)
+		fieldProcessorPipelineMap[fieldSpec.Name] = operators
 	}
 
 	for _, item := range sources {
 		rec := make(map[string]interface{})
 		for key, val := range fieldProcessorPipelineMap {
-			in := val[0]
-			out := val[1]
+
+			in := make(chan interface{})
+
+			out := make(chan interface{})
+			tempIn := in
+			for _, op := range val {
+				go func(op1 pipeline.Operator, in chan interface{}, o chan interface{}) {
+					op1(in, o)
+					close(o)
+				}(op, tempIn, out)
+				tempIn = out
+				out = make(chan interface{})
+			}
 
 			go func() {
-				in.Data <- item
+				in <- item
+				close(in)
 			}()
 
-			go func() {
-				for control := range out.Control {
-					// drain
-					fmt.Printf("%+v", control)
-				}
-			}()
+			res := <-tempIn
+			rec[key] = res
 
-			rec[key] = <-out.Data
 		}
 		recs = append(recs, rec)
 	}
@@ -74,34 +89,12 @@ func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]inter
 	return recs
 }
 
-// https://whiskybadger.io/post/introducing-go-pipeline/
-func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) (processor.Flow, processor.Flow) {
-	data := make(chan interface{})
-	control := make(chan processor.ControlMessage)
-
-	input := processor.Flow{
-		Data:    data,
-		Control: control,
+func buildProcessorPipeline(processorSpecs []*databot.ProcessorSpec) []pipeline.Operator {
+	var operators []pipeline.Operator
+	for _, spec := range processorSpecs {
+		builder := pipeline.Get(spec.Name)
+		operators = append(operators, builder(spec.Params))
 	}
+	return operators
 
-	output := processor.Flow{}
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		pipeline := processor.Flow{}
-		pipeline = input
-		for _, spec := range processorSpecs {
-			print(spec.Name)
-			fmt.Printf("%+v", spec.Params)
-			nextProcessor := processor.Get(spec.Name)
-			pipeline = nextProcessor(pipeline, spec.Params)
-		}
-		output = pipeline
-		wg.Done()
-
-	}()
-
-	wg.Wait()
-	return input, output
 }

@@ -1,17 +1,20 @@
-package processor
+package pipeline
 
 import (
-	"strings"
+	"fmt"
 
-	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/stringutil"
+
+	"github.com/kodebot/databot/pkg/html"
+	"github.com/kodebot/databot/pkg/logger"
 )
 
 func init() {
-	register("regexp:select", regexpSelect)
+	register("css:select", cssSelect)
 }
 
-func regexpSelect(input Flow, params map[string]interface{}) Flow {
+func cssSelect(params map[string]interface{}) Operator {
+	fmt.Printf("%+v", params)
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -28,22 +31,16 @@ func regexpSelect(input Flow, params map[string]interface{}) Flow {
 		logger.Fatalf("selector must be specified using slice of string")
 	}
 
-	outData := make(chan interface{})
-
-	go func() {
-		for newInput := range input.Data {
+	return func(in <-chan interface{}, out chan<- interface{}) {
+		for newInput := range in {
 			block, ok := newInput.(string)
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
-			for _, selector := range selectors {
-				matches := stringutil.RegexpMatchAll(block, selector)
-				block = strings.Join(matches, "")
-			}
-			outData <- block
-		}
-		close(outData)
-	}()
 
-	return Flow{outData, input.Control}
+			doc := html.NewDocument(block)
+			doc.Select(selectors...)
+			out <- doc.HTML()
+		}
+	}
 }
