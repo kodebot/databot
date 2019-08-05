@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"github.com/kodebot/databot/pkg/html"
@@ -10,7 +10,7 @@ func init() {
 	register("css:remove", cssRemove)
 }
 
-func cssRemove(params map[string]interface{}) Operator {
+func cssRemove(params map[string]interface{}) Processor {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"reflect"
@@ -10,7 +10,7 @@ func init() {
 	register("split", split)
 }
 
-func split(params map[string]interface{}) Operator {
+func split(params map[string]interface{}) Processor {
 	return func(in <-chan interface{}, out chan<- interface{}) {
 		for newInput := range in {
 			object := reflect.ValueOf(newInput)

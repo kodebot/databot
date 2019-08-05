@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"github.com/kodebot/databot/pkg/logger"
@@ -9,7 +9,7 @@ func init() {
 	register("regexp:selectEach", regexpSelectEach)
 }
 
-func regexpSelectEach(params map[string]interface{}) Operator {
+func regexpSelectEach(params map[string]interface{}) Processor {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

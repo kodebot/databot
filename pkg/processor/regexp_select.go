@@ -1,20 +1,17 @@
-package pipeline
+package processor
 
 import (
-	"fmt"
+	"strings"
 
-	"github.com/kodebot/databot/pkg/stringutil"
-
-	"github.com/kodebot/databot/pkg/html"
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("css:select", cssSelect)
+	register("regexp:select", regexpSelect)
 }
 
-func cssSelect(params map[string]interface{}) Operator {
-	fmt.Printf("%+v", params)
+func regexpSelect(params map[string]interface{}) Processor {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -37,10 +34,11 @@ func cssSelect(params map[string]interface{}) Operator {
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
-
-			doc := html.NewDocument(block)
-			doc.Select(selectors...)
-			out <- doc.HTML()
+			for _, selector := range selectors {
+				matches := stringutil.RegexpMatchAll(block, selector)
+				block = strings.Join(matches, "")
+			}
+			out <- block
 		}
 	}
 }

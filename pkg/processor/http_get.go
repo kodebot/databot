@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func init() {
 	register("http:get", httpGet)
 }
 
-func httpGet(params map[string]interface{}) Operator {
+func httpGet(params map[string]interface{}) Processor {
 	fmt.Printf("%+v", params)
 	useCacheParam := params["useCache"]
 	useCache := false

@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"strings"
@@ -11,7 +11,7 @@ func init() {
 	register("regexp:remove", regexpRemove)
 }
 
-func regexpRemove(params map[string]interface{}) Operator {
+func regexpRemove(params map[string]interface{}) Processor {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

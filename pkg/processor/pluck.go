@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"reflect"
@@ -10,7 +10,7 @@ func init() {
 	register("pluck", pluck)
 }
 
-func pluck(params map[string]interface{}) Operator {
+func pluck(params map[string]interface{}) Processor {
 
 	fieldParam := params["field"]
 

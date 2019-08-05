@@ -1,4 +1,4 @@
-package pipeline
+package processor
 
 import (
 	"github.com/kodebot/databot/pkg/logger"
@@ -8,7 +8,7 @@ func init() {
 	register("combine", combine)
 }
 
-func combine(params map[string]interface{}) Operator {
+func combine(params map[string]interface{}) Processor {
 	return func(in <-chan interface{}, out chan<- interface{}) {
 		outputSlice := []interface{}{}
 		for newInput := range in {
