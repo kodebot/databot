@@ -47,7 +47,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"']
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', '<a.*கருத்துகள்.*?</a>', '<a.*கருத்தைப்.*?</a>', '<div.*எழுத்தின் அளவு.*?</div>']
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
