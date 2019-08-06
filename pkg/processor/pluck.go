@@ -30,7 +30,20 @@ func pluck(params map[string]interface{}) Processor {
 			if !fieldData.IsValid() {
 				logger.Fatalf("the field %s doesn't exist in the input", field)
 			}
-			out <- fieldData.Interface()
+
+			object := reflect.ValueOf(fieldData.Interface())
+			if object.Kind() == reflect.Slice || object.Kind() == reflect.Array {
+				slice := []interface{}{}
+				if object.Len() > 0 {
+					for i := 0; i < object.Len(); i++ {
+						slice = append(slice, object.Index(i).Interface())
+					}
+				}
+
+				out <- slice
+			} else {
+				out <- fieldData.Interface()
+			}
 		}
 	}
 }

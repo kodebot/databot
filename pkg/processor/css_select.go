@@ -40,6 +40,7 @@ func cssSelect(params map[string]interface{}) Processor {
 
 			doc := html.NewDocument(block)
 			doc.Select(selectors...)
+			doc.RemoveNonContent()
 			out <- doc.HTML()
 		}
 	}

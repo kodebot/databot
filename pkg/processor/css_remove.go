@@ -36,6 +36,7 @@ func cssRemove(params map[string]interface{}) Processor {
 
 			doc := html.NewDocument(block)
 			doc.Remove(selectors...)
+			doc.RemoveNonContent()
 			out <- doc.HTML()
 		}
 	}

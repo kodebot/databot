@@ -34,6 +34,7 @@ func cssSelectEach(params map[string]interface{}) Processor {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
 			doc := html.NewDocument(block)
+			doc.RemoveNonContent()
 			out <- doc.HTMLEach(selectors...)
 		}
 	}

@@ -27,6 +27,7 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 		close(in)
 	}()
 	records := <-out
+
 	collected := collect(records.([]interface{}), spec)
 	return collected
 }

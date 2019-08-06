@@ -19,7 +19,7 @@ func Test(t *testing.T) {
 	confBuilder.Build()
 
 	feedSpecReader := toml.FeedSpecReader{}
-	feed := feedSpecReader.ReadFile("feedconfig1.toml")
+	feed := feedSpecReader.ReadFile("dinamalar-politics.toml")
 
 	var recCreator databot.RecordCreator
 	recCreator = record.NewRecordCreator()
