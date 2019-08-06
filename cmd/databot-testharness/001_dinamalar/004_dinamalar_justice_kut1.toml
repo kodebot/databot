@@ -1,9 +1,9 @@
-name = "dinamalar-general"
-desc = "dinamalar general feed"
+name = "dinamalar-justice-kut1"
+desc = "dinamalar justice feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.dinamalar.com/?cat=pot1"
+    sourceUri ="http://rss.dinamalar.com/?cat=kut1"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -39,7 +39,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
-                    "selectors" = ["script", "style", "#colour-selector"]
+                    "selectors" = ["script", "style", "#colour-selector", "#st-1"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]

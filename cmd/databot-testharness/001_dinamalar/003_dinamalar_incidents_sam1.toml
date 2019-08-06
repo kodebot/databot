@@ -1,9 +1,9 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
+name = "dinamalar-incidents-sam1"
+desc = "dinamalar incidents feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+    sourceUri ="http://rss.dinamalar.com/?cat=sam1"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -39,7 +39,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
-                    "selectors" = ["script", "style", "#colour-selector"]
+                    "selectors" = ["script", "style", "#colour-selector", "#st-1"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
@@ -83,7 +83,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "India"
+                    "value" = "Tamilnadu"
 
      [[record.field]]
         name= "SourceUrl"
