@@ -1,0 +1,93 @@
+name = "dinamalar-cinema"
+desc = "dinamalar cinema feed"
+group = "dinamalar"
+schedule = "every 5 minutes"
+[record]
+    sourceUri ="https://cinema.dinamalar.com/rss.php"
+    [[record.preprocessor]]
+        name="http:get"
+            [record.preprocessor.params]
+                "useCache" = false
+    [[record.preprocessor]]
+        name="toRssFeed"
+    [[record.preprocessor]]
+        name="pluck"
+            [record.preprocessor.params]
+                "field" = "Items"
+
+    [[record.field]]
+        name= "Title"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Title"
+
+    [[record.field]]
+        name= "Content"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["#selDetail"]
+        [[record.field.processor]]
+            name="css:remove"
+                [record.field.processor.params]
+                    "selectors" = ["script", "style"]
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["body"]
+        [[record.field.processor]]
+            name="regexp:remove"
+                [record.field.processor.params]
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', '<a.*?கருத்துகள்.*?</a>','<a.*?கருத்தைப்.*?</a>', '<\s*div[^>]*>[\s\w]*எழுத்தின் அளவு.*?<\s*/\s*div>', '<img[^>]+src=".*?whatsapp.png"/>', '<div\s*>\s*\d{1,2}.*?</div>']
+        [[record.field.processor]]
+            name="regexp:remove"
+                [record.field.processor.params]
+                    "selectors" = ["Advertisement"]
+
+     [[record.field]]
+        name= "PublishedDate"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+        [[record.field.processor]]
+            name="regexp:select"
+                [record.field.processor.params]
+                    "selectors" = ['article:published_time.*content="(?P<data>[^"]+)']
+    [[record.field]]
+        name= "ThumbImageUrl"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Description"
+        [[record.field.processor]]
+            name="regexp:select"
+                [record.field.processor.params]
+                    "selectors" = ["<img[^>]+src='(?P<data>[^']+)"]
+
+    [[record.field]]
+        name= "Category"
+        [[record.field.processor]]
+            name="constant"
+                [record.field.processor.params]
+                    "value" = "Others"
+
+     [[record.field]]
+        name= "SourceUrl"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"

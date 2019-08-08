@@ -47,7 +47,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', '<a.*?கருத்துகள்.*?</a>','<a.*?கருத்தைப்.*?</a>', '<\s*div[^>]*>[\s\w]*எழுத்தின் அளவு.*?<\s*/\s*div>']
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', '<a.*?கருத்துகள்.*?</a>','<a.*?கருத்தைப்.*?</a>', '<\s*div[^>]*>[\s\w]*எழுத்தின் அளவு.*?<\s*/\s*div>', '<img[^>]+src=".*?whatsapp.png"/>', '<div\s*>\s*\d{1,2}.*?</div>']
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
