@@ -34,6 +34,10 @@ func httpGet(params map[string]interface{}) Processor {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", url)
 			}
 
+			if strings.HasPrefix(url, "//") {
+				url = "http:" + url
+			}
+
 			var docReader html.DocumentReader
 			if useCache {
 				docReader = html.NewCachedDocumentReader(url, cache.Current())

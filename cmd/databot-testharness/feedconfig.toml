@@ -1,9 +1,9 @@
-name = "dinamalar-cinema"
-desc = "dinamalar cinema feed"
+name = "dinamalar-cricket"
+desc = "dinamalar cricket feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="https://cinema.dinamalar.com/rss.php"
+    sourceUri ="https://sports.dinamalar.com/rss/Cricket"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -33,25 +33,13 @@ schedule = "every 5 minutes"
                 [record.field.processor.params]
                     "useCache" = true
         [[record.field.processor]]
-            name="css:select"
-                [record.field.processor.params]
-                    "selectors" = ["#selDetail"]
-        [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
                     "selectors" = ["script", "style"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
-                    "selectors" = ["body"]
-        [[record.field.processor]]
-            name="regexp:remove"
-                [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', '<a.*?கருத்துகள்.*?</a>','<a.*?கருத்தைப்.*?</a>', '<\s*div[^>]*>[\s\w]*எழுத்தின் அளவு.*?<\s*/\s*div>', '<img[^>]+src=".*?whatsapp.png"/>', '<div\s*>\s*\d{1,2}.*?</div>']
-        [[record.field.processor]]
-            name="regexp:remove"
-                [record.field.processor.params]
-                    "selectors" = ["Advertisement"]
+                    "selectors" = ["body > div.midbg.float-fix > div.left-box-container.float-fix"]
 
      [[record.field]]
         name= "PublishedDate"
@@ -83,7 +71,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "Others"
+                    "value" = "Sports"
 
      [[record.field]]
         name= "SourceUrl"
