@@ -113,6 +113,7 @@ func RegexpReplaceAll(val string, expr string, new string) string {
 		}
 
 		if requiredMatchIndex > -1 {
+			
 			matches := re.FindAllStringSubmatch(val, -1)
 			if matches == nil || len(matches) < 1 {
 				logger.Warnf("no match found.")
