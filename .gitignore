@@ -5,3 +5,4 @@ datafeed/test_data/testharness/output
 .DS_Store
 */**/*.test
 */**/temp.*
+*/**/result.txt

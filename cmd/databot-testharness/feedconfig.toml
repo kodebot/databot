@@ -21,6 +21,10 @@ schedule = "every 5 minutes"
             name="pluck"
                 [record.field.processor.params]
                     "field" = "Title"
+        [[record.field.processor]]
+            name="regexp:remove"
+                [record.field.processor.params]
+                    "selectors" = [' \|.*']
 
     [[record.field]]
         name= "Content"
@@ -33,13 +37,13 @@ schedule = "every 5 minutes"
                 [record.field.processor.params]
                     "useCache" = true
         [[record.field.processor]]
-            name="css:remove"
-                [record.field.processor.params]
-                    "selectors" = ["script", "style"]
-        [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
                     "selectors" = ["div.article-left-sub-cat1 > div > span > img", "#articleresultbody"]
+        [[record.field.processor]]
+            name="css:remove"
+                [record.field.processor.params]
+                    "selectors" = ["script", "style"]
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
@@ -47,7 +51,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
-                    "selectors" = ["*"]
+                    "selectors" = ["body"]
 
      [[record.field]]
         name= "PublishedDate"
@@ -62,17 +66,25 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="regexp:select"
                 [record.field.processor.params]
-                    "selectors" = ['article:published_time.*content="(?P<data>[^"]+)']
+                    "selectors" = ['datePublished.*content="(?P<data>[^"]+)']
     [[record.field]]
         name= "ThumbImageUrl"
         [[record.field.processor]]
             name="pluck"
                 [record.field.processor.params]
-                    "field" = "Description"
+                    "field" = "Link"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["div.article-left-sub-cat1 > div > span > img"]
         [[record.field.processor]]
             name="regexp:select"
                 [record.field.processor.params]
-                    "selectors" = ["<img[^>]+src='(?P<data>[^']+)"]
+                    "selectors" = ['<img[^>]+src="(?P<data>[^"]+)']
 
     [[record.field]]
         name= "Category"
