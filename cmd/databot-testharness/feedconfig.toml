@@ -39,11 +39,15 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
-                    "selectors" = ["body > div.midbg.float-fix > div.left-box-container.float-fix > div > div.articlesub-cat-mid-rp"]
+                    "selectors" = ["div.article-left-sub-cat1 > div > span > img", "#articleresultbody"]
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"']
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', 'Advertisement']
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["*"]
 
      [[record.field]]
         name= "PublishedDate"
