@@ -16,9 +16,14 @@ func regexpReplace(params map[string]interface{}) Processor {
 		logger.Fatalf("no old parameter found.")
 	}
 
-	old, ok := oldParam.(string)
+	oldVals, ok := oldParam.([]interface{})
 	if !ok {
-		logger.Fatalf("old must be string")
+		logger.Fatalf("old must be specified using slice")
+	}
+
+	olds, ok := stringutil.ToStringSlice(oldVals)
+	if !ok {
+		logger.Fatalf("old must be specified using slice of string")
 	}
 
 	newParam := params["new"]
@@ -39,8 +44,10 @@ func regexpReplace(params map[string]interface{}) Processor {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
 
-			result := stringutil.RegexpReplaceAll(block, old, new)
-			out <- result
+			for _, old := range olds {
+				block = stringutil.RegexpReplaceAll(block, old, new)
+			}
+			out <- block
 		}
 	}
 }

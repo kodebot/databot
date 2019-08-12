@@ -31,12 +31,12 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = "3939 "
+                    "old" = ["3939 "]
                     "new" = "&#39;&#39;"
         [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = "39 "
+                    "old" = ["39 "]
                     "new" = "&#39;"
                     
      [[record.field]]

@@ -38,7 +38,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = '\+00:00'
+                    "old" = ['\+00:00']
                     "new" = ""
         [[record.field.processor]]
             name="date:parse"
