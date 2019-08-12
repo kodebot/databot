@@ -9,7 +9,7 @@ schedule = "every 5 minutes"
             [record.preprocessor.params]
                 "useCache" = false
     [[record.preprocessor]]
-        name="toRssFeed"
+        name="rssatom:parse"
     [[record.preprocessor]]
         name="pluck"
             [record.preprocessor.params]
@@ -50,7 +50,7 @@ schedule = "every 5 minutes"
                 [record.field.processor.params]
                     "useCache" = true
         [[record.field.processor]]
-            name="regexp:select"
+            name="regexp:selectOne"
                 [record.field.processor.params]
                     "selectors" = ['Published:<time.*?dateTime="(?P<data>[^"]+)']
                     
@@ -61,7 +61,7 @@ schedule = "every 5 minutes"
                 [record.field.processor.params]
                     "field" = "Description"
         [[record.field.processor]]
-            name="regexp:select"
+            name="regexp:selectOne"
                 [record.field.processor.params]
                     "selectors" = ['<img[^>]+src="(?P<data>[^"]+)']
 

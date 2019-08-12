@@ -1,17 +1,15 @@
 package processor
 
 import (
-	"strings"
-
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
-	register("regexp:select", regexpSelect)
+	register("regexp:selectOne", regexpSelectOne)
 }
 
-func regexpSelect(params map[string]interface{}) Processor {
+func regexpSelectOne(params map[string]interface{}) Processor {
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {
@@ -34,11 +32,15 @@ func regexpSelect(params map[string]interface{}) Processor {
 			if !ok {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
+			result := ""
 			for _, selector := range selectors {
-				matches := stringutil.RegexpMatchAll(block, selector)
-				block = strings.Join(matches, "")
+				match := stringutil.RegexpMatch(block, selector)
+				if match != "" {
+					result = match
+					break
+				}
 			}
-			out <- block
+			out <- result
 		}
 	}
 }

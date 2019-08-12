@@ -7,10 +7,10 @@ import (
 )
 
 func init() {
-	register("toRssFeed", toRssFeed)
+	register("rssatom:parse", parseRssAtomFeed)
 }
 
-func toRssFeed(params map[string]interface{}) Processor {
+func parseRssAtomFeed(params map[string]interface{}) Processor {
 	return func(in <-chan interface{}, out chan<- interface{}) {
 		for newInput := range in {
 			block, ok := newInput.(string)
