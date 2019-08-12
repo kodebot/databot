@@ -1,9 +1,9 @@
-name = "puthiyathalaimurai-viral-video"
-desc = "puthiyathalaimurai viral video feed"
+name = "puthiyathalaimurai-sports"
+desc = "puthiyathalaimurai sports feed"
 group = "puthiyathalaimurai"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://feeds.feedburner.com/Puthiyathalaimurai_Viral_Videos?format=xml"
+    sourceUri ="http://feeds.feedburner.com/Puthiyathalaimurai_Sports_News?format=xml"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -62,7 +62,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "Others"
+                    "value" = "Sports"
 
      [[record.field]]
         name= "SourceUrl"
