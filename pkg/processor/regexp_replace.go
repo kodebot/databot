@@ -1,8 +1,6 @@
 package processor
 
 import (
-	"strings"
-
 	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/stringutil"
 )
@@ -41,9 +39,8 @@ func regexpReplace(params map[string]interface{}) Processor {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
 
-			match := stringutil.RegexpMatch(block, old)
-			block = strings.Replace(block, match, new, -1)
-			out <- block
+			result := stringutil.RegexpReplaceAll(block, old, new)
+			out <- result
 		}
 	}
 }

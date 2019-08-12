@@ -1,9 +1,9 @@
-name = "vikadan-politics"
-desc = "vikadan politics feed"
+name = "vikadan-sports"
+desc = "vikadan sports feed"
 group = "vikadan"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.vikatan.com/feeds/politics_news.rss"
+    sourceUri ="http://rss.vikatan.com/feeds/sports_news.rss"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -70,7 +70,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "Entertainment"
+                    "value" = "Sports"
 
      [[record.field]]
         name= "SourceUrl"
