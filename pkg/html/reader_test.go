@@ -26,7 +26,7 @@ func newTestDocumentReader(url string, client *testHTTPClient) DocumentReader {
 
 func newTestCachedDocumentReader(url string, client *testHTTPClient, cacheManager *cache.Manager) DocumentReader {
 	docReader := documentReader{client, url}
-	return &cachedDocumentReader{&docReader, cacheManager}
+	return &cachedDocumentReader{&docReader, *cacheManager}
 }
 
 func TestReadAsStringWithoutCache(t *testing.T) {

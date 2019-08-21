@@ -1,26 +1,7 @@
 package databot
 
-// FieldSpec represents a field in a record along with the collector and transformers linked to it
+// FieldSpec represents a field in a record along with the processors that are applied
 type FieldSpec struct {
-	Name             string
-	CollectorSpec    *FieldCollectorSpec     `toml:"collector"`
-	TransformerSpecs []*FieldTransformerSpec `toml:"transformer"`
+	Name           string
+	ProcessorSpecs []*ProcessorSpec `toml:"processor"`
 }
-
-// FieldCollectorSpec represents collector config
-type FieldCollectorSpec struct {
-	Type   FieldCollectorType
-	Params map[string]interface{}
-}
-
-// FieldCollectorType provides available collectors
-type FieldCollectorType string
-
-// FieldTransformerSpec represents transformer config
-type FieldTransformerSpec struct {
-	Type   FieldTransformerType
-	Params map[string]interface{}
-}
-
-// FieldTransformerType provides available transformer
-type FieldTransformerType string

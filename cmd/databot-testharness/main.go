@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -9,8 +8,7 @@ import (
 
 	"github.com/kodebot/databot/pkg/config"
 	"github.com/kodebot/databot/pkg/databot"
-	"github.com/kodebot/databot/pkg/reccollector"
-	"github.com/kodebot/databot/pkg/rssatom"
+	"github.com/kodebot/databot/pkg/record"
 	"github.com/kodebot/databot/pkg/toml"
 )
 
@@ -29,22 +27,15 @@ func previewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	config := r.FormValue("config")
+
 	feedSpecReader := toml.FeedSpecReader{}
 	feed := feedSpecReader.Read(config)
 
 	var recCreator databot.RecordCreator
-	switch feed.RecordSpec.CollectorSpec.Type {
-	case reccollector.RssAtom:
-		recCreator = rssatom.NewRecordCreator()
-	case reccollector.HTMLSingle:
-		panic(errors.New("HTMLSingle record collector is not implemented"))
-	case reccollector.HTML:
-		panic(errors.New("HTMLMultiple record collector is not implemented"))
-	default:
-		panic(errors.New("Unsupported record collector"))
-	}
+	recCreator = record.NewRecordCreator()
+	rspec := feed.RecordSpec
+	recs := recCreator.Create(rspec)
 
-	recs := recCreator.Create(feed.RecordSpec)
 	resp := previewResp{config, recs}
 	t.Execute(w, resp)
 }
