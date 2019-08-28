@@ -1,7 +1,7 @@
 name = "dinamalar-world"
 desc = "dinamalar world feed"
 group = "dinamalar"
-schedule = "every 5 minutes"
+schedule = "@every 5m"
 [record]
     sourceUri ="http://rss.dinamalar.com/?cat=INL1"
     [[record.preprocessor]]

@@ -1,7 +1,7 @@
 name = "dinamalar-politics"
 desc = "dinamalar politics feed"
 group = "dinamalar"
-schedule = "every 5 minutes"
+schedule = "@every 5m"
 [record]
     sourceUri ="http://rss.dinamalar.com/?cat=ara1"
     [[record.preprocessor]]

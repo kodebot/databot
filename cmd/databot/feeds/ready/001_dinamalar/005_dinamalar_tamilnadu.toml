@@ -1,7 +1,7 @@
 name = "dinamalar-tamilnadu"
 desc = "dinamalar tamilnadu feed"
 group = "dinamalar"
-schedule = "every 5 minutes"
+schedule = "@every 5m"
 [record]
     sourceUri ="http://rss.dinamalar.com/tamilnadunews.asp"
     [[record.preprocessor]]

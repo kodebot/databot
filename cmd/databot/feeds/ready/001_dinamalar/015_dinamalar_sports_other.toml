@@ -1,7 +1,7 @@
 name = "dinamalar-other-sports"
 desc = "dinamalar other sports feed"
 group = "dinamalar"
-schedule = "every 5 minutes"
+schedule = "@every 5m"
 [record]
     sourceUri ="https://sports.dinamalar.com/rss/other-sports"
     [[record.preprocessor]]

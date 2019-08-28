@@ -34,7 +34,7 @@ func NewAdapter() dbcache.Adapter {
 func (a *mongoDBAdapter) Connect(conStr string) {
 
 	if dbClient != nil {
-		logger.Fatalf("connection is already created. only one connection to just one database is supported")
+		return // connection is already created
 	}
 
 	var err error

@@ -1,7 +1,7 @@
 name = "dinamalar-cinema"
 desc = "dinamalar cinema feed"
 group = "dinamalar"
-schedule = "every 5 minutes"
+schedule = "@every 5m"
 [record]
     sourceUri ="https://cinema.dinamalar.com/rss.php"
     [[record.preprocessor]]

@@ -1,7 +1,7 @@
 name = "dinamalar-justice-kut1"
 desc = "dinamalar justice feed"
 group = "dinamalar"
-schedule = "every 5 minutes"
+schedule = "@every 5m"
 [record]
     sourceUri ="http://rss.dinamalar.com/?cat=kut1"
     [[record.preprocessor]]
