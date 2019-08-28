@@ -1,9 +1,9 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
+name = "dinamalar-delhi"
+desc = "dinamalar delhi feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+    sourceUri ="http://rss.dinamalar.com/Delhinews.asp"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"os"
 	"path/filepath"
@@ -11,8 +10,7 @@ import (
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/exporter"
 	"github.com/kodebot/databot/pkg/logger"
-	"github.com/kodebot/databot/pkg/reccollector"
-	"github.com/kodebot/databot/pkg/rssatom"
+	"github.com/kodebot/databot/pkg/record"
 	"github.com/kodebot/databot/pkg/toml"
 )
 
@@ -36,6 +34,7 @@ func main() {
 }
 
 func schedule() {
+
 	ticker := time.NewTicker(30 * time.Minute)
 	quit := make(chan bool)
 
@@ -72,18 +71,10 @@ func processFeeds() {
 		feed := feedSpecReader.ReadFile(path)
 
 		var recCreator databot.RecordCreator
-		switch feed.RecordSpec.CollectorSpec.Type {
-		case reccollector.RssAtom:
-			recCreator = rssatom.NewRecordCreator()
-		case reccollector.HTMLSingle:
-			panic(errors.New("HTMLSingle record collector is not implemented"))
-		case reccollector.HTML:
-			panic(errors.New("HTMLMultiple record collector is not implemented"))
-		default:
-			panic(errors.New("Unsupported record collector"))
-		}
+		recCreator = record.NewRecordCreator()
+		rspec := feed.RecordSpec
+		recs := recCreator.Create(rspec)
 
-		recs := recCreator.Create(feed.RecordSpec)
 		exporter.ExportToMongoDB(recs, config.Current().ExportToDBConStr())
 		logger.Infof("feed spec %s is processed successfully", path)
 		return nil

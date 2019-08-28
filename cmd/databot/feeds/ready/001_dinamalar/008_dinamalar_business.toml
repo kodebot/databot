@@ -1,9 +1,9 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
+name = "dinamalar-business"
+desc = "dinamalar business feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+    sourceUri ="http://rss.dinamalar.com/?cat=business1"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -35,11 +35,11 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
-                    "selectors" = ["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
+                    "selectors" = ["#txt1"]
         [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
-                    "selectors" = ["script", "style", "#colour-selector", "#st-1"]
+                    "selectors" = ["script", "style"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
@@ -83,7 +83,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "India"
+                    "value" = "Others"
 
      [[record.field]]
         name= "SourceUrl"

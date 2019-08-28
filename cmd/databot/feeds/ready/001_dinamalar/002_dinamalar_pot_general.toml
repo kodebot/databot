@@ -1,9 +1,9 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
+name = "dinamalar-general"
+desc = "dinamalar general feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+    sourceUri ="http://rss.dinamalar.com/?cat=pot1"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -83,7 +83,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "India"
+                    "value" = "Tamilnadu"
 
      [[record.field]]
         name= "SourceUrl"

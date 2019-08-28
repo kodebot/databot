@@ -1,9 +1,9 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
+name = "dinamalar-cinema"
+desc = "dinamalar cinema feed"
 group = "dinamalar"
 schedule = "every 5 minutes"
 [record]
-    sourceUri ="http://rss.dinamalar.com/?cat=ara1"
+    sourceUri ="https://cinema.dinamalar.com/rss.php"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -35,11 +35,11 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
-                    "selectors" = ["#mvp-content-wrap", "#columns > div:nth-child(8) > div.row > div.col-sm-12.col-md-8"]
+                    "selectors" = ["#selDetail"]
         [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
-                    "selectors" = ["script", "style", "#colour-selector", "#st-1"]
+                    "selectors" = ["script", "style"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
@@ -47,7 +47,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"']
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', '<a.*?கருத்துகள்.*?</a>','<a.*?கருத்தைப்.*?</a>', '<\s*div[^>]*>[\s\w]*எழுத்தின் அளவு.*?<\s*/\s*div>', '<img[^>]+src=".*?whatsapp.png"/>', '<div\s*>\s*\d{1,2}.*?</div>']
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
@@ -83,7 +83,7 @@ schedule = "every 5 minutes"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "India"
+                    "value" = "Entertainment"
 
      [[record.field]]
         name= "SourceUrl"
