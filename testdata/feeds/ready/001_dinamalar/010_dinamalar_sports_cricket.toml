@@ -1,0 +1,112 @@
+name = "dinamalar-cricket"
+desc = "dinamalar cricket feed"
+schedule = "@every 1h"
+[record]
+    sourceUri ="https://sports.dinamalar.com/rss/Cricket"
+    [[record.preprocessor]]
+        name="http:get"
+            [record.preprocessor.params]
+                "useCache" = false
+    [[record.preprocessor]]
+        name="rssatom:parse"
+    [[record.preprocessor]]
+        name="pluck"
+            [record.preprocessor.params]
+                "field" = "Items"
+
+    [[record.field]]
+        name= "Title"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Title"
+        [[record.field.processor]]
+            name="regexp:remove"
+                [record.field.processor.params]
+                    "selectors" = [' \|.*']
+
+    [[record.field]]
+        name= "Content"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["div.article-left-sub-cat1 > div > span > img", "#articleresultbody"]
+        [[record.field.processor]]
+            name="css:remove"
+                [record.field.processor.params]
+                    "selectors" = ["script", "style"]
+        [[record.field.processor]]
+            name="regexp:remove"
+                [record.field.processor.params]
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"', 'Advertisement']
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["body"]
+
+     [[record.field]]
+        name= "PublishedDate"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+        [[record.field.processor]]
+            name="regexp:selectOne"
+                [record.field.processor.params]
+                    "selectors" = ['datePublished.*content="(?P<data>[^"]+)']
+    [[record.field]]
+        name= "ThumbImageUrl"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"
+        [[record.field.processor]]
+            name="http:get"
+                [record.field.processor.params]
+                    "useCache" = true
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["div.article-left-sub-cat1 > div > span > img"]
+        [[record.field.processor]]
+            name="regexp:selectOne"
+                [record.field.processor.params]
+                    "selectors" = ['<img[^>]+src="(?P<data>[^"]+)']
+
+    [[record.field]]
+        name= "Category"
+        [[record.field.processor]]
+            name="constant"
+                [record.field.processor.params]
+                    "value" = "Sports"
+
+     [[record.field]]
+        name= "SourceUrl"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Link"
+
+    [[record.field]]
+        name= "Group"
+        [[record.field.processor]]
+            name="constant"
+                [record.field.processor.params]
+                    "value" = "dinamalar"
+
+    [[record.field]]
+        name= "ProcessedAt"
+        [[record.field.processor]]
+            name="utcnow"

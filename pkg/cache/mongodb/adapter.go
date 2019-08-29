@@ -34,7 +34,7 @@ func NewAdapter() dbcache.Adapter {
 func (a *mongoDBAdapter) Connect(conStr string) {
 
 	if dbClient != nil {
-		logger.Fatalf("connection is already created. only one connection to just one database is supported")
+		return // connection is already created
 	}
 
 	var err error
@@ -67,7 +67,7 @@ func (a *mongoDBAdapter) Get(key string) interface{} {
 	var doc document
 	err := findOne(bson.M{"key": key}, &doc)
 	if err != nil {
-		logger.Infof("error when reading from mongodb backed cache. error: %s", err.Error())
+		logger.Tracef("error when reading from mongodb backed cache. error: %s", err.Error())
 		return nil
 	}
 	// todo: this hits the database twice, find a way to improve this situation

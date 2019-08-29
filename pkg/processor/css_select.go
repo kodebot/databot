@@ -1,8 +1,6 @@
 package processor
 
 import (
-	"fmt"
-
 	"github.com/kodebot/databot/pkg/stringutil"
 
 	"github.com/kodebot/databot/pkg/html"
@@ -14,7 +12,6 @@ func init() {
 }
 
 func cssSelect(params map[string]interface{}) Processor {
-	fmt.Printf("%+v", params)
 	selectorsParam := params["selectors"]
 
 	if selectorsParam == nil {

@@ -1,61 +1,42 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"os"
 	"path/filepath"
-	"time"
+	"strings"
 
 	"github.com/kodebot/databot/pkg/config"
 	"github.com/kodebot/databot/pkg/databot"
 	"github.com/kodebot/databot/pkg/exporter"
 	"github.com/kodebot/databot/pkg/logger"
-	"github.com/kodebot/databot/pkg/reccollector"
-	"github.com/kodebot/databot/pkg/rssatom"
+	"github.com/kodebot/databot/pkg/record"
 	"github.com/kodebot/databot/pkg/toml"
+	"github.com/robfig/cron"
 )
 
 func main() {
 	// todo: keep all feed specs in database
-	// todo: change this to be scheduled job
 
 	runonce := flag.Bool("runonce", false, "processes the feeds once outside the schedule and exits")
+	feedConfigPath := flag.String("feedconfigpath", "./feeds/ready/", "specifies the location of config files to process. The processes all the config files in the specified directory and its subdirectories recursively.")
+
+	if !strings.HasSuffix(*feedConfigPath, "/") {
+		x := (*feedConfigPath) + "/"
+		feedConfigPath = &x
+	}
+
 	flag.Parse()
 
 	confBuilder := config.NewBuilder()
 	confBuilder.UseEnv()
 	confBuilder.Build()
-	if *runonce {
-		logger.Infof("processing feeds only once outside the schedule")
-		processFeeds()
-	} else {
-		logger.Infof("scheduling feeds for processing")
-		schedule()
-	}
+
+	processFeeds(*runonce, *feedConfigPath)
 }
 
-func schedule() {
-	ticker := time.NewTicker(30 * time.Minute)
-	quit := make(chan bool)
-
-	for {
-		select {
-		case <-ticker.C:
-			print("process the files")
-
-		case shouldQuit := <-quit:
-			if shouldQuit {
-				break
-			}
-		}
-	}
-}
-
-func processFeeds() {
-
-	feedConfigPath := "./feeds/ready/"
-
+func processFeeds(runonce bool, feedConfigPath string) {
+	c := cron.New()
 	filepath.Walk(feedConfigPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			logger.Errorf("error while processing feed %s. error: %s", path, err.Error())
@@ -70,23 +51,39 @@ func processFeeds() {
 
 		feedSpecReader := toml.FeedSpecReader{}
 		feed := feedSpecReader.ReadFile(path)
-
 		var recCreator databot.RecordCreator
-		switch feed.RecordSpec.CollectorSpec.Type {
-		case reccollector.RssAtom:
-			recCreator = rssatom.NewRecordCreator()
-		case reccollector.HTMLSingle:
-			panic(errors.New("HTMLSingle record collector is not implemented"))
-		case reccollector.HTML:
-			panic(errors.New("HTMLMultiple record collector is not implemented"))
-		default:
-			panic(errors.New("Unsupported record collector"))
-		}
+		recCreator = record.NewRecordCreator()
 
-		recs := recCreator.Create(feed.RecordSpec)
-		exporter.ExportToMongoDB(recs, config.Current().ExportToDBConStr())
-		logger.Infof("feed spec %s is processed successfully", path)
+		if runonce {
+			processFeed(feed, recCreator)
+			logger.Infof("feed spec %s is processed successfully", path)
+		} else {
+			c.AddFunc(feed.Schedule, func() { processFeed(feed, recCreator) })
+			logger.Infof("feed spec %s is scheduled successfully", path)
+		}
 		return nil
 	})
-	logger.Infof("feed specs processed successfully")
+
+	if !runonce {
+		logger.Infof("starting feed schedules")
+		c.Start()
+		logger.Infof("started feed schedules successfully")
+		quit := make(chan bool)
+		for {
+			select {
+			case shouldQuit := <-quit:
+				if shouldQuit {
+					break
+				}
+			}
+		}
+	} else {
+		logger.Infof("all feed specs processed successfully")
+	}
+}
+
+func processFeed(feedSpec databot.FeedSpec, recCreator databot.RecordCreator) {
+	rspec := feedSpec.RecordSpec
+	recs := recCreator.Create(rspec)
+	exporter.ExportToMongoDB(recs, config.Current().ExportToDBConStr())
 }

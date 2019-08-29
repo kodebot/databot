@@ -4,7 +4,6 @@ package databot
 type FeedSpec struct {
 	Name       string
 	Desc       string
-	Group      string
 	Schedule   string
 	RecordSpec *RecordSpec `toml:"record"`
 }

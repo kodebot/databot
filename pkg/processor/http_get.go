@@ -17,10 +17,8 @@ func init() {
 }
 
 func httpGet(params map[string]interface{}) Processor {
-	fmt.Printf("%+v", params)
 	useCacheParam := params["useCache"]
 	useCache := false
-	fmt.Printf("%+v", useCacheParam)
 	if useCacheParam != nil {
 		if _, ok := useCacheParam.(bool); ok {
 			useCache = true
