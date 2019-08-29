@@ -33,12 +33,12 @@ func RegexpMatchAll(val string, expr string) []string {
 		if requiredMatchIndex > -1 {
 			matches := re.FindAllStringSubmatch(val, -1)
 			if matches == nil || len(matches) < 1 {
-				logger.Warnf("no match found.")
+				logger.Tracef("no match found. str: %s, expr: %s", val, expr)
 			}
 
 			for _, m := range matches {
 				if len(m) < requiredMatchIndex+1 {
-					logger.Warnf("no match found.")
+					logger.Tracef("no match found. str: %s, expr: %s", val, expr)
 					return result
 				}
 				result = append(result, m[requiredMatchIndex])
@@ -77,7 +77,7 @@ func RegexpMatch(val string, expr string) string {
 			matches := re.FindStringSubmatch(val)
 
 			if len(matches) < requiredMatchIndex+1 {
-				logger.Warnf("no match found.")
+				logger.Tracef("no match found. str: %s, expr: %s", val, expr)
 				return ""
 			}
 			return matches[requiredMatchIndex]

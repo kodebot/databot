@@ -144,3 +144,15 @@ schedule = "@every 1h"
             name="regexp:selectOne"
                 [record.field.processor.params]
                     "selectors" = ['(?P<data>[^?]+)']
+
+    [[record.field]]
+        name= "Group"
+        [[record.field.processor]]
+            name="constant"
+                [record.field.processor.params]
+                    "value" = "oneindiatamil"
+
+    [[record.field]]
+        name= "ProcessedAt"
+        [[record.field.processor]]
+            name="utcnow"

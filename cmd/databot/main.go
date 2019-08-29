@@ -4,6 +4,7 @@ import (
 	"flag"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/kodebot/databot/pkg/config"
 	"github.com/kodebot/databot/pkg/databot"
@@ -16,20 +17,25 @@ import (
 
 func main() {
 	// todo: keep all feed specs in database
-	// todo: change this to be scheduled job
 
 	runonce := flag.Bool("runonce", false, "processes the feeds once outside the schedule and exits")
+	feedConfigPath := flag.String("feedconfigpath", "./feeds/ready/", "specifies the location of config files to process. The processes all the config files in the specified directory and its subdirectories recursively.")
+
+	if !strings.HasSuffix(*feedConfigPath, "/") {
+		x := (*feedConfigPath) + "/"
+		feedConfigPath = &x
+	}
+
 	flag.Parse()
 
 	confBuilder := config.NewBuilder()
 	confBuilder.UseEnv()
 	confBuilder.Build()
 
-	processFeeds(*runonce)
+	processFeeds(*runonce, *feedConfigPath)
 }
 
-func processFeeds(runonce bool) {
-	feedConfigPath := "./feeds/ready/"
+func processFeeds(runonce bool, feedConfigPath string) {
 	c := cron.New()
 	filepath.Walk(feedConfigPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {

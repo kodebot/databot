@@ -1,7 +1,6 @@
-name = "dinamalar-politics"
-desc = "dinamalar politics feed"
-group = "dinamalar"
-schedule = "every 5 minutes"
+name = "bbcnews"
+desc = "bbc news feed"
+schedule = "@every 1h"
 [record]
      sourceUri ="https://www.bbc.co.uk/news"
      [[record.preprocessor]]

@@ -2,7 +2,7 @@ name = "oneindia-tamil-news"
 desc = "oneindia tamil news feed"
 schedule = "@every 1h"
 [record]
-    sourceUri ="https://tamil.oneindia.com/rss/tamil-fb.xml"
+    sourceUri ="https://tamil.oneindia.com/rss/tamil-news-fb.xml"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -27,10 +27,6 @@ schedule = "@every 1h"
             name="pluck"
                 [record.field.processor.params]
                     "field" = "Link"
-        [[record.field.processor]]
-            name="regexp:selectOne"
-                [record.field.processor.params]
-                    "selectors" = ['(?P<data>[^?]+)']
         [[record.field.processor]]
             name="http:get"
                 [record.field.processor.params]
@@ -79,10 +75,6 @@ schedule = "@every 1h"
                 [record.field.processor.params]
                     "field" = "Link"
         [[record.field.processor]]
-            name="regexp:selectOne"
-                [record.field.processor.params]
-                    "selectors" = ['(?P<data>[^?]+)']
-        [[record.field.processor]]
             name="http:get"
                 [record.field.processor.params]
                     "useCache" = true
@@ -112,28 +104,33 @@ schedule = "@every 1h"
     [[record.field.processor]]
             name="regexp:selectOne"
                 [record.field.processor.params]
-                    "selectors" = ['/news/(?P<data>[^/]+)']
+                    "selectors" = ['/(?P<data>india|international|tamilnadu)/']
     [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = ["washington", "london", "international"]
+                    "old" = ["international"]
                     "new"= "World"
     [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = ["delhi", "bangalore", "mumbai", "india", "lucknow", "patna", "thiruvananthapuram"]
+                    "old" = ["india"]
                     "new"= "India"
     [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = ["chennai", "madurai", "nagercoil", "karur", "virudhunagar", "coimbatore", "kanyakumari", "vellore", "sivagangai", "trichirappalli", "puducherry", "thanjavur", "tuticorin", "tiruppur", "villupuram", "tamilnadu"]
+                    "old" = ["tamilnadu"]
                     "new"= "Tamilnadu"
     [[record.field.processor]]
             name="regexp:replace"
                 [record.field.processor.params]
-                    "old" = ["^[a-z]+.*$"]
+                    "old" = ["^[a-z].*$"]
                     "new"= "Others"
-    
+    [[record.field.processor]]
+            name="regexp:replace"
+                [record.field.processor.params]
+                    "old" = ["^$"]
+                    "new"= "Others"
+
      [[record.field]]
         name= "SourceUrl"
         [[record.field.processor]]
@@ -144,3 +141,15 @@ schedule = "@every 1h"
             name="regexp:selectOne"
                 [record.field.processor.params]
                     "selectors" = ['(?P<data>[^?]+)']
+
+    [[record.field]]
+        name= "Group"
+        [[record.field.processor]]
+            name="constant"
+                [record.field.processor.params]
+                    "value" = "oneindiatamil"
+
+    [[record.field]]
+        name= "ProcessedAt"
+        [[record.field.processor]]
+            name="utcnow"
