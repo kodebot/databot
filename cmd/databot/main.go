@@ -78,7 +78,7 @@ func processFeeds(runonce bool, feedConfigPath string) {
 			}
 		}
 	} else {
-		logger.Infof("feed specs processed successfully")
+		logger.Infof("all feed specs processed successfully")
 	}
 }
 
