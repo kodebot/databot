@@ -13,4 +13,4 @@ ENV DATABOT_EXPORT_TO_DB_CON_STR=mongodb://localhost:27017
 
 ADD . /go/src/github.com/kodebot/databot
 
-ENTRYPOINT go run /go/src/github.com/kodebot/databot/cmd/databot/main.go -stderrthreshold=INFO -feedconfigpath=../../testdata/feeds/ready/
+ENTRYPOINT go run /go/src/github.com/kodebot/databot/cmd/databot/main.go -stderrthreshold=INFO -feedconfigpath=/go/src/github.com/kodebot/databot/testdata/feeds/ready/

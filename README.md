@@ -35,4 +35,4 @@ then run the following to build with prod file
 
 to run the container
 
-`docker run databot`
+`docker run -t -d databot`
