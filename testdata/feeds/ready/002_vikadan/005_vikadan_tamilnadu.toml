@@ -39,7 +39,7 @@ schedule = "@every 1h"
                     "new" = "&#39;"
                     
      [[record.field]]
-        name= "PublishedDate"
+        name= "PublishedAt"
         [[record.field.processor]]
             name="pluck"
                 [record.field.processor.params]
@@ -52,6 +52,11 @@ schedule = "@every 1h"
             name="regexp:selectOne"
                 [record.field.processor.params]
                     "selectors" = ['Published:<time.*?dateTime="(?P<data>[^"]+)']
+        [[record.field.processor]]
+            name="date:parse"
+                [record.field.processor.params]
+                    "layout" = "2006-01-02T15:04:05.999Z"
+
                     
     [[record.field]]
         name= "ThumbImageUrl"
@@ -79,7 +84,7 @@ schedule = "@every 1h"
                     "field" = "Link"
 
     [[record.field]]
-        name= "Group"
+        name= "Source"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
