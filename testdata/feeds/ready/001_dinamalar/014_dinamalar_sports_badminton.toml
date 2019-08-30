@@ -53,7 +53,7 @@ schedule = "@every 1h"
                     "selectors" = ["body"]
 
     [[record.field]]
-        name= "PublishedDate"
+        name= "PublishedAt"
         [[record.field.processor]]
             name="pluck"
                 [record.field.processor.params]
@@ -100,7 +100,7 @@ schedule = "@every 1h"
                     "field" = "Link"
 
     [[record.field]]
-        name= "Group"
+        name= "Source"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
