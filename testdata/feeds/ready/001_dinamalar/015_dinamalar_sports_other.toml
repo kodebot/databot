@@ -66,6 +66,11 @@ schedule = "@every 1h"
             name="regexp:selectOne"
                 [record.field.processor.params]
                     "selectors" = ['datePublished.*content="(?P<data>[^"]+)']
+        [[record.field.processor]]
+            name="date:parse"
+                [record.field.processor.params]
+                    "layout" = "2006-01-02T15:04:05Z07:00"
+
     [[record.field]]
         name= "ThumbImageUrl"
         [[record.field.processor]]
