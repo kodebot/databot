@@ -20,8 +20,8 @@ func httpGet(params map[string]interface{}) Processor {
 	useCacheParam := params["useCache"]
 	useCache := false
 	if useCacheParam != nil {
-		if _, ok := useCacheParam.(bool); ok {
-			useCache = true
+		if val, ok := useCacheParam.(bool); ok {
+			useCache = val
 		}
 	}
 
