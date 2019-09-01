@@ -63,7 +63,7 @@ func main() {
 	confBuilder.UseEnv()
 	confBuilder.Build()
 
-	// processFeeds(*runonce, *feedConfigPath)
+	processFeeds(*runonce, *feedConfigPath)
 
 	if !*runonce {
 		http.HandleFunc("/", previewHandler)
