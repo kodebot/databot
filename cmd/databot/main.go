@@ -2,9 +2,12 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+	"text/template"
 
 	"github.com/kodebot/databot/pkg/config"
 	"github.com/kodebot/databot/pkg/databot"
@@ -14,6 +17,34 @@ import (
 	"github.com/kodebot/databot/pkg/toml"
 	"github.com/robfig/cron"
 )
+
+type previewResp struct {
+	Config string
+	Recs   []map[string]interface{}
+}
+
+func previewHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles("home.html")
+	if r.Method == "GET" {
+		config, _ := ioutil.ReadFile("feedconfig.toml")
+		resp := previewResp{Config: string(config), Recs: []map[string]interface{}{}}
+		t.Execute(w, resp)
+		return
+	}
+
+	config := r.FormValue("config")
+
+	feedSpecReader := toml.FeedSpecReader{}
+	feed := feedSpecReader.Read(config)
+
+	var recCreator databot.RecordCreator
+	recCreator = record.NewRecordCreator()
+	rspec := feed.RecordSpec
+	recs := recCreator.Create(rspec)
+
+	resp := previewResp{config, recs}
+	t.Execute(w, resp)
+}
 
 func main() {
 	// todo: keep all feed specs in database
@@ -32,7 +63,13 @@ func main() {
 	confBuilder.UseEnv()
 	confBuilder.Build()
 
-	processFeeds(*runonce, *feedConfigPath)
+	// processFeeds(*runonce, *feedConfigPath)
+
+	if !*runonce {
+		http.HandleFunc("/", previewHandler)
+		logger.Infof("Launching web UI on port 9025")
+		logger.Fatalf(http.ListenAndServe(":9025", nil).Error())
+	}
 }
 
 func processFeeds(runonce bool, feedConfigPath string) {
@@ -68,15 +105,6 @@ func processFeeds(runonce bool, feedConfigPath string) {
 		logger.Infof("starting feed schedules")
 		c.Start()
 		logger.Infof("started feed schedules successfully")
-		quit := make(chan bool)
-		for {
-			select {
-			case shouldQuit := <-quit:
-				if shouldQuit {
-					break
-				}
-			}
-		}
 	} else {
 		logger.Infof("all feed specs processed successfully")
 	}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Home</title>
+
+    <style>
+        body,
+        html {
+            height: 100%;
+        }
+
+        #editor {
+            position: absolute !important;
+            border: 1px solid lightgray;
+            margin: auto;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">DATABOT</a>
+    </nav>
+
+    <div class="container-fluid p-3 h-75">
+        <div class="row h-100">
+            <div class="col-sm">
+                <form action="/" method="POST">
+                    <div class="text-right">
+                        <input type="submit" value="Preview" class="btn btn-success mb-2" data-toggle="modal"
+                            data-target="#loadingModal">
+                    </div>
+                    <pre id="editor">{{.Config}}</pre>
+                    <input type="hidden" name="config" value="{{.Config}}">
+                </form>
+            </div>
+            <div class="col-sm-6">
+                {{range $index, $rec := .Recs}}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        {{range $key, $val := $rec}}
+                        <div class="row">
+                            <div class="col-11 text-truncate">
+                                {{$key}} - {{$val}}
+                            </div>
+                            <button class="col-1 btn btn-primary btn-sm" data-toggle="modal" data-target="#previewModal"
+                                data-content="{{$val}}">...</button>
+                        </div>
+                        <br />
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalTitle"> Preview</h5> <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal-->
+    <div class="modal" tabindex="-1" role="dialog" id="loadingModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    Loading, please wait...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
+    <script>
+        $('#previewModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var content = button.data('content') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('.content').html(getContentToRender(content))
+        })
+
+        function getContentToRender(content) {
+
+            if (isHTML(content)) {
+                return content;
+            }
+
+            if (isJSON(content)) {
+                return $('<pre>').html(content).clone().wrap('<p>').parent().html()
+            }
+
+            if (isImageURL(content)) {
+                return $('<img>').attr('src', content).clone().wrap('<p>').parent().html()
+            }
+
+            return content;
+        }
+
+        function isHTML(content) {
+            var $div = $('<div>').html(content);
+            return !!($div.children().length);
+        }
+
+        function isJSON(content) {
+            try {
+                JSON.parse(content)
+                return true;
+            } catch{
+                return false;
+            }
+        }
+
+        function isImageURL(content) {
+            return /\.(jpg|png)$/.test(content);
+        }
+
+        var editor = ace.edit("editor");
+        var configInput = $('input[name="config"]').val();
+        editor.getSession().setValue(configInput);
+        editor.getSession().on('change', function () {
+            configInput.val(editor.getSession().getValue());
+        });
+        editor.getSession().setUseWorker(false);
+        editor.setTheme("ace/theme/chrome");
+        editor.getSession().setMode("ace/mode/toml");
+
+    </script>
+
+</body>
+
+</html>
