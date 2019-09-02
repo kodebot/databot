@@ -40,7 +40,7 @@
                             data-target="#loadingModal">
                     </div>
                     <pre id="editor">{{.Config}}</pre>
-                    <input type="hidden" name="config" value="{{.Config}}">
+                    <input type="hidden" name="config" id="config_hidden" value="{{.Config}}">
                 </form>
             </div>
             <div class="col-sm-6">
@@ -107,6 +107,7 @@
         crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
+        
     <script>
         $('#previewModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
@@ -152,8 +153,9 @@
             return /\.(jpg|png)$/.test(content);
         }
 
+        var configInput = $('#config_hidden').val();
         var editor = ace.edit("editor");
-        var configInput = $('input[name="config"]').val();
+                        
         editor.getSession().setValue(configInput);
         editor.getSession().on('change', function () {
             configInput.val(editor.getSession().getValue());
