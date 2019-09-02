@@ -19,9 +19,20 @@
             position: absolute !important;
             border: 1px solid lightgray;
             margin: auto;
-            height: 100%;
+            /* height: 100%; */
             width: 100%;
         }
+
+        .footer{
+            height: 52px;
+            text-align: center;
+            background-color: gray;
+            font-size: 12px;
+            color: white;
+            padding-top: 8px;
+        }
+
+        
     </style>
 </head>
 
@@ -31,15 +42,17 @@
         <a class="navbar-brand" href="#">DATABOT</a>
     </nav>
 
-    <div class="container-fluid p-3 h-75">
+    <div class="container-fluid p-3 main">
         <div class="row h-100">
             <div class="col-sm">
                 <form action="/" method="POST">
-                    <div class="text-right">
+                    <div class="text-right command-bar">
                         <input type="submit" value="Preview" class="btn btn-success mb-2" data-toggle="modal"
                             data-target="#loadingModal">
                     </div>
-                    <pre id="editor">{{.Config}}</pre>
+                    <div>
+                        <pre id="editor">{{.Config}}</pre>
+                    </div>
                     <input type="hidden" name="config" id="config_hidden" value="{{.Config}}">
                 </form>
             </div>
@@ -62,6 +75,10 @@
                 {{end}}
             </div>
         </div>
+    </div>
+
+    <div class="footer">
+        &copy; Kodebot Limited. 2014 - 2019.
     </div>
 
     <!-- Preview Modal -->
@@ -107,7 +124,7 @@
         crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
-        
+
     <script>
         $('#previewModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) // Button that triggered the modal
@@ -153,16 +170,40 @@
             return /\.(jpg|png)$/.test(content);
         }
 
-        var configInput = $('#config_hidden').val();
-        var editor = ace.edit("editor");
-                        
-        editor.getSession().setValue(configInput);
-        editor.getSession().on('change', function () {
-            configInput.val(editor.getSession().getValue());
+        
+        $(document).ready(function () {
+            setupAceEditor();
+            setMainSectionHeight();
+            $(window).on('resize', setMainSectionHeight);
         });
-        editor.getSession().setUseWorker(false);
-        editor.setTheme("ace/theme/chrome");
-        editor.getSession().setMode("ace/mode/toml");
+
+
+        function setMainSectionHeight() {
+            var navbarHeight = $('nav').height();
+            var footerHeight = $('.footer').height();
+            var extra = 40;
+            var mainHeight = $(window).height() - navbarHeight - footerHeight - extra;
+            $('.main').height(mainHeight);
+            setEditorHeight(mainHeight);
+        }
+
+        function setEditorHeight(mainHeight) {
+            $('#editor').height(mainHeight - $('.command-bar').height());
+        }
+
+        function setupAceEditor() {
+            var configInput = $('#config_hidden').val();
+            var editor = ace.edit("editor");
+
+            editor.getSession().setValue(configInput);
+            editor.getSession().on('change', function () {
+                configInput.val(editor.getSession().getValue());
+            });
+            editor.getSession().setUseWorker(false);
+            editor.setTheme("ace/theme/chrome");
+            editor.getSession().setMode("ace/mode/toml");
+
+        }
 
     </script>
 
