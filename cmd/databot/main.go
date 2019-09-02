@@ -26,13 +26,16 @@ type previewResp struct {
 func previewHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("home.html")
 	if r.Method == "GET" {
-		config, _ := ioutil.ReadFile("feedconfig.toml")
-		resp := previewResp{Config: string(config), Recs: []map[string]interface{}{}}
+		configBytes, _ := ioutil.ReadFile("feedconfig.toml")
+		config := string(configBytes)
+		config = strings.Replace(config, "\"", "&quot;", -1)
+		resp := previewResp{Config: config, Recs: []map[string]interface{}{}}
 		t.Execute(w, resp)
 		return
 	}
 
 	config := r.FormValue("config")
+	config = strings.Replace(config, "&quot;", "\"", -1)
 
 	feedSpecReader := toml.FeedSpecReader{}
 	feed := feedSpecReader.Read(config)
@@ -42,6 +45,7 @@ func previewHandler(w http.ResponseWriter, r *http.Request) {
 	rspec := feed.RecordSpec
 	recs := recCreator.Create(rspec)
 
+	config = strings.Replace(config, "\"", "&quot;", -1)
 	resp := previewResp{config, recs}
 	t.Execute(w, resp)
 }
