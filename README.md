@@ -35,4 +35,4 @@ then run the following to build with prod file
 
 to run the container
 
-`docker run -t -d -p:9025:9025 databot`
+`docker run -t -d -p 9025:9025 databot`
