@@ -1,8 +1,8 @@
-name = "dinamani-cinema"
-desc = "dinamani cinema feed"
+name = "dinamani-india"
+desc = "dinamani india feed"
 schedule = "@every 1h"
 [record]
-    sourceUri ="https://www.dinamani.com/cinema/cinema-news"
+    sourceUri ="https://www.dinamani.com/india"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -10,7 +10,7 @@ schedule = "@every 1h"
     [[record.preprocessor]]
         name="css:select"
             [record.preprocessor.params]
-                "selectors" = ["#products_2449"]
+                "selectors" = ["#products_2569"]
 
      [[record.preprocessor]]
         name="css:selectEach"
@@ -44,7 +44,7 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
-                    "selectors" = ["script", "style", ".morefrom", "iframe"]
+                    "selectors" = ["script", "style", ".morefrom"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
@@ -89,7 +89,7 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "Entertainment"
+                    "value" = "India"
 
      [[record.field]]
         name= "SourceUrl"
