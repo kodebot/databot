@@ -52,7 +52,8 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"']
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"','<a.*data-iframely.*?</a>']
+                   
      [[record.field]]
         name= "PublishedAt"
         [[record.field.processor]]
