@@ -201,15 +201,15 @@
         }
 
         function setupAceEditor() {
-            var configInput = $('#config_hidden').val();
+            var configInput = $('#config_hidden');
             var editor = ace.edit("editor");
 
-            editor.getSession().setValue(configInput);
+            editor.getSession().setValue(configInput.val());
             editor.getSession().on('change', function () {
                 configInput.val(editor.getSession().getValue());
             });
             editor.getSession().setUseWorker(false);
-            editor.setTheme("ace/theme/chrome");
+            editor.setTheme("ace/theme/tomorrow_night");
             editor.getSession().setMode("ace/mode/toml");
         }
 
