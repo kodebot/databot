@@ -10,10 +10,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: pwd
-  displayName: 'test1'
+- task: Docker@2
+  inputs:
+    command: 'build'
+    Dockerfile: '**/Dockerfile.PROD'
+    tags: 'databot-$(Build.BuildId)'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
