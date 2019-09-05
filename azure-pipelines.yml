@@ -16,4 +16,4 @@ steps:
     repository: 'databot'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags: 'databot-$(Build.BuildId)'
+    tags: '$(Build.BuildId)'
