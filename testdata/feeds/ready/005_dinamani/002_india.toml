@@ -24,6 +24,17 @@ schedule = "@every 1h"
         name="combine"
 
     [[record.field]]
+        name= "Title"
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["h5 .article_click"]
+        [[record.field.processor]]
+             name="regexp:selectOne"
+                 [record.field.processor.params]
+                     "selectors" = ["<a[^>]*>(?P<data>.*[^<])</a>"]
+
+    [[record.field]]
         name= "Content"
         [[record.field.processor]]
              name="regexp:selectOne"
