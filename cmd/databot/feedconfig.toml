@@ -1,8 +1,8 @@
-name = "dinamani-cinema"
-desc = "dinamani cinema feed"
+name = "dinamani-sports"
+desc = "dinamani sports feed"
 schedule = "@every 1h"
 [record]
-    sourceUri ="https://www.dinamani.com/cinema/cinema-news"
+    sourceUri ="https://www.dinamani.com/sports"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -10,18 +10,29 @@ schedule = "@every 1h"
     [[record.preprocessor]]
         name="css:select"
             [record.preprocessor.params]
-                "selectors" = ["#products_2449"]
+                "selectors" = [".container.SectionContainer"]
 
      [[record.preprocessor]]
         name="css:selectEach"
             [record.preprocessor.params]
-                "selectors" = [".item"]
+                "selectors" = [".sports-lead", ".sports-thum"]
     
      [[record.preprocessor]]
         name="split"
 	
      [[record.preprocessor]]
         name="combine"
+
+    [[record.field]]
+        name= "Title"
+        [[record.field.processor]]
+            name="css:select"
+                [record.field.processor.params]
+                    "selectors" = ["figcaption .article_click"]
+        [[record.field.processor]]
+             name="regexp:selectOne"
+                 [record.field.processor.params]
+                     "selectors" = ["<a[^>]*>(?P<data>.*[^<])</a>"]
 
     [[record.field]]
         name= "Content"
@@ -44,7 +55,7 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="css:remove"
                 [record.field.processor.params]
-                    "selectors" = ["script", "style", ".morefrom", "iframe"]
+                    "selectors" = ["script", "style", ".morefrom"]
         [[record.field.processor]]
             name="css:select"
                 [record.field.processor.params]
@@ -52,8 +63,7 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="regexp:remove"
                 [record.field.processor.params]
-                    "selectors" = ['class="[^"]+"', 'style="[^"]+"','<a.*data-iframely.*?</a>']
-                   
+                    "selectors" = ['class="[^"]+"', 'style="[^"]+"']
      [[record.field]]
         name= "PublishedAt"
         [[record.field.processor]]
@@ -90,7 +100,7 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="constant"
                 [record.field.processor.params]
-                    "value" = "Entertainment"
+                    "value" = "Sports"
 
      [[record.field]]
         name= "SourceUrl"
