@@ -15,4 +15,5 @@ steps:
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile.PROD'
     tags: 'databot-$(Build.BuildId)'
+    repository: $(imageName)
 
