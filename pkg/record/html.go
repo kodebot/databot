@@ -17,7 +17,7 @@ func NewRecordCreator() databot.RecordCreator {
 }
 
 // Create returns one or more records from given rss/atom record spec
-func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{} {
+func (r *recordCreator) Create(spec *databot.RecordSpec) (collected []map[string]interface{}) {
 	processors := pipeline.GetProcessors(spec.PreprocessorSpecs)
 	in := make(chan interface{})
 	out := pipeline.CreateSingleUsePipeline(in, processors)
@@ -28,8 +28,13 @@ func (r *recordCreator) Create(spec *databot.RecordSpec) []map[string]interface{
 	}()
 	records := <-out
 
-	collected := collect(records.([]interface{}), spec)
-	return collected
+	if records != nil {
+		collected = collect(records.([]interface{}), spec)
+	} else {
+		// no records  collected
+		collected = make([]map[string]interface{}, 0)
+	}
+	return
 }
 
 func collect(sources []interface{}, spec *databot.RecordSpec) []map[string]interface{} {

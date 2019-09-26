@@ -2,6 +2,7 @@ package pipeline
 
 import (
 	"github.com/kodebot/databot/pkg/databot"
+	"github.com/kodebot/databot/pkg/logger"
 	"github.com/kodebot/databot/pkg/processor"
 )
 
@@ -21,6 +22,12 @@ func CreateSingleUsePipeline(input <-chan interface{}, processors []processor.Pr
 	for _, p := range processors {
 		output = make(chan interface{})
 		go func(p processor.Processor, in <-chan interface{}, out chan interface{}) {
+			defer func() {
+				if r := recover(); r != nil {
+					logger.Errorf("Error when running pipeline, returning early. Error %s", r.(error).Error())
+					close(out)
+				}
+			}()
 			p(in, out)
 			close(out)
 		}(p, input, output)
