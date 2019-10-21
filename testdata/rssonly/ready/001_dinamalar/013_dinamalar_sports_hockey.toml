@@ -1,8 +1,8 @@
-name = "dinamalar-other-sports"
-desc = "dinamalar other sports feed"
+name = "dinamalar-hockey"
+desc = "dinamalar hockey feed"
 schedule = "@every 1h"
 [record]
-    sourceUri ="https://sports.dinamalar.com/rss/other-sports"
+    sourceUri ="https://sports.dinamalar.com/rss/Hockey"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]

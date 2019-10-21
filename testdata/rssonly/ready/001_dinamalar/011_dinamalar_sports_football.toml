@@ -1,8 +1,8 @@
-name = "dinamalar-other-sports"
-desc = "dinamalar other sports feed"
+name = "dinamalar-football"
+desc = "dinamalar football feed"
 schedule = "@every 1h"
 [record]
-    sourceUri ="https://sports.dinamalar.com/rss/other-sports"
+    sourceUri ="https://sports.dinamalar.com/rss/Football"
     [[record.preprocessor]]
         name="http:get"
             [record.preprocessor.params]
@@ -13,6 +13,17 @@ schedule = "@every 1h"
         name="pluck"
             [record.preprocessor.params]
                 "field" = "Items"
+
+    [[record.field]]
+        name= "Title"
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Title"
+        [[record.field.processor]]
+            name="regexp:remove"
+                [record.field.processor.params]
+                    "selectors" = [' \|.*']
 
     [[record.field]]
         name= "Title"

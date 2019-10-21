@@ -67,7 +67,7 @@ func parseDate(params map[string]interface{}) Processor {
 			}
 
 			if !parsingSuccess {
-				logger.Warnf("unable to parse the date at all...")
+				logger.Errorf("unable to parse the date at all...")
 				out <- nil
 			}
 		}
