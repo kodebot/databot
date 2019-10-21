@@ -26,6 +26,9 @@ func pluck(params map[string]interface{}) Processor {
 	return func(in <-chan interface{}, out chan<- interface{}) {
 		for newInput := range in {
 
+			logger.Infof("***********************************************************************************")
+			logger.Infof("%+v", newInput)
+
 			fieldData := reflect.Indirect(reflect.ValueOf(newInput)).FieldByName(field)
 			if !fieldData.IsValid() {
 				logger.Fatalf("the field %s doesn't exist in the input", field)
