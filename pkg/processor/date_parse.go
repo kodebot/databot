@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/kodebot/databot/pkg/logger"
+	"github.com/kodebot/databot/pkg/stringutil"
 )
 
 func init() {
@@ -11,13 +12,22 @@ func init() {
 }
 
 func parseDate(params map[string]interface{}) Processor {
-	layout := time.RFC3339
+	layouts := []string{time.RFC3339}
 	layoutParam := params["layout"]
 	if layoutParam != nil {
-		var ok bool
-		layout, ok = layoutParam.(string)
-		if !ok {
-			logger.Fatalf("layout must be string")
+		layoutVals, ok := layoutParam.([]interface{})
+		if ok {
+			layouts, ok = stringutil.ToStringSlice(layoutVals)
+			if !ok {
+				logger.Fatalf("layout specified using slice must be slice of string")
+			}
+		} else {
+			val, ok := layoutParam.(string)
+			if ok {
+				layouts = []string{val}
+			} else {
+				logger.Fatalf("layout must be specified using string or slice of string")
+			}
 		}
 	}
 
@@ -43,13 +53,22 @@ func parseDate(params map[string]interface{}) Processor {
 				logger.Fatalf("unexpected input %#v. Input must be of type string", block)
 			}
 
-			result, err := time.ParseInLocation(layout, block, location)
-			if err != nil {
-				logger.Warnf("date parsing failed layout:%+v, value:%+v, location:%+v", layout, block, location)
-				out <- nil
+			parsingSuccess := false
+			for _, layout := range layouts {
+				result, err := time.ParseInLocation(layout, block, location)
+				if err != nil {
+					logger.Warnf("date parsing failed layout:%+v, value:%+v, location:%+v", layout, block, location)
+					continue
+				} else {
+					parsingSuccess = true
+					out <- result
+					break
+				}
+			}
 
-			} else {
-				out <- result
+			if !parsingSuccess {
+				logger.Warnf("unable to parse the date at all...")
+				out <- nil
 			}
 		}
 	}
