@@ -73,13 +73,25 @@ schedule = "@every 1h"
             name="map:get"
                 [record.field.processor.params]
                     "key" = "thumbnail"
+        [[record.field.processor]]
+            name="slice:get"
+                [record.field.processor.params]
+                    "index"=0
+        [[record.field.processor]]
+            name="pluck"
+                [record.field.processor.params]
+                    "field" = "Attrs"
+        [[record.field.processor]]
+            name="map:get"
+                [record.field.processor.params]
+                    "key" = "url"
         
     [[record.field]]
         name= "Category"
         [[record.field.processor]]
             name="pluck"
                 [record.field.processor.params]
-                    "field" = "Extensions"
+                    "field" = "Categories"
 
      [[record.field]]
         name= "SourceUrl"
