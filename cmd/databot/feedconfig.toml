@@ -63,18 +63,23 @@ schedule = "@every 1h"
         [[record.field.processor]]
             name="pluck"
                 [record.field.processor.params]
-                    "field" = "Thumbnail"
+                    "field" = "Extensions"
         [[record.field.processor]]
-            name="regexp:selectOne"
+            name="map:get"
                 [record.field.processor.params]
-                    "selectors" = ['<img[^>]+src="(?P<data>[^"]+)']
+                    "key" = "media"
 
+        [[record.field.processor]]
+            name="map:get"
+                [record.field.processor.params]
+                    "key" = "thumbnail"
+        
     [[record.field]]
         name= "Category"
         [[record.field.processor]]
             name="pluck"
                 [record.field.processor.params]
-                    "field" = "Category"
+                    "field" = "Extensions"
 
      [[record.field]]
         name= "SourceUrl"
